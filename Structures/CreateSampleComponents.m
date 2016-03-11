@@ -66,7 +66,7 @@ components(4).LocationReq = 'Outside';
 
 % Solar Panels
 components(5).Name = 'Solar Panels';
-components(5).Subsystem = 'Power';
+components(5).Subsystem = 'EPS';
 components(5).Shape = 'Rectangle';
 components(5).Mass = 70;
 components(5).isFit = 0;
@@ -76,7 +76,7 @@ components(5).LocationReq = 'Outside';
 % 
 % Batteries
 components(6).Name = 'Battery';
-components(6).Subsystem = 'Power';
+components(6).Subsystem = 'EPS';
 components(6).Shape = 'Rectangle';
 components(6).Mass = 90;
 components(6).isFit = 0;
@@ -85,7 +85,7 @@ components(6).LocationReq = 'Inside';
 
 % Power Electronics
 components(7).Name = 'Electronics';
-components(7).Subsystem = 'Power';
+components(7).Subsystem = 'EPS';
 components(7).Shape = 'Rectangle';
 components(7).Mass = 10;
 components(7).isFit = 0;
@@ -162,12 +162,12 @@ components(15).Subsystem = 'ADCS';
 components(15).Shape = 'Cylinder';
 components(15).Mass = 10;
 components(15).isFit = 0;
-components(15).Dim = [0.1,0.1];
+components( 15).Dim = [0.1,0.1];
 components(15).LocationReq = 'Inside';
 
 % Power Electronics
 components(16).Name = 'Electronics 2';
-components(16).Subsystem = 'Power';
+components(16).Subsystem = 'EPS';
 components(16).Shape = 'Rectangle';
 components(16).Mass = 10;
 components(16).isFit = 0;
