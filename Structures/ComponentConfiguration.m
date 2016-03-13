@@ -1,9 +1,15 @@
-function [components,structures,genParameters] = ComponentConfiguration(components,structures,structures_buildableIndices,genParameters)
+function [components,structures,genParameters] = ComponentConfiguration(components,structures,genParameters)
 %%
 
 genParameters.needExpand = zeros(length(structures),2);
 
 [components,structures,genParameters] = FitComponents(components,structures,genParameters);
+
+% Expand the satellite height if necessary.
+if any(genParameters.needExpand(:,1))
+    [new.structures,genParameters] = ExpandStructure(structures,genParameters);
+end
+
 
 
 function [components,structures,genParameters] = FitComponents(components,structures,genParameters)

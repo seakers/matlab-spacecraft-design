@@ -2,21 +2,34 @@ function PlotSatellite(components, structures)
 % hwlRectangle = [2,3,1];
 % xyzRectangle = [0,0,0];
 
+figure('units','normalized','position',[.1 .5 .7 .7])
 hold on
+grid 'on'
+xlabel('X')
+ylabel('Y')
+zlabel('Z')
+axis equal
+% S.LN = plot(S.x,S.x,'r');
+
 % RectangularPlotter(hwlRectangle(1),hwlRectangle(2),hwlRectangle(3),xyzRectangle(1),xyzRectangle(2),xyzRectangle(3))
 % SpherePlotter(1.5,0,0,2)
 % CylindricalPlotter(1,2,2,2)
 
 PlotComponents(components)
-PlotStructures(structures)
-
-grid 'on'
+obj = PlotStructures(structures);
 hold off
-xlabel('X')
-ylabel('Y')
-zlabel('Z')
-axis equal
+% Create a Slider Bar
+sl_handle = uicontrol('style','slide',...
+         'min',0,'max',1,'val',1,...
+         'Units', 'normalized','Position',[0.95,0.3,.05,.4], ...
+        'callback',{@sl_call,obj});
+%  set(sl_handle,'ylabel','Structures Transparancy'),
+
 % ConePlotter()
+function [] = sl_call(varargin)
+% Callback for the slider.
+[h,obj] = varargin{[1,3]};  % calling handle and data structure.
+set(obj,'FaceAlpha',get(h,'Value'))
 
 function PlotComponents(components)
 % function to plot the components
@@ -26,15 +39,16 @@ for i = 1:nr
     ShapePlotter(components(i).Shape,components(i).Dim,components(i).Vertices,components(i).CG_XYZ,FaceColor,EdgeColor);
 end
 
-function PlotStructures(structures)
+function obj = PlotStructures(structures)
 % Function to plot the structure
 nr = length(structures);
+obj = [];
 for i = 1:nr
     myVertices = [structures(i).Bottom_Vertices;structures(i).Top_Vertices];
     myCG = structures(i).CG_XYZ; 
     [FaceColor,EdgeColor] = ColorSelection('Structures');
-    ShapePlotter(structures(i).Shape,structures(i).Dim,myVertices,myCG,FaceColor,EdgeColor);
-
+    objnew = ShapePlotter(structures(i).Shape,structures(i).Dim,myVertices,myCG,FaceColor,EdgeColor);
+    obj = [obj,objnew];
 end
 
 function [FaceColor,EdgeColor] = ColorSelection(Subsystem)
@@ -72,7 +86,7 @@ elseif strcmp('EPS',Subsystem)
     EdgeColor = [0,0.4,0.8];    
 end
 
-function ShapePlotter(Shape,myDim,myVertices,myCG,FaceColor,EdgeColor)
+function obj = ShapePlotter(Shape,myDim,myVertices,myCG,FaceColor,EdgeColor)
 
 
 % myVertices = [-l/2 -w/2 -h/2; 
@@ -94,13 +108,13 @@ if strcmp(Shape,'Rectangle')
     % and length (x axis) l
     % x, y, and z are the coordinates of the center of the rectangle.
     myFaces = [1 2 3 4; 2 6 7 3; 4 3 7 8; 1 5 8 4; 1 2 6 5; 5 6 7 8];
-    patch('Vertices', myVertices, 'Faces', myFaces, 'FaceColor', FaceColor,'EdgeColor',EdgeColor);
+     obj = patch('Vertices', myVertices, 'Faces', myFaces, 'FaceColor', FaceColor,'EdgeColor',EdgeColor);
 elseif strcmp(Shape,'Sphere')
     % A function that plots a sphere of radius r and centered at location (a,b,c)
     % sphere with radius 5 centred at (0,0,0)
     r = myDim;
     [x,y,z] = sphere();
-    surf(r*x+myCG(1), r*y+myCG(2), r*z+myCG(3),'FaceColor', FaceColor,'EdgeColor',EdgeColor)
+     obj = surf(r*x+myCG(1), r*y+myCG(2), r*z+myCG(3),'FaceColor', FaceColor,'EdgeColor',EdgeColor);
 elseif strcmp(Shape,'Cone')
  
 elseif ~(isempty(strfind(Shape,'Cylinder')))
@@ -109,9 +123,8 @@ elseif ~(isempty(strfind(Shape,'Cylinder')))
     h = myDim(1,1);
     [x,y,z] = cylinder(r);
     z = (z*h)-h/2;
-    surf(x+myCG(1),y+myCG(2),z+myCG(3),'FaceColor', FaceColor,'EdgeColor',EdgeColor);
+    obj = surf(x+myCG(1),y+myCG(2),z+myCG(3),'FaceColor', FaceColor,'EdgeColor',EdgeColor);
 end
-
 
 function ConePlotter()
 % 
