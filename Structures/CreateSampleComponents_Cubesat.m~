@@ -34,14 +34,8 @@ components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Rectangle';
 components(i).Mass = .01;
 components(i).isFit = 0;
-components(i).CG_XYZ = [];
-components(i).Vertices = [];
 components(i).Dim = [0.005,0.005,0.001];
 components(i).LocationReq = 'Inside';
-components(i).Orientation = [];
-components(i).Thermal = [];
-components(i).InertiaMatrix = [];
-components(i).RotateToSatBodyFrame = [];
 i = i+1; 
 
 % Comms Electronics
@@ -92,7 +86,7 @@ i = i + 1;
 components(i).Name = 'Battery';
 components(i).Subsystem = 'EPS';
 components(i).Shape = 'Rectangle';
-components(i).Mass = .2;
+components(i).Mass = 90;
 components(i).isFit = 0;
 components(i).Dim = [0.05,0.003,0.0001];
 components(i).LocationReq = 'Inside';
@@ -102,7 +96,7 @@ i = i + 1;
 components(i).Name = 'Electronics';
 components(i).Subsystem = 'EPS';
 components(i).Shape = 'Rectangle';
-components(i).Mass = .004;
+components(i).Mass = 10;
 components(i).isFit = 0;
 components(i).Dim = [0.02,0.01,0.001];
 components(i).LocationReq = 'Inside';
@@ -112,9 +106,9 @@ i = i + 1;
 components(i).Name = 'Reaction Wheel 1';
 components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Cylinder';
-components(i).Mass = .01;
+components(i).Mass = 30;
 components(i).isFit = 0;
-components(i).Dim = [0.008,0.005];
+components(i).Dim = [0.001,0.001];
 components(i).LocationReq = 'Inside';
 i = i + 1;
 
@@ -122,9 +116,9 @@ i = i + 1;
 components(i).Name = 'Reaction Wheel 2';
 components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Cylinder';
-components(i).Mass = .01;
+components(i).Mass = 30;
 components(i).isFit = 0;
-components(i).Dim = [0.008,0.005];
+components(i).Dim = [0.1,0.1];
 components(i).LocationReq = 'Inside';
 i = i + 1;
 
@@ -132,9 +126,9 @@ i = i + 1;
 components(i).Name = 'Reaction Wheel 3';
 components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Cylinder';
-components(i).Mass = .01;
+components(i).Mass = 30;
 components(i).isFit = 0;
-components(i).Dim = [0.008,0.005];
+components(i).Dim = [0.1,0.1];
 components(i).LocationReq = 'Inside';
 i = i + 1;
 
@@ -142,9 +136,9 @@ i = i + 1;
 components(i).Name = 'Reaction Wheel 4';
 components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Cylinder';
-components(i).Mass = 0.01;
+components(i).Mass = 30;
 components(i).isFit = 0;
-components(i).Dim = [0.008,0.005];
+components(i).Dim = [0.1,0.1];
 components(i).LocationReq = 'Inside';
 i = i + 1;
 
@@ -152,30 +146,30 @@ i = i + 1;
 components(i).Name = 'Magnetometer';
 components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Rectangle';
-components(i).Mass = .0001;
+components(i).Mass = 10;
 components(i).isFit = 0;
 components(i).Dim = [0.1,0.1,.1];
 components(i).LocationReq = 'Inside';
 
-% Sensors
+% Reaction Wheel 4
 components(i).Name = 'Sensors';
 components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Rectangle';
-components(i).Mass = .02;
+components(i).Mass = 10;
 components(i).isFit = 0;
-components(i).Dim = [0.01,0.01,0.001];
+components(i).Dim = [0.1,0.1,0.1];
 components(i).LocationReq = 'Inside';
 i = i + 1;
-% 
-% % Thruster
-% components(i).Name = 'Thruster';
-% components(i).Subsystem = 'Propulsion';
-% components(i).Shape = 'Cylinder';
-% components(i).Mass = 30;
-% components(i).isFit = 0;
-% components(i).Dim = [0.2,0.1,0.3];
-% components(i).LocationReq = 'Specific';
-% i = i + 1;
+
+% Thruster
+components(i).Name = 'Thruster';
+components(i).Subsystem = 'Propulsion';
+components(i).Shape = 'Cylinder';
+components(i).Mass = 30;
+components(i).isFit = 0;
+components(i).Dim = [0.2,0.1,0.3];
+components(i).LocationReq = 'Specific';
+i = i + 1;
 
 % Magnetic Torquer
 components(i).Name = 'Magnetic Torquer';
@@ -183,7 +177,7 @@ components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Cylinder';
 components(i).Mass = 10;
 components(i).isFit = 0;
-components(i).Dim = [0.01,0.01];
+components(i).Dim = [0.1,0.1];
 components(i).LocationReq = 'Inside';
 i = i + 1;
 
@@ -191,9 +185,9 @@ i = i + 1;
 components(i).Name = 'Electronics 2';
 components(i).Subsystem = 'EPS';
 components(i).Shape = 'Rectangle';
-components(i).Mass = .01;
+components(i).Mass = 10;
 components(i).isFit = 0;
-components(i).Dim = [0.02,0.01,0.001];
+components(i).Dim = [0.2,0.1,0.1];
 components(i).LocationReq = 'Inside';
 i = i + 1;
 % 

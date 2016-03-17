@@ -16,13 +16,25 @@ if strcmp(structureType,'Central Cylinder')
     buildableIndices = OrderedSurfaces(structureType);
 elseif strcmp(structureType,'Stacked')
     % Create a stacked satellite
-    generalParameters.tolerance = 0.01; % tolerance for space between components.
+    generalParameters.tolerance = 0.002; % tolerance for space between components.
     generalParameters.aluminumThickness = .002; % Initial thickness of aluminum
     generalParameters.carbonfiberThickness = .03; % Initial thickness of carbon fiber
-    generalParameters.initWidth = .1; % Initial Length
-    generalParameters.initLength = .1; % Initial Width
-    generalParameters.initHeight = .1; % Initial Height
-    
+    if componentSize < 0.1
+        % If the largest component is smaller than 10 centimeters, create a
+        % cubesat shape
+        generalParameters.initWidth = .1; % Initial Length
+        generalParameters.initLength = .1; % Initial Width
+        generalParameters.initHeight = .1; % Initial Height    
+    else 
+        % Else just use a ratio that scales the size of the satellite
+        % compared to the biggest component to get the width, length, and
+        % height
+        ratios.size_component = 1.8;
+        generalParameters.initWidth = ratios.size_component*componentSize; % Initial Length
+        generalParameters.initLength = ratios.size_component*componentSize; % Initial Width
+        generalParameters.initHeight = ratios.size_component*componentSize; % Initial Height    
+    end
+
     structures = StackedStructure(generalParameters);
     buildableIndices = OrderedSurfaces(structureType);
 end
@@ -190,8 +202,8 @@ structures(6).Top_Vertices = topVert;
 structures(6).Surface(1).Mountable = 'N/A';
 structures(6).Surface(1).buildableDir = 'XY';
 structures(6).Surface(1).normalFace = '+Z';
-structures(6).Surface(1).availableX = [-initParameters.initLength/2,initParameters.initLength/2];
-structures(6).Surface(1).availableY = [-initParameters.initWidth/2,initParameters.initWidth/2];
+structures(6).Surface(1).availableX = -[-initParameters.initLength/2,initParameters.initLength/2]; % This needs to be in the negative direciton, as if the x direction is facing you and you're mounting into the page
+structures(6).Surface(1).availableY = [-initParameters.initWidth/2,initParameters.initWidth/2]; 
 structures(6).Surface(1).availableZ = [initParameters.initHeight,+inf];
  
 %% 7, Inside Mounting Panel (normal to +Z)
@@ -212,11 +224,11 @@ structures(7).CG_XYZ = [0,0,initParameters.aluminumThickness*1.5];
 structures(7).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
 structures(7).Top_Vertices = topVert;
 
-% Outside Surface to mount parts on
+% Inside Surface to mount parts on
 structures(7).Surface(1).Mountable = 'N/A';
 structures(7).Surface(1).buildableDir = 'XY';
 structures(7).Surface(1).normalFace = '+Z';
-structures(7).Surface(1).availableX = [-initParameters.initLength/2+initParameters.aluminumThickness,initParameters.initLength/2-initParameters.aluminumThickness];
+structures(7).Surface(1).availableX = -[-initParameters.initLength/2+initParameters.aluminumThickness,initParameters.initLength/2-initParameters.aluminumThickness];
 structures(7).Surface(1).availableY = [-initParameters.initWidth/2+initParameters.aluminumThickness,initParameters.initWidth/2-initParameters.aluminumThickness];
 structures(7).Surface(1).availableZ = [2*initParameters.aluminumThickness,initParameters.initHeight-initParameters.aluminumThickness];
 
@@ -451,13 +463,14 @@ if strcmp(structureType,'Central Cylinder')
     structuresIndices.Specific(3).Name = 'Thruster';
     structuresIndices.Specific(3).Index = [1,1];
 elseif strcmp(structureType,'Stacked')
-    structuresIndices.Inside = [2,1];                                
-    structuresIndices.Outside = [2,1;
-                                3,1;
-                                4,1;
-                                5,1;
-                                6,1;
-                                1,1];
+    structuresIndices.Inside = [7,1]; 
+    structuresIndices.Outside = [6,1];
+%     structuresIndices.Outside = [2,1;
+%                                 3,1;
+%                                 4,1;
+%                                 5,1;
+%                                 6,1;
+%                                 1,1];
     
 end
 % Idk about this idea, but could be possible.

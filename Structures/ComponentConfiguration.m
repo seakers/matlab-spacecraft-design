@@ -2,13 +2,17 @@ function [components,structures,genParameters] = ComponentConfiguration(componen
 %%
 
 genParameters.needExpand = zeros(length(structures),2);
+genParameters.isFit = zeros(length(components),1);
 
-[components,structures,genParameters] = FitComponents(components,structures,genParameters);
+% while ~any(genParameters.isFit)
+% While all the components aren't placed yet.
+    [components,structures,genParameters] = FitComponents(components,structures,genParameters);
 
-% Expand the satellite height if necessary.
-if any(genParameters.needExpand(:,1))
-    [new.structures,genParameters] = ExpandStructure(structures,genParameters);
-end
+    % Expand the satellite height if necessary.
+    if any(genParameters.needExpand(:,1))
+        [new.structures,genParameters] = ExpandStructure(structures,genParameters);
+    end
+% end
 
 
 

@@ -54,7 +54,10 @@ rotationMatrix = RotateFrameToAxes(structures.normalFace,0);
 % Check to see if the Y goes in the negative direction
 % if ~isempty(strfind(structures.normalFace,'X')) % This doesn't stand for the Y axis.
 if abs(panelWidth(2)) >= abs(panelWidth(1)) && panelWidth(2) < panelWidth(1)
-    rectangleCG(:,2) = -rectangleCG(:,2);
+    if ~strcmp(structures.normalFace,'+Z')
+        % This is only necessary if the normal face isn't in the Z axis.
+        rectangleCG(:,2) = -rectangleCG(:,2);
+    end
 end
 % elseif ~isempty(strfind(structures.normalFace,'Y'))
 %    if abs(panelWidth(2)) >= abs(panelWidth(1)) && panelWidth(2) > panelWidth(1)

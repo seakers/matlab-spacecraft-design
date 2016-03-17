@@ -2,7 +2,7 @@ function StructuresSubsystem()
 
 % load('sampleComponents.mat')
 
-[components] = CreateSampleComponents_Cylinder();
+[components] = CreateSampleComponents_Cubesat();
 
 [structures,buildableIndices,genParameters]= StructureBuilder(components);
 
