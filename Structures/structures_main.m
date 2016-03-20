@@ -1,4 +1,4 @@
-function [totalMass,inertiaTensor] = structures_main(components) % Include surfaceArea
+function [totalMass,inertiaTensor,components,structures] = structures_main(components) % Include surfaceArea
 % The main function for the structures subsystem. This takes in components
 % from the other subsystems and figures out the structure for them.
 
@@ -48,7 +48,7 @@ end
 % display(old.totalMass)
 % display(old.InertiaTensor)
 close all
-PlotSatellite(old.components,old.structures)
+% PlotSatellite(old.components,old.structures)
 totalMass = old.totalMass;
 inertiaTensor = old.InertiaTensor;
 

@@ -1,4 +1,4 @@
-function [structures,buildableIndices,genParameters]= StructureBuilder(components)
+function [structures,genParameters]= StructureBuilder(components)
 % STRUCTUREBUILDER: Building the structures based on the components that
 % are inputted.
 % 
@@ -37,7 +37,7 @@ if ~isempty(tankInd)
     % Check to make sure that there is a tank and what the size is. If
     % there are more than one tanks, find the larger one.
     tankDiam = 0;
-    for i = 1:size(tankInd)
+    for i = 1:size(tankInd,1)
         placeHolder = components(tankInd(i)).Dim*2;
         if tankDiam <= placeHolder
             tankDiam = placeHolder;
@@ -47,9 +47,29 @@ if ~isempty(tankInd)
     [structures,buildableIndices,genParameters] = InitStructure(cylinderDiam,'Central Cylinder');
 else
     % If there is no tank find the largest component on the satellite.
-    
-    % Include more here.
-    [structures,buildableIndices,genParameters] = InitStructure(cylinderDiam,'Stacked');
+    largestComponent = 0;
+    for i = 1:length(components)
+    % Cycle through all the components, there are different ways that
+    % the component can be very large in dimension to the satellite.
+        if strcmp(components(i).Shape,'Rectangle')
+            % Check each dimensions of the rectangle
+            for j = 1:3
+                if largestComponent < components(i).Dim(j)
+                    largestComponent = components(i).Dim(j);
+                end
+            end
+        elseif strcmp(components(i).Shape,'Sphere')
+            % Check each dimensions of the sphere
+            if largestComponent < components(i).Dim(1)*2
+                largestComponent = components(i).Dim(1)*2;
+            end
+        elseif strcmp(components(i).Shape,'Cylinder')
+            
+        elseif strcmp(components(i).Shape,'Cone')
+
+        end
+    end
+    [structures,genParameters] = InitStructure(largestComponent,'Stacked');
 % [structures,buildableIndices,genParameters] = InitStructure('Stacked');
 end
 

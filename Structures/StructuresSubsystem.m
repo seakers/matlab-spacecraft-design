@@ -2,11 +2,9 @@ function StructuresSubsystem()
 
 % load('sampleComponents.mat')
 
-[components] = CreateSampleComponents();
+[components] = CreateSampleComponents_Cubesat();
 
-[structures,buildableIndices,genParameters]= StructureBuilder(components);
-
-inertiaOK = 0;
+[structures,genParameters]= StructureBuilder(components);
 counter = 1;
 old.InertiaTensor = ones(3,3)*inf;
 old.CG = [inf,inf,inf];
@@ -17,22 +15,20 @@ while counter <= 50;
     % locations the next few times around.
     if counter == 1   
         components = ComponentSort(components); % Sort the components by their mass
-        components = InitialAllocateComponents(components,buildableIndices); % Assign the components to specific parts
+        components = InitialAllocateComponents(components,genParameters.buildableIndices); % Assign the components to specific parts
         % Initialize the way these structures are set up.
         old.components = components;
         old.structures = structures;
         new = old;
     else
         new.structures = structures;
-        new.components = LocalSearch(components,buildableIndices);
+        new.components = LocalSearch(components,genParameters.buildableIndices);
     end
     % Place the components in their locations
-    [new.components,new.structures,genParameters]= ComponentConfiguration(new.components,new.structures,buildableIndices,genParameters);
+    [new.components,new.structures,genParameters]= ComponentConfiguration(new.components,new.structures,genParameters);
     
-    % Expand the satellite height if necessary.
-    if any(genParameters.needExpand(:,1))
-        [new.structures,genParameters] = ExpandStructure(new.structures,genParameters);
-    end
+    % Statics
+%     [] = Statics();
     
     % Calculate the total mass of the satellite.
     [new.totalMass,new.structures] = MassCalculator(new.components,new.structures);
