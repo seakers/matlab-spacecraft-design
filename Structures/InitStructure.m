@@ -1,9 +1,10 @@
-function [structures,buildableIndices,generalParameters] = InitStructure(componentSize,structureType)
+function [structures,generalParameters] = InitStructure(componentSize,structureType)
 
 
 if strcmp(structureType,'Central Cylinder')
     % the component is the tank
     % Aspect ratios used for the satellite.
+    generalParameters.spacecraftType = 'Central Cylinder';
     generalParameters.cylinderDiam = componentSize;
     generalParameters.initHeight = 1;
     generalParameters.tolerance = 0.025; % tolerance for space between components.
@@ -16,7 +17,8 @@ if strcmp(structureType,'Central Cylinder')
     buildableIndices = OrderedSurfaces(structureType);
 elseif strcmp(structureType,'Stacked')
     % Create a stacked satellite
-    generalParameters.tolerance = 0.002; % tolerance for space between components.
+    generalParameters.spacecraftType = 'Stacked';
+    generalParameters.tolerance = 0.01; % tolerance for space between components.
     generalParameters.aluminumThickness = .002; % Initial thickness of aluminum
     generalParameters.carbonfiberThickness = .03; % Initial thickness of carbon fiber
     if componentSize < 0.1
@@ -36,7 +38,7 @@ elseif strcmp(structureType,'Stacked')
     end
 
     structures = StackedStructure(generalParameters);
-    buildableIndices = OrderedSurfaces(structureType);
+    generalParameters.buildableIndices = OrderedSurfaces(structureType);
 end
 
 function structures = StackedStructure(initParameters)
@@ -464,14 +466,13 @@ if strcmp(structureType,'Central Cylinder')
     structuresIndices.Specific(3).Index = [1,1];
 elseif strcmp(structureType,'Stacked')
     structuresIndices.Inside = [7,1]; 
-    structuresIndices.Outside = [6,1];
-%     structuresIndices.Outside = [2,1;
-%                                 3,1;
-%                                 4,1;
-%                                 5,1;
-%                                 6,1;
-%                                 1,1];
-    
+%     structuresIndices.Outside = [6,1];
+    structuresIndices.Outside = [2,1;
+                                3,1;
+                                4,1;
+                                5,1;
+                                6,1;
+                                1,1];
 end
 % Idk about this idea, but could be possible.
 

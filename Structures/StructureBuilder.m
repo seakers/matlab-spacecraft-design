@@ -1,4 +1,4 @@
-function [structures,buildableIndices,genParameters]= StructureBuilder(components)
+function [structures,genParameters]= StructureBuilder(components)
 % STRUCTUREBUILDER: Building the structures based on the components that
 % are inputted.
 % 
@@ -69,7 +69,7 @@ else
 
         end
     end
-    [structures,buildableIndices,genParameters] = InitStructure(largestComponent,'Stacked');
+    [structures,genParameters] = InitStructure(largestComponent,'Stacked');
 % [structures,buildableIndices,genParameters] = InitStructure('Stacked');
 end
 
