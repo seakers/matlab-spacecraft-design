@@ -452,7 +452,7 @@ structures(6).Surface(1).Mountable = 'N/A'; % Don't need any specifics
 structures(6).Surface(1).normalFace = '-X';
 structures(6).Surface(1).buildableDir = 'YZ';
 structures(6).Surface(1).Location = 'Inside';
-structures(6).Surface(1).availableX = [panelWidth/2-initParameters.honeycombThickness/2,initParameters.cylinderDiam/2];
+structures(6).Surface(1).availableX = -[panelWidth/2-initParameters.honeycombThickness/2,initParameters.cylinderDiam/2];
 structures(6).Surface(1).availableY = [-initParameters.cylinderDiam/2-shearWidth,initParameters.cylinderDiam/2+shearWidth];
 structures(6).Surface(1).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
