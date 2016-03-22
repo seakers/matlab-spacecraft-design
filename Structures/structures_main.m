@@ -1,4 +1,4 @@
-function [totalMass,inertiaTensor,components,structures] = structures_main(components) % Include surfaceArea
+function [totalMass,InertiaTensor,components,structures] = structures_main(components) % Include surfaceArea
 % The main function for the structures subsystem. This takes in components
 % from the other subsystems and figures out the structure for them.
 
@@ -18,13 +18,14 @@ while counter <= 50;
         % Initialize the way these structures are set up.
         old.components = components;
         old.structures = structures;
+        old.genParameters = genParameters;
         new = old;
     else
         new.structures = structures;
         new.components = LocalSearch(components,genParameters.buildableIndices);
     end
     % Place the components in their locations
-    [new.components,new.structures,genParameters]= ComponentConfiguration(new.components,new.structures,genParameters);
+    [new.components,new.structures,new.genParameters]= ComponentConfiguration(new.components,new.structures,genParameters);
     
     % Statics
 %     [] = Statics();
@@ -44,7 +45,12 @@ end
 % InertiaCalculator(structures);
 display(old.totalMass)
 display(old.InertiaTensor)
-PlotSatellite(old.components,old.structures)
+totalMass = old.totalMass;
+InertiaTensor = old.InertiaTensor;
+components = old.components;
+structures = old.structures;
+
+PlotSatellite(components,structures)
 
 function [old] = CheckInertia(old,new)
 % Checks to see if the new inertia matrix passes the threshhold of what's
@@ -56,6 +62,9 @@ rnew = sqrt(new.CG(1)^2+new.CG(2)^2);
 if rnew < rold
     old = new;
 end
+
+
+
 
 
 

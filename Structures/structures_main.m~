@@ -1,9 +1,7 @@
-function StructuresSubsystem()
+function [old.totalMass,old.inertiaTensor,old.components,old.structures] = structures_main(components) % Include surfaceArea
+% The main function for the structures subsystem. This takes in components
+% from the other subsystems and figures out the structure for them.
 
-% load('sampleComponents.mat')
-
-% [components] = CreateSampleComponents_Cubesat();
-[components] = CreateSampleComponents_Cylinder();
 
 [structures,genParameters]= StructureBuilder(components);
 counter = 1;
@@ -48,11 +46,13 @@ end
 display(old.totalMass)
 display(old.InertiaTensor)
 totalMass = old.totalMass;
-InertiaTensor = old.InertiaTensor;
+inertiaTensor = old.inertiaTensor;
 components = old.components;
 structures = old.structures;
 
-PlotSatellite(components,structures)
+
+
+PlotSatellite(old.components,old.structures)
 
 function [old] = CheckInertia(old,new)
 % Checks to see if the new inertia matrix passes the threshhold of what's
@@ -64,6 +64,9 @@ rnew = sqrt(new.CG(1)^2+new.CG(2)^2);
 if rnew < rold
     old = new;
 end
+
+
+
 
 
 
