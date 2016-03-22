@@ -2,7 +2,8 @@ function StructuresSubsystem()
 
 % load('sampleComponents.mat')
 
-[components] = CreateSampleComponents_Cubesat();
+% [components] = CreateSampleComponents_Cubesat();
+[components] = CreateSampleComponents_Cylinder();
 
 [structures,genParameters]= StructureBuilder(components);
 counter = 1;
@@ -19,13 +20,14 @@ while counter <= 50;
         % Initialize the way these structures are set up.
         old.components = components;
         old.structures = structures;
+        old.genParameters = genParameters;
         new = old;
     else
         new.structures = structures;
         new.components = LocalSearch(components,genParameters.buildableIndices);
     end
     % Place the components in their locations
-    [new.components,new.structures,genParameters]= ComponentConfiguration(new.components,new.structures,genParameters);
+    [new.components,new.structures,new.genParameters]= ComponentConfiguration(new.components,new.structures,genParameters);
     
     % Statics
 %     [] = Statics();

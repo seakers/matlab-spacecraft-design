@@ -11,7 +11,7 @@ function [packedCG,packedDim,needExpand,isFit] = SleatorPacking_Limitless(rectan
 % PanelWidth and PanelHeight are ranges from where the components start out
 % to where they end on the panel.
 
-needExpand = 0;
+needExpand = [0,0];
 rectangleDim = rectangleDim + tolerance;
 
 isFit = ones(size(rectangleDim,1),1);

@@ -3,8 +3,7 @@ function [totalMass,inertiaTensor,components,structures] = structures_main(compo
 % from the other subsystems and figures out the structure for them.
 
 
-[structures,buildableIndices,genParameters]= StructureBuilder(components);
-
+[structures,genParameters]= StructureBuilder(components);
 counter = 1;
 old.InertiaTensor = ones(3,3)*inf;
 old.CG = [inf,inf,inf];
@@ -15,22 +14,20 @@ while counter <= 50;
     % locations the next few times around.
     if counter == 1   
         components = ComponentSort(components); % Sort the components by their mass
-        components = InitialAllocateComponents(components,buildableIndices); % Assign the components to specific parts
+        components = InitialAllocateComponents(components,genParameters.buildableIndices); % Assign the components to specific parts
         % Initialize the way these structures are set up.
         old.components = components;
         old.structures = structures;
         new = old;
     else
         new.structures = structures;
-        new.components = LocalSearch(components,buildableIndices);
+        new.components = LocalSearch(components,genParameters.buildableIndices);
     end
     % Place the components in their locations
-    [new.components,new.structures,genParameters]= ComponentConfiguration(new.components,new.structures,buildableIndices,genParameters);
+    [new.components,new.structures,genParameters]= ComponentConfiguration(new.components,new.structures,genParameters);
     
-    % Expand the satellite height if necessary.
-    if any(genParameters.needExpand(:,1))
-        [new.structures,genParameters] = ExpandStructure(new.structures,genParameters);
-    end
+    % Statics
+%     [] = Statics();
     
     % Calculate the total mass of the satellite.
     [new.totalMass,new.structures] = MassCalculator(new.components,new.structures);
@@ -45,12 +42,9 @@ while counter <= 50;
     counter = counter + 1;
 end
 % InertiaCalculator(structures);
-% display(old.totalMass)
-% display(old.InertiaTensor)
-close all
-% PlotSatellite(old.components,old.structures)
-totalMass = old.totalMass;
-inertiaTensor = old.InertiaTensor;
+display(old.totalMass)
+display(old.InertiaTensor)
+PlotSatellite(old.components,old.structures)
 
 function [old] = CheckInertia(old,new)
 % Checks to see if the new inertia matrix passes the threshhold of what's

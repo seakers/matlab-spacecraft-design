@@ -6,7 +6,7 @@ genParameters.isFit = zeros(length(components),1);
 
 % while ~any(genParameters.isFit)
 [components,structures,genParameters] = FitComponents(components,structures,genParameters);
-
+j = 1;
 
 % end
 
@@ -40,6 +40,10 @@ while i <= length(structures)
                 % algorithm
                     if ~strcmp(genParameters.spacecraftType,'Stacked')
                         [temp_comp,structures,genParameters.needExpand,isFit] = PackingAlgorithm(temp_comp,structures,[i,j],genParameters);
+                            % Expand the satellite if necessary
+                            if genParameters.needExpand(1)
+                                [temp_comp(~isFit),structures,genParameters] = ExpandStructure(temp_comp(~isFit),structures,genParameters);
+                            end
                     else
                     % If the satellite has a stacked configuration    
                         % Try to fit the components on the existing panel
@@ -57,6 +61,10 @@ while i <= length(structures)
                 else
                 % If not use stacking algorithm
                     [temp_comp,structures,genParameters.needExpand] = StackingAlgorithm(temp_comp,structures,[i,j],genParameters);
+                        % Expand the satellite if necessary
+                    if genParameters.needExpand(1) && ~strcmp('Payload',structures(i).Surface(j).Mountable)
+                        [temp_comp(~isFit),structures,genParameters] = ExpandStructure(temp_comp(~isFit),structures,genParameters);
+                    end
                 end
                 components(index) = temp_comp;
                 structuresAssignment = cat(1,components.structuresAssignment);
