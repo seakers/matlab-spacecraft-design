@@ -14,7 +14,7 @@ if strcmp(structureType,'Central Cylinder')
     generalParameters.carbonfiberThickness = .03;
     
     [structures] = CylinderStructure(generalParameters,ratios);  
-    buildableIndices = OrderedSurfaces(structureType);
+    generalParameters.buildableIndices = OrderedSurfaces(structureType);
 elseif strcmp(structureType,'Stacked')
     % Create a stacked satellite
     generalParameters.spacecraftType = 'Stacked';
@@ -254,10 +254,10 @@ structures(1).Name = 'Central Cylinder';
 structures(1).Shape = 'Cylinder Hollow';
 structures(1).Material = 'Carbon Fiber';
 structures(1).Mass = []; % This will be density times volume
-structures(1).Dim = [initParameters.initHeight,initParameters.cylinderDiam/2,initParameters.carbonfiberThickness]; % use the initial paramaters.
-structures(1).CG_XYZ = [0,0,initParameters.initHeight/2];
-structures(1).Bottom_Vertices = [0,0,0]; % For a cylinder the Vertices are just the bottom center point.
-structures(1).Top_Vertices = [0,0,initParameters.initHeight];
+structures(1).Dim = [initParameters.initHeight-2*initParameters.honeycombThickness,initParameters.cylinderDiam/2,initParameters.carbonfiberThickness]; % use the initial paramaters.
+structures(1).CG_XYZ = [0,0,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
+structures(1).Bottom_Vertices = [0,0,initParameters.honeycombThickness]; % For a cylinder the Vertices are just the bottom center point.
+structures(1).Top_Vertices = [0,0,initParameters.initHeight-2*initParameters.honeycombThickness];
 
 % Place fuel tanks inside the central cylinder
 structures(1).Surface(1).Mountable = 'Fuel Tank';
@@ -265,33 +265,25 @@ structures(1).Surface(1).buildableDir = '+Z';
 structures(1).Surface(1).normalFace = '+Z';
 structures(1).Surface(1).availableX = [-initParameters.cylinderDiam/2,initParameters.cylinderDiam/2];
 structures(1).Surface(1).availableY = [-initParameters.cylinderDiam/2,initParameters.cylinderDiam/2];
-structures(1).Surface(1).availableZ = [0,initParameters.initHeight];
- 
-% Surface to mount payload on
-structures(1).Surface(2).Mountable = 'Payload';
-structures(1).Surface(2).normalFace = '+Z';
-structures(1).Surface(2).buildableDir = '+Z'; % Maybe fix this if you want to put multiple payloads
-structures(1).Surface(2).availableX = [-panelWidth/2,panelWidth/2];
-structures(1).Surface(2).availableY = [-(initParameters.cylinderDiam/2+shearWidth+initParameters.honeycombThickness),initParameters.cylinderDiam/2+shearWidth+initParameters.honeycombThickness];
-structures(1).Surface(2).availableZ = [initParameters.initHeight,inf];
+structures(1).Surface(1).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
 
 %% 2, create the North shear panels along the y axis
-northShearBase = [initParameters.honeycombThickness/2,initParameters.cylinderDiam/2,0;
-                 -initParameters.honeycombThickness/2,initParameters.cylinderDiam/2,0;
-                 -initParameters.honeycombThickness/2,initParameters.cylinderDiam/2+shearWidth,0;
-                 initParameters.honeycombThickness/2,initParameters.cylinderDiam/2+shearWidth,0];
+bottomVert = [initParameters.honeycombThickness/2,initParameters.cylinderDiam/2,initParameters.honeycombThickness;
+                 -initParameters.honeycombThickness/2,initParameters.cylinderDiam/2,initParameters.honeycombThickness;
+                 -initParameters.honeycombThickness/2,initParameters.cylinderDiam/2+shearWidth,initParameters.honeycombThickness;
+                 initParameters.honeycombThickness/2,initParameters.cylinderDiam/2+shearWidth,initParameters.honeycombThickness];
     
-northShearTop = northShearBase;
-northShearTop(:,3) = initParameters.initHeight;
+topVert = bottomVert;
+topVert(:,3) = bottomVert(:,3) + initParameters.initHeight - 2*initParameters.honeycombThickness;
 
 structures(2).Name = 'North Shear Panel';
 structures(2).Shape = 'Rectangle';
 structures(2).Material = 'Honeycomb';
-structures(2).Dim = [initParameters.initHeight,shearWidth,initParameters.honeycombThickness];
-structures(2).CG_XYZ = [0,initParameters.cylinderDiam/2+shearWidth/2,initParameters.initHeight/2];
-structures(2).Bottom_Vertices = northShearBase; % For a cylinder the Vertices are just the bottom center point.
-structures(2).Top_Vertices = northShearTop;
+structures(2).Dim = [initParameters.initHeight-2*initParameters.honeycombThickness,shearWidth,initParameters.honeycombThickness];
+structures(2).CG_XYZ = [0,initParameters.cylinderDiam/2+shearWidth/2,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
+structures(2).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
+structures(2).Top_Vertices = topVert;
 
 % North Shear Panel Face 1
 structures(2).Surface(1).Mountable = 'N/A'; % Don't need any specifics 
@@ -300,7 +292,7 @@ structures(2).Surface(1).buildableDir = 'YZ';
 structures(2).Surface(1).Location = 'Inside';
 structures(2).Surface(1).availableX = [initParameters.honeycombThickness/2,inf];
 structures(2).Surface(1).availableY = [initParameters.cylinderDiam/2,initParameters.cylinderDiam/2+shearWidth];
-structures(2).Surface(1).availableZ = [0,initParameters.initHeight];
+structures(2).Surface(1).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
 % North Shear Panel Face 2
 structures(2).Surface(2).normalFace = '-X';
@@ -308,26 +300,26 @@ structures(2).Surface(2).buildableDir = 'YZ';
 structures(2).Surface(2).Location = 'Inside';
 structures(2).Surface(2).availableX = [-initParameters.honeycombThickness/2,-inf];
 structures(2).Surface(2).availableY = [initParameters.cylinderDiam/2,initParameters.cylinderDiam/2+shearWidth];
-structures(2).Surface(2).availableZ = [0,initParameters.initHeight];
+structures(2).Surface(2).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
 
 %% 3, create the South shear panels along the y axis
 
-southShearBase = [initParameters.honeycombThickness/2,-initParameters.cylinderDiam/2,0;
-                 -initParameters.honeycombThickness/2,-initParameters.cylinderDiam/2,0;
-                 -initParameters.honeycombThickness/2,-initParameters.cylinderDiam/2-shearWidth,0;
-                 initParameters.honeycombThickness/2,-initParameters.cylinderDiam/2-shearWidth,0];
+bottomVert = [initParameters.honeycombThickness/2,-initParameters.cylinderDiam/2,initParameters.honeycombThickness;
+                 -initParameters.honeycombThickness/2,-initParameters.cylinderDiam/2,initParameters.honeycombThickness;
+                 -initParameters.honeycombThickness/2,-initParameters.cylinderDiam/2-shearWidth,initParameters.honeycombThickness;
+                 initParameters.honeycombThickness/2,-initParameters.cylinderDiam/2-shearWidth,initParameters.honeycombThickness];
     
-southShearTop = southShearBase;
-southShearTop(:,3) = initParameters.initHeight;
+topVert = bottomVert;
+topVert(:,3) = bottomVert(:,3) + initParameters.initHeight - 2*initParameters.honeycombThickness;
 
 structures(3).Name = 'South Shear Panel';
 structures(3).Shape = 'Rectangle';
 structures(3).Material = 'Honeycomb';
-structures(3).Dim = [initParameters.initHeight,shearWidth,initParameters.honeycombThickness];
-structures(3).CG_XYZ = [0,-initParameters.cylinderDiam/2-shearWidth/2,initParameters.initHeight/2];
-structures(3).Bottom_Vertices = southShearBase; % For a cylinder the Vertices are just the bottom center point.
-structures(3).Top_Vertices = southShearTop;
+structures(3).Dim = [initParameters.initHeight-2*initParameters.honeycombThickness,shearWidth,initParameters.honeycombThickness];
+structures(3).CG_XYZ = [0,-initParameters.cylinderDiam/2-shearWidth/2,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
+structures(3).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
+structures(3).Top_Vertices = topVert;
 
 % South Shear Panel Face 1
 structures(3).Surface(1).Mountable = 'N/A'; % Don't need any specifics 
@@ -336,7 +328,7 @@ structures(3).Surface(1).buildableDir = 'YZ';
 structures(3).Surface(1).Location = 'Inside';
 structures(3).Surface(1).availableX = [-initParameters.honeycombThickness/2,-inf];
 structures(3).Surface(1).availableY = [-initParameters.cylinderDiam/2,-initParameters.cylinderDiam/2-shearWidth];
-structures(3).Surface(1).availableZ = [0,initParameters.initHeight];
+structures(3).Surface(1).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
 % South Shear Panel Face 2
 structures(3).Surface(2).Mountable = 'N/A'; % Don't need any specifics 
@@ -345,25 +337,25 @@ structures(3).Surface(2).buildableDir = 'YZ';
 structures(3).Surface(2).Location = 'Inside';
 structures(3).Surface(2).availableX = [initParameters.honeycombThickness/2,inf];
 structures(3).Surface(2).availableY = [-initParameters.cylinderDiam/2,-initParameters.cylinderDiam/2-shearWidth];
-structures(3).Surface(2).availableZ = [0,initParameters.initHeight];
+structures(3).Surface(2).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
 %% 4, North panel
-northPanelBase = [panelWidth/2,initParameters.cylinderDiam/2+shearWidth,0;
-                 -panelWidth/2,initParameters.cylinderDiam/2+shearWidth,0;
-                 -panelWidth/2,initParameters.cylinderDiam/2+shearWidth+initParameters.honeycombThickness,0;
-                  panelWidth/2,initParameters.cylinderDiam/2+shearWidth+initParameters.honeycombThickness,0];
+bottomVert = [panelWidth/2,initParameters.cylinderDiam/2+shearWidth,initParameters.honeycombThickness;
+                 -panelWidth/2,initParameters.cylinderDiam/2+shearWidth,initParameters.honeycombThickness;
+                 -panelWidth/2,initParameters.cylinderDiam/2+shearWidth+initParameters.honeycombThickness,initParameters.honeycombThickness;
+                  panelWidth/2,initParameters.cylinderDiam/2+shearWidth+initParameters.honeycombThickness,initParameters.honeycombThickness];
 
-northPanelTop = northPanelBase;
-northPanelTop(:,3) = initParameters.initHeight;                       
+topVert = bottomVert;
+topVert(:,3) = bottomVert(:,3) + initParameters.initHeight - 2*initParameters.honeycombThickness;                        
 
 
 structures(4).Name = 'North Panel';
 structures(4).Shape = 'Rectangle';
 structures(4).Material = 'Honeycomb';
-structures(4).Dim = [initParameters.initHeight,initParameters.honeycombThickness,panelWidth];
-structures(4).CG_XYZ = [0,shearWidth+initParameters.honeycombThickness/2,initParameters.initHeight/2];
-structures(4).Bottom_Vertices = northPanelBase; % For a cylinder the Vertices are just the bottom center point.
-structures(4).Top_Vertices = northPanelTop;
+structures(4).Dim = [initParameters.initHeight-2*initParameters.honeycombThickness,initParameters.honeycombThickness,panelWidth];
+structures(4).CG_XYZ = [0,shearWidth+initParameters.honeycombThickness/2,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
+structures(4).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
+structures(4).Top_Vertices = topVert;
 
 % North Panel Face 1
 structures(4).Surface(1).Mountable = 'N/A'; % Don't need any specifics 
@@ -372,7 +364,7 @@ structures(4).Surface(1).buildableDir = 'XZ';
 structures(4).Surface(1).Location = 'Inside';
 structures(4).Surface(1).availableX = [initParameters.honeycombThickness/2,panelWidth/2];
 structures(4).Surface(1).availableY = [initParameters.cylinderDiam/2+shearWidth,initParameters.cylinderDiam/2];
-structures(4).Surface(1).availableZ = [0,initParameters.initHeight];
+structures(4).Surface(1).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
 % North Panel Face 2
 structures(4).Surface(2).Mountable = 'N/A'; % Don't need any specifics 
@@ -381,7 +373,7 @@ structures(4).Surface(2).buildableDir = 'XZ';
 structures(4).Surface(2).Location = 'Inside';
 structures(4).Surface(2).availableX = [-initParameters.honeycombThickness/2,-panelWidth/2];
 structures(4).Surface(2).availableY = [initParameters.cylinderDiam/2+shearWidth,initParameters.cylinderDiam/2];
-structures(4).Surface(2).availableZ = [0,initParameters.initHeight];
+structures(4).Surface(2).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
 % North Panel Outside Face
 structures(4).Surface(3).Mountable = 'N/A'; % Don't need any specifics
@@ -390,54 +382,184 @@ structures(4).Surface(3).buildableDir = 'XZ';
 structures(4).Surface(3).Location = 'Outside';
 structures(4).Surface(3).availableX = [-panelWidth/2,panelWidth/2];
 structures(4).Surface(3).availableY = [initParameters.cylinderDiam/2+shearWidth+initParameters.honeycombThickness,inf];
-structures(4).Surface(3).availableZ = [0,initParameters.initHeight];
+structures(4).Surface(3).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
 
 %% 5, South panel
-southPanelBase = [panelWidth/2,-initParameters.cylinderDiam/2-shearWidth,0;
-                 -panelWidth/2,-initParameters.cylinderDiam/2-shearWidth,0;
-                 -panelWidth/2,-initParameters.cylinderDiam/2-shearWidth-initParameters.honeycombThickness,0;
-                 panelWidth/2,-initParameters.cylinderDiam/2-shearWidth-initParameters.honeycombThickness,0];
+bottomVert = [panelWidth/2,-initParameters.cylinderDiam/2-shearWidth,initParameters.honeycombThickness;
+                 -panelWidth/2,-initParameters.cylinderDiam/2-shearWidth,initParameters.honeycombThickness;
+                 -panelWidth/2,-initParameters.cylinderDiam/2-shearWidth-initParameters.honeycombThickness,initParameters.honeycombThickness;
+                 panelWidth/2,-initParameters.cylinderDiam/2-shearWidth-initParameters.honeycombThickness,initParameters.honeycombThickness];
              
-southPanelTop = southPanelBase;
-southPanelTop(:,3) = initParameters.initHeight; 
+topVert = bottomVert;
+topVert(:,3) = bottomVert(:,3) + initParameters.initHeight - 2*initParameters.honeycombThickness; 
 
 
 structures(5).Name = 'South Panel';
 structures(5).Shape = 'Rectangle';
 structures(5).Material = 'Honeycomb';
-structures(5).Dim = [initParameters.initHeight,initParameters.honeycombThickness,panelWidth];
-structures(5).CG_XYZ = [0,-shearWidth-initParameters.honeycombThickness/2,initParameters.initHeight/2];
-structures(5).Bottom_Vertices = southPanelBase; % For a cylinder the Vertices are just the bottom center point.
-structures(5).Top_Vertices = southPanelTop;
+structures(5).Dim = [initParameters.initHeight-2*initParameters.honeycombThickness,initParameters.honeycombThickness,panelWidth];
+structures(5).CG_XYZ = [0,-shearWidth-initParameters.honeycombThickness/2,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
+structures(5).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
+structures(5).Top_Vertices = topVert;
 
-% North Panel Face 1
+% South Panel Face 1
 structures(5).Surface(1).Mountable = 'N/A'; % Don't need any specifics
 structures(5).Surface(1).normalFace = '+Y';
 structures(5).Surface(1).buildableDir = 'XZ';
 structures(5).Surface(1).Location = 'Inside';
 structures(5).Surface(1).availableX = [-initParameters.honeycombThickness/2,-panelWidth/2];
 structures(5).Surface(1).availableY = [-(initParameters.cylinderDiam/2+shearWidth),-initParameters.cylinderDiam/2];
-structures(5).Surface(1).availableZ = [0,initParameters.initHeight];
+structures(5).Surface(1).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
-% North Panel Face 2
+% South Panel Face 2
 structures(5).Surface(2).Mountable = 'N/A'; % Don't need any specifics
 structures(5).Surface(2).normalFace = '+Y';
 structures(5).Surface(2).buildableDir = 'XZ';
 structures(5).Surface(2).Location = 'Inside';
 structures(5).Surface(2).availableX = [initParameters.honeycombThickness/2,panelWidth/2];
 structures(5).Surface(2).availableY = [-(initParameters.cylinderDiam/2+shearWidth),-initParameters.cylinderDiam/2];
-structures(5).Surface(2).availableZ = [0,initParameters.initHeight];
+structures(5).Surface(2).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
 
-% North Panel Outside Face
+% South Panel Outside Face
 structures(5).Surface(3).Mountable = 'N/A'; % Don't need any specifics
 structures(5).Surface(3).normalFace = '-Y';
 structures(5).Surface(3).buildableDir = 'XZ';
 structures(5).Surface(3).Location = 'Outside';
 structures(5).Surface(3).availableX = [panelWidth/2,-panelWidth/2];
 structures(5).Surface(3).availableY = [-(initParameters.cylinderDiam/2+shearWidth+initParameters.honeycombThickness),-inf];
-structures(5).Surface(3).availableZ = [0,initParameters.initHeight];
-    
+structures(5).Surface(3).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
+
+%% 6, East panel
+bottomVert = [panelWidth/2,-initParameters.cylinderDiam/2-shearWidth,initParameters.honeycombThickness;
+                 panelWidth/2-initParameters.honeycombThickness,-initParameters.cylinderDiam/2-shearWidth,initParameters.honeycombThickness;
+                 panelWidth/2-initParameters.honeycombThickness,initParameters.cylinderDiam/2+shearWidth,initParameters.honeycombThickness;
+                 panelWidth/2,initParameters.cylinderDiam/2+shearWidth,initParameters.honeycombThickness];
+             
+topVert = bottomVert;
+topVert(:,3) = bottomVert(:,3) + initParameters.initHeight - 2*initParameters.honeycombThickness; 
+
+structures(6).Name = 'East Panel';
+structures(6).Shape = 'Rectangle';
+structures(6).Material = 'Honeycomb';
+structures(6).Dim = [initParameters.initHeight,panelWidth,initParameters.honeycombThickness];
+structures(6).CG_XYZ = [panelWidth/2-initParameters.honeycombThickness/2,0,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
+structures(6).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
+structures(6).Top_Vertices = topVert;
+
+% East Panel Inside Face
+structures(6).Surface(1).Mountable = 'N/A'; % Don't need any specifics
+structures(6).Surface(1).normalFace = '-X';
+structures(6).Surface(1).buildableDir = 'YZ';
+structures(6).Surface(1).Location = 'Inside';
+structures(6).Surface(1).availableX = [panelWidth/2-initParameters.honeycombThickness/2,initParameters.cylinderDiam/2];
+structures(6).Surface(1).availableY = [-initParameters.cylinderDiam/2-shearWidth,initParameters.cylinderDiam/2+shearWidth];
+structures(6).Surface(1).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
+
+% East Panel Outside Face
+structures(6).Surface(2).Mountable = 'N/A'; % Don't need any specifics
+structures(6).Surface(2).normalFace = '+X';
+structures(6).Surface(2).buildableDir = 'YZ';
+structures(6).Surface(2).Location = 'Outside';
+structures(6).Surface(2).availableX = [panelWidth/2,inf];
+structures(6).Surface(2).availableY = [-initParameters.cylinderDiam/2-shearWidth,initParameters.cylinderDiam/2+shearWidth];
+structures(6).Surface(2).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
+
+%% 7, West panel
+bottomVert = [-panelWidth/2,-initParameters.cylinderDiam/2-shearWidth,initParameters.honeycombThickness;
+                 -panelWidth/2+initParameters.honeycombThickness,-initParameters.cylinderDiam/2-shearWidth,initParameters.honeycombThickness;
+                 -panelWidth/2+initParameters.honeycombThickness,initParameters.cylinderDiam/2+shearWidth,initParameters.honeycombThickness;
+                 -panelWidth/2,initParameters.cylinderDiam/2+shearWidth,initParameters.honeycombThickness];
+             
+topVert = bottomVert;
+topVert(:,3) = bottomVert(:,3) + initParameters.initHeight - 2*initParameters.honeycombThickness; 
+
+structures(7).Name = 'West Panel';
+structures(7).Shape = 'Rectangle';
+structures(7).Material = 'Honeycomb';
+structures(7).Dim = [initParameters.initHeight,panelWidth,initParameters.honeycombThickness];
+structures(7).CG_XYZ = [-panelWidth/2+initParameters.honeycombThickness/2,0,initParameters.initHeight/2];
+structures(7).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
+structures(7).Top_Vertices = topVert;
+
+% West Panel Inside Face
+structures(7).Surface(1).Mountable = 'N/A'; % Don't need any specifics
+structures(7).Surface(1).normalFace = '+X';
+structures(7).Surface(1).buildableDir = 'YZ';
+structures(7).Surface(1).Location = 'Inside';
+structures(7).Surface(1).availableX = [-panelWidth/2+initParameters.honeycombThickness/2,-initParameters.cylinderDiam/2];
+structures(7).Surface(1).availableY = [-initParameters.cylinderDiam/2-shearWidth,initParameters.cylinderDiam/2+shearWidth-initParameters.honeycombThickness];
+structures(7).Surface(1).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
+
+% West Panel Outside Face
+structures(7).Surface(2).Mountable = 'N/A'; % Don't need any specifics
+structures(7).Surface(2).normalFace = '-X';
+structures(7).Surface(2).buildableDir = 'YZ';
+structures(7).Surface(2).Location = 'Outside';
+structures(7).Surface(2).availableX = [-panelWidth/2,-inf];
+structures(7).Surface(2).availableY = [-initParameters.cylinderDiam/2-shearWidth,initParameters.cylinderDiam/2+shearWidth];
+structures(7).Surface(2).availableZ = [initParameters.honeycombThickness,initParameters.initHeight-initParameters.honeycombThickness];
+
+%% 8, Bottom panel
+bottomVert = [-panelWidth/2,-initParameters.cylinderDiam/2-shearWidth,0;
+                 -panelWidth/2,initParameters.cylinderDiam/2+shearWidth,0;
+                 panelWidth/2,initParameters.cylinderDiam/2+shearWidth,0;
+                 panelWidth/2,-initParameters.cylinderDiam/2-shearWidth,0];
+             
+topVert = bottomVert;
+topVert(:,3) = bottomVert(:,3) + initParameters.honeycombThickness; 
+
+structures(8).Name = 'Bottom Panel';
+structures(8).Shape = 'Rectangle';
+structures(8).Material = 'Honeycomb';
+structures(8).Dim = [initParameters.honeycombThickness,initParameters.cylinderDiam+shearWidth*2+initParameters.honeycombThickness*2,panelWidth];
+structures(8).CG_XYZ = [0,0,initParameters.honeycombThickness/2];
+structures(8).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
+structures(8).Top_Vertices = topVert;
+% 
+% Bottom Panel Inside Face
+structures(8).Surface(1).Mountable = 'N/A'; % Don't need any specifics
+structures(8).Surface(1).normalFace = '+Z';
+structures(8).Surface(1).buildableDir = 'XY';
+structures(8).Surface(1).Location = 'Inside';
+structures(8).Surface(1).availableX = [-panelWidth/2,+panelWidth/2];
+structures(8).Surface(1).availableY = [-initParameters.cylinderDiam/2-shearWidth,initParameters.cylinderDiam/2+shearWidth];
+structures(8).Surface(1).availableZ = [initParameters.honeycombThickness,initParameters.initHeight];
+
+%% 9, Top panel
+bottomVert = [-panelWidth/2,-initParameters.cylinderDiam/2-shearWidth,initParameters.initHeight-initParameters.honeycombThickness;
+                 -panelWidth/2,initParameters.cylinderDiam/2+shearWidth,initParameters.initHeight-initParameters.honeycombThickness;
+                 panelWidth/2,initParameters.cylinderDiam/2+shearWidth,initParameters.initHeight-initParameters.honeycombThickness;
+                 panelWidth/2,-initParameters.cylinderDiam/2-shearWidth,initParameters.initHeight-initParameters.honeycombThickness];
+             
+topVert = bottomVert;
+topVert(:,3) = bottomVert(:,3) + initParameters.initHeight; 
+
+structures(9).Name = 'Bottom Panel';
+structures(9).Shape = 'Rectangle';
+structures(9).Material = 'Honeycomb';
+structures(9).Dim = [initParameters.honeycombThickness,initParameters.cylinderDiam+shearWidth*2+initParameters.honeycombThickness*2,panelWidth];
+structures(9).CG_XYZ = [0,0,initParameters.initHeight+initParameters.honeycombThickness/2];
+structures(9).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
+structures(9).Top_Vertices = topVert;
+% 
+% Bottom Panel Inside Face
+structures(9).Surface(1).Mountable = 'Payload'; % Don't need any specifics
+structures(9).Surface(1).normalFace = '+Z';
+structures(9).Surface(1).buildableDir = '+Z';
+structures(9).Surface(1).availableX = [-panelWidth/2,+panelWidth/2];
+structures(9).Surface(1).availableY = [-initParameters.cylinderDiam/2-shearWidth,initParameters.cylinderDiam/2+shearWidth];
+structures(9).Surface(1).availableZ = [initParameters.initHeight,inf];
+% 
+% % West Panel Outside Face
+% structures(6).Surface(1).Mountable = 'N/A'; % Don't need any specifics
+% structures(6).Surface(1).normalFace = '-X';
+% structures(6).Surface(1).buildableDir = 'YZ';
+% structures(6).Surface(1).Location = 'Outside';
+% structures(6).Surface(1).availableX = [-panelWidth/2,-inf];
+% structures(6).Surface(1).availableY = [-initParameters.cylinderDiam/2-shearWidth+initParameters.honeycombThickness,initParameters.cylinderDiam/2+shearWidth-initParameters.honeycombThickness];
+% structures(6).Surface(1).availableZ = [0,initParameters.initHeight];
+ 
 
 
 function structuresIndices = OrderedSurfaces(structureType)
@@ -453,13 +575,17 @@ if strcmp(structureType,'Central Cylinder')
                                 4,1;
                                 5,1;
                                 4,2;
-                                5,2];
+                                5,2;
+                                6,1;
+                                7,1];
 %     structuresIndices.Inside = [4,1];
 %                                 2,1];
     structuresIndices.Outside = [4,3;
-                                5,3];
+                                5,3;
+                                6,2;
+                                7,2];
     structuresIndices.Specific(1).Name = 'Payload';
-    structuresIndices.Specific(1).Index = [1,2];
+    structuresIndices.Specific(1).Index = [9,1];
     structuresIndices.Specific(2).Name = 'Fuel Tank';
     structuresIndices.Specific(2).Index = [1,1];
     structuresIndices.Specific(3).Name = 'Thruster';
@@ -473,6 +599,8 @@ elseif strcmp(structureType,'Stacked')
                                 5,1;
                                 6,1;
                                 1,1];
+    structuresIndices.Specific(1).Name = 'Payload';
+    structuresIndices.Specific(1).Index = [7,1];
 end
 % Idk about this idea, but could be possible.
 

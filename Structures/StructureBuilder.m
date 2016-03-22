@@ -44,7 +44,7 @@ if ~isempty(tankInd)
         end
     end
     cylinderDiam = ClampbandSizer(tankDiam);
-    [structures,buildableIndices,genParameters] = InitStructure(cylinderDiam,'Central Cylinder');
+    [structures,genParameters] = InitStructure(cylinderDiam,'Central Cylinder');
 else
     % If there is no tank find the largest component on the satellite.
     largestComponent = 0;

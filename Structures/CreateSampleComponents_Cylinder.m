@@ -58,6 +58,16 @@ components(i).LocationReq = 'Inside';
 i = i + 1;
 %
 
+% Payload
+components(i).Name = 'Payload';
+components(i).Subsystem = 'Payload';
+components(i).Shape = 'Rectangle';
+components(i).Mass = 10;
+components(i).isFit = 0;
+components(i).Dim = [.5,0.5,0.3];
+components(i).LocationReq = 'Specific';
+i = i + 1;
+
 % Antenna
 components(i).Name = 'Antenna';
 components(i).Subsystem = 'Comms';
@@ -81,15 +91,15 @@ components(i).LocationReq = 'Outside';
 i = i + 1;
 % components(5).LocationReq = 'Inside';
 % 
-% Batteries
-components(i).Name = 'Battery';
-components(i).Subsystem = 'EPS';
-components(i).Shape = 'Rectangle';
-components(i).Mass = 90;
-components(i).isFit = 0;
-components(i).Dim = [0.5,0.3,0.2];
-components(i).LocationReq = 'Inside';
-i = i + 1;
+% % Batteries
+% components(i).Name = 'Battery';
+% components(i).Subsystem = 'EPS';
+% components(i).Shape = 'Rectangle';
+% components(i).Mass = 90;
+% components(i).isFit = 0;
+% components(i).Dim = [0.5,0.3,0.2];
+% components(i).LocationReq = 'Inside';
+% i = i + 1;
 
 % Power Electronics
 components(i).Name = 'Electronics';

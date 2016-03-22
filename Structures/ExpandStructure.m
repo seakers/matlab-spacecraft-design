@@ -27,9 +27,11 @@ if strcmp(genParameters.spacecraftType,'Stacked')
 else
     % Expand the structure for any structure that doesn't have mounting
     % panels
-    structureHeight = newHeight;
-    structures = Expansion(structures,structureHeight,genParameters.initHeight);
-    genParameters.initHeight = structureHeight;
+    if newHeight >= genParameters.initHeight
+        structureHeight = newHeight;
+        structures = Expansion(structures,structureHeight,genParameters.initHeight);
+        genParameters.initHeight = structureHeight;
+    end
 end
 genParameters(:,:).needExpand = 0;
 

@@ -18,6 +18,7 @@ axis equal
 PlotComponents(components)
 obj = PlotStructures(structures);
 hold off
+view(3) %sets the default three-dimensional view, az = ?37.5, el = 30.
 % Create a Slider Bar
 sl_handle = uicontrol('style','slide',...
          'min',0,'max',1,'val',1,...
@@ -83,7 +84,12 @@ elseif strcmp('Propulsion',Subsystem)
 elseif strcmp('EPS',Subsystem)
     % Blueish colors
     FaceColor = [0.2,0.8,1];
-    EdgeColor = [0,0.4,0.8];    
+    EdgeColor = [0,0.4,0.8]; 
+    
+elseif strcmp('Payload',Subsystem)
+    % Turquoise colors
+    FaceColor = [0,0.8,0.6];
+    EdgeColor = [0,1,1];  
 end
 
 function obj = ShapePlotter(Shape,myDim,myVertices,myCG,FaceColor,EdgeColor)
