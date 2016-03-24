@@ -9,9 +9,13 @@ n2 = length(structures);
 
 for i = 1:n1
     % Compute the inertia matrix for the components
-    I = ComputingShapeInertia(components(i));
-    components(i).InertiaMatrix = components(i).RotateToSatBodyFrame*I*components(i).RotateToSatBodyFrame';
-    [totalI,totalCM,totalMass] = ParallelAxis(totalMass,components(i).Mass,totalCM,components(i).CG_XYZ,totalI,components(i).InertiaMatrix);  
+    if ~isempty(components(i).CG_XYZ )
+        I = ComputingShapeInertia(components(i));
+        components(i).InertiaMatrix = components(i).RotateToSatBodyFrame*I*components(i).RotateToSatBodyFrame';
+        [totalI,totalCM,totalMass] = ParallelAxis(totalMass,components(i).Mass,totalCM,components(i).CG_XYZ,totalI,components(i).InertiaMatrix);  
+    else
+        fprintf([components(i).Name,' not added to satellite because it doesn"t fit\n'])
+    end
 end
 
 for i = 1:n2

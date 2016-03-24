@@ -12,7 +12,7 @@ for i = 1:n1
     if strcmp(structures(i).Shape,'Rectangle')
         if ~strcmp(structures(i).Plane,'XY')
             % If the panel is a column
-            [thickness] = PanelBuckling(P,width,thickness,E,height);
+            
             
         else
             % If the panel is not a column
@@ -38,18 +38,18 @@ fnat_ax = 25; % Axial natural frequency
 % the least cost for the thickness. 
 material =  MaterialTable();
 
-function [thickness] = PanelBuckling(P,width,thickness,E,height)
-% Using a safety factor of 1.5, calculate the critical force.
+function [t] = PanelBuckling(P,width,thickness,E,L)
+% Using a safety factor of 1.5,
 SF = 1.5;
 Pcr = P*SF;
 
 % Assuming that the panel is cantilevered,
-Le = 2*height;
+Le = 2*L;
 
 % Pcr = pi^2*E*crossI/Le^2;
 % Check for buckling in both X and Y axes
-% crossI = width*thickness^3/12;
-thickness= ((Pcr*Le^2/(pi^2*E))*(Le^2/width))^3;
+crossI = width*thickness^3/12;
+crossI = Pcr*Le^2;
 
 function CylinderBuckling()
 

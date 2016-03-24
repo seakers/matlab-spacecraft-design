@@ -9,7 +9,7 @@ function StructuresSubsystem()
 counter = 1;
 old.InertiaTensor = ones(3,3)*inf;
 old.CG = [inf,inf,inf];
-while counter <= 50;
+while counter <= 100;
 % while the total inertia matrix doesn't reach a certain parameter,
 
     % Allocate the components either the first time or randomized their

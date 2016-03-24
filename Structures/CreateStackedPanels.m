@@ -21,6 +21,7 @@ structures(n).Dim = [genParameters.aluminumThickness,genParameters.initWidth,gen
 structures(n).CG_XYZ = [0,0,genParameters.aluminumThickness*.5+height];
 structures(n).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
 structures(n).Top_Vertices = topVert;
+structures(4).Plane = 'XY';
 
 % Inside Surface to mount parts on
 structures(n).Surface(1).Mountable = 'N/A';

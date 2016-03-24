@@ -43,14 +43,14 @@ while counter <= 50;
     counter = counter + 1;
 end
 % InertiaCalculator(structures);
-display(old.totalMass)
-display(old.InertiaTensor)
+% display(old.totalMass)
+% display(old.InertiaTensor)
 totalMass = old.totalMass;
 InertiaTensor = old.InertiaTensor;
 components = old.components;
 structures = old.structures;
 
-PlotSatellite(components,structures)
+% PlotSatellite(components,structures)
 
 function [old] = CheckInertia(old,new)
 % Checks to see if the new inertia matrix passes the threshhold of what's

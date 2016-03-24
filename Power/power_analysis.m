@@ -134,6 +134,8 @@ function Cost=power_analysis(params,vars)
     power.solararraymass=Msa;
     power.solararraypower = Psa;
     power.Components=components;
+    power.cells=CellType;
+    power.batteries=BatteryType;
     
     %penalty if solar array does not meet the power requirements
     %(unfeasible solution--> Super high Cost)

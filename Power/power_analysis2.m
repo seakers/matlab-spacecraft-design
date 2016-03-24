@@ -128,14 +128,16 @@ function [power,components]=power_analysis2(params,vars)
     
     %Outputs for Structures (Anjit)
     
-    components(1) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
-    components(2) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
-    components(3) = struct('Name','Battery','Subsystem','EPS','Shape','Rectangle','Mass',Mbatt,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100]);
-    components(4) = struct('Name','Wiring','Subsystem','EPS','Shape','Rectangle','Mass',Mpcu+Mregconv+Mwiring,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100]);
+    components(1) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+    components(2) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+    components(3) = struct('Name','Battery','Subsystem','EPS','Shape','Rectangle','Mass',Mbatt,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+    components(4) = struct('Name','Wiring','Subsystem','EPS','Shape','Rectangle','Mass',Mpcu+Mregconv+Mwiring,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
 
     power.mass = Msa + Mbatt + Mpcu + Mregconv + Mwiring;  % in kg
     power.solararraymass=Msa;
     power.solararraypower = Psa;
+    power.cells=CellType;
+    power.batteries=BatteryType;
     
     %penalty if solar array does not meet the power requirements
     %(unfeasible solution--> Super high Cost)
