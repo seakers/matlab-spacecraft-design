@@ -11,7 +11,7 @@ if strcmp(genParameters.spacecraftType,'Stacked')
     if newHeight >= genParameters.initHeight
         % If the height is more than the current top height of the spacecraft,
         % expand the top height and then create a new panel.
-        if genParameters.initWidth == .1 && genParameters.initLength == .1 && newHeight < 0.3
+        if genParameters.initWidth == .1 && genParameters.initLength == .1 && newHeight <= 0.3
             % If the satellite is a cubesat, expand the satellite up until 3u
             structureHeight = genParameters.initHeight + 0.1;
         else

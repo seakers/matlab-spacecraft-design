@@ -21,7 +21,7 @@ elseif strcmp(structureType,'Stacked')
     generalParameters.tolerance = 0.01; % tolerance for space between components.
     generalParameters.aluminumThickness = .002; % Initial thickness of aluminum
     generalParameters.carbonfiberThickness = .03; % Initial thickness of carbon fiber
-    if componentSize < 0.1
+    if componentSize <= 0.1
         % If the largest component is smaller than 10 centimeters, create a
         % cubesat shape
         generalParameters.initWidth = .1; % Initial Length
@@ -564,7 +564,7 @@ structures(8).Plane = 'XY';
 % Bottom Panel Inside Face
 structures(9).Surface(1).Mountable = 'Payload'; % Don't need any specifics
 structures(9).Surface(1).normalFace = '+Z';
-structures(9).Surface(1).buildableDir = 'XY';
+structures(9).Surface(1).buildableDir = '+Z';
 structures(9).Surface(1).availableX = [-panelWidth/2,+panelWidth/2];
 structures(9).Surface(1).availableY = [-initParameters.cylinderDiam/2-shearWidth,initParameters.cylinderDiam/2+shearWidth];
 structures(9).Surface(1).availableZ = [initParameters.initHeight,inf];
@@ -617,7 +617,7 @@ elseif strcmp(structureType,'Stacked')
                                 6,1;
                                 1,1];
     structuresIndices.Specific(1).Name = 'Payload';
-    structuresIndices.Specific(1).Index = [7,1];
+    structuresIndices.Specific(1).Index = [6,1];
 end
 % Idk about this idea, but could be possible.
 

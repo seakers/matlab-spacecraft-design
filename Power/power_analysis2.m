@@ -122,10 +122,15 @@ function [power,components]=power_analysis2(params,vars)
     W=L/3; %we suppose a square solar array
     aspectfactor=20; %aspect factor= W/h
     H=W/aspectfactor;
-    Mpcu = .02*Psa;%power control unit
-    Mregconv=0.025*Psa;%regulator/converter
-    Mwiring=(0.01+0.04)/2*params.drymass;
-    
+    if params.drymass<10
+        Mpcu=.02*Psa/10;%power control unit
+        Mregconv=0.025*Psa/10;%regulator/converter
+        Mwiring=(0.01+0.04)/2*params.drymass/10;
+    else
+        Mpcu = .02*Psa;%power control unit
+        Mregconv=0.025*Psa;%regulator/converter
+        Mwiring=(0.01+0.04)/2*params.drymass;
+    end
     %Outputs for Structures (Anjit)
     
     components(1) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
