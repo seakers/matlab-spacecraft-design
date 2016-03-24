@@ -1,4 +1,4 @@
-function [totalMass,InertiaTensor,components,structures] = structures_main(components) % Include surfaceArea
+function [StructuresSub,totalMass,InertiaTensor,components,structures] = structures_main(components) % Include surfaceArea
 % The main function for the structures subsystem. This takes in components
 % from the other subsystems and figures out the structure for them.
 
@@ -7,7 +7,7 @@ function [totalMass,InertiaTensor,components,structures] = structures_main(compo
 counter = 1;
 old.InertiaTensor = ones(3,3)*inf;
 old.CG = [inf,inf,inf];
-while counter <= 50;
+while counter <= 100;
 % while the total inertia matrix doesn't reach a certain parameter,
 
     % Allocate the components either the first time or randomized their
@@ -43,14 +43,15 @@ while counter <= 50;
     counter = counter + 1;
 end
 % InertiaCalculator(structures);
-display(old.totalMass)
-display(old.InertiaTensor)
+% display(old.totalMass)
+% display(old.InertiaTensor)
 totalMass = old.totalMass;
 InertiaTensor = old.InertiaTensor;
 components = old.components;
 structures = old.structures;
+StructuresSub.Mass = cat(1,structures.Mass);
 
-PlotSatellite(components,structures)
+% PlotSatellite(components,structures)
 
 function [old] = CheckInertia(old,new)
 % Checks to see if the new inertia matrix passes the threshhold of what's

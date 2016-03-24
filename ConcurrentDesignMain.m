@@ -38,7 +38,7 @@ while (time < 50) && ~drymass_ok
     
     components = [fueltank comms_comp avionics_comp power_comp];
     
-    [drymass_calc,~,components,structures] = structures_main(components);
+    [StructuresSub,drymass_calc,~,components,structures] = structures_main(components);
     
     thermal=thermal_main(drymass_calc);
    
@@ -51,6 +51,7 @@ while (time < 50) && ~drymass_ok
     time = toc;
     
 end
+PieChartCreator(payload,comms,power,avionics,thermal,structures)
 if drymass_ok
     fprintf('Total mass (kg): %f\n',drymass_calc)
     fprintf('Total Cost (k$): %f\n',cost)
