@@ -1,6 +1,8 @@
 function [totMass,structures] = MassCalculator(components,structures)
 load('materials.mat')
 
+massRatio = 2;
+
 n1 = length(structures);
 for i = 1:n1
 % Go through each of the structures and see if the material for the
@@ -31,7 +33,7 @@ for i = 1:n1
             r = structures(i).Dim(2);
             volume = (pi*r^2)*h; 
         end
-        structures(i).Mass = materials(matInd-1).Density*volume;
+        structures(i).Mass = materials(matInd-1).Density*volume/massRatio;
     end
 end
 
