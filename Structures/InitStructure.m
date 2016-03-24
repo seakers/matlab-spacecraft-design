@@ -64,6 +64,7 @@ structures(1).Dim = [initParameters.aluminumThickness,initParameters.initWidth,i
 structures(1).CG_XYZ = [0,0,initParameters.aluminumThickness/2]; % Make the origin at the middle of the bottom panel.
 structures(1).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
 structures(1).Top_Vertices = topVert;
+structures(1).Plane = 'XY';
 
 % Outside Surface to mount parts on
 structures(1).Surface(1).Mountable = 'N/A';
@@ -92,6 +93,7 @@ structures(2).Dim = [initParameters.initHeight-2*initParameters.aluminumThicknes
 structures(2).CG_XYZ = [0,initParameters.initWidth/2-initParameters.aluminumThickness/2,(initParameters.initHeight-initParameters.aluminumThickness)/2+initParameters.aluminumThickness];
 structures(2).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
 structures(2).Top_Vertices = topVert;
+structures(2).Plane = 'XZ';
 
 % Outside Surface to mount parts on <- Check out the z face start
 structures(2).Surface(1).Mountable = 'N/A';
@@ -118,6 +120,7 @@ structures(3).Dim = [initParameters.initHeight-2*initParameters.aluminumThicknes
 structures(3).CG_XYZ = [0,-initParameters.initWidth/2+initParameters.aluminumThickness/2,(initParameters.initHeight-initParameters.aluminumThickness)/2+initParameters.aluminumThickness];
 structures(3).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
 structures(3).Top_Vertices = topVert;
+structures(3).Plane = 'XZ';
 
 % Outside Surface to mount parts on <- Check out the z face start
 structures(3).Surface(1).Mountable = 'N/A';
@@ -145,6 +148,7 @@ structures(4).Dim = [initParameters.initHeight-initParameters.aluminumThickness,
 structures(4).CG_XYZ = [initParameters.initLength/2-initParameters.aluminumThickness/2,0,(initParameters.initHeight-initParameters.aluminumThickness)/2+initParameters.aluminumThickness];
 structures(4).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
 structures(4).Top_Vertices = topVert;
+structures(4).Plane = 'YZ';
 
 % Outside Surface to mount parts on <- Check out the z face start
 structures(4).Surface(1).Mountable = 'N/A';
@@ -172,6 +176,7 @@ structures(5).Dim = [initParameters.initHeight-initParameters.aluminumThickness,
 structures(5).CG_XYZ = [-initParameters.initLength/2+initParameters.aluminumThickness/2,0,(initParameters.initHeight-initParameters.aluminumThickness)/2+initParameters.aluminumThickness];
 structures(5).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
 structures(5).Top_Vertices = topVert;
+structures(5).Plane = 'YZ';
 
 % Outside Surface to mount parts on <- Check out the z face start
 structures(5).Surface(1).Mountable = 'N/A';
@@ -199,6 +204,7 @@ structures(6).Dim = [initParameters.aluminumThickness,initParameters.initWidth,i
 structures(6).CG_XYZ = [0,0,initParameters.initHeight-initParameters.aluminumThickness/2]; % Make the origin at the base of the bottom panel.
 structures(6).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
 structures(6).Top_Vertices = topVert;
+structures(6).Plane = 'XY';
 
 % Outside Surface to mount parts on
 structures(6).Surface(1).Mountable = 'N/A';
@@ -225,6 +231,7 @@ structures(7).Dim = [initParameters.aluminumThickness,initParameters.initWidth,i
 structures(7).CG_XYZ = [0,0,initParameters.aluminumThickness*1.5];
 structures(7).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
 structures(7).Top_Vertices = topVert;
+structures(7).Plane = 'XY';
 
 % Inside Surface to mount parts on
 structures(7).Surface(1).Mountable = 'N/A';
@@ -258,6 +265,7 @@ structures(1).Dim = [initParameters.initHeight-2*initParameters.honeycombThickne
 structures(1).CG_XYZ = [0,0,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
 structures(1).Bottom_Vertices = [0,0,initParameters.honeycombThickness]; % For a cylinder the Vertices are just the bottom center point.
 structures(1).Top_Vertices = [0,0,initParameters.initHeight-2*initParameters.honeycombThickness];
+structures(1).Plane = 'Z';
 
 % Place fuel tanks inside the central cylinder
 structures(1).Surface(1).Mountable = 'Fuel Tank';
@@ -284,6 +292,7 @@ structures(2).Dim = [initParameters.initHeight-2*initParameters.honeycombThickne
 structures(2).CG_XYZ = [0,initParameters.cylinderDiam/2+shearWidth/2,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
 structures(2).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
 structures(2).Top_Vertices = topVert;
+structures(2).Plane = 'YZ';
 
 % North Shear Panel Face 1
 structures(2).Surface(1).Mountable = 'N/A'; % Don't need any specifics 
@@ -320,6 +329,7 @@ structures(3).Dim = [initParameters.initHeight-2*initParameters.honeycombThickne
 structures(3).CG_XYZ = [0,-initParameters.cylinderDiam/2-shearWidth/2,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
 structures(3).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
 structures(3).Top_Vertices = topVert;
+structures(3).Plane = 'YZ';
 
 % South Shear Panel Face 1
 structures(3).Surface(1).Mountable = 'N/A'; % Don't need any specifics 
@@ -356,6 +366,7 @@ structures(4).Dim = [initParameters.initHeight-2*initParameters.honeycombThickne
 structures(4).CG_XYZ = [0,shearWidth+initParameters.honeycombThickness/2,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
 structures(4).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
 structures(4).Top_Vertices = topVert;
+structures(4).Plane = 'XZ';
 
 % North Panel Face 1
 structures(4).Surface(1).Mountable = 'N/A'; % Don't need any specifics 
@@ -402,6 +413,7 @@ structures(5).Dim = [initParameters.initHeight-2*initParameters.honeycombThickne
 structures(5).CG_XYZ = [0,-shearWidth-initParameters.honeycombThickness/2,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
 structures(5).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
 structures(5).Top_Vertices = topVert;
+structures(5).Plane = 'XZ';
 
 % South Panel Face 1
 structures(5).Surface(1).Mountable = 'N/A'; % Don't need any specifics
@@ -446,6 +458,7 @@ structures(6).Dim = [initParameters.initHeight,panelWidth,initParameters.honeyco
 structures(6).CG_XYZ = [panelWidth/2-initParameters.honeycombThickness/2,0,(initParameters.initHeight-2*initParameters.honeycombThickness)/2+initParameters.honeycombThickness];
 structures(6).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
 structures(6).Top_Vertices = topVert;
+structures(6).Plane = 'YZ';
 
 % East Panel Inside Face
 structures(6).Surface(1).Mountable = 'N/A'; % Don't need any specifics
@@ -481,6 +494,7 @@ structures(7).Dim = [initParameters.initHeight,panelWidth,initParameters.honeyco
 structures(7).CG_XYZ = [-panelWidth/2+initParameters.honeycombThickness/2,0,initParameters.initHeight/2];
 structures(7).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
 structures(7).Top_Vertices = topVert;
+structures(7).Plane = 'YZ';
 
 % West Panel Inside Face
 structures(7).Surface(1).Mountable = 'N/A'; % Don't need any specifics
@@ -516,6 +530,8 @@ structures(8).Dim = [initParameters.honeycombThickness,initParameters.cylinderDi
 structures(8).CG_XYZ = [0,0,initParameters.honeycombThickness/2];
 structures(8).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
 structures(8).Top_Vertices = topVert;
+structures(8).Plane = 'XY';
+
 % 
 % Bottom Panel Inside Face
 structures(8).Surface(1).Mountable = 'N/A'; % Don't need any specifics
@@ -542,11 +558,13 @@ structures(9).Dim = [initParameters.honeycombThickness,initParameters.cylinderDi
 structures(9).CG_XYZ = [0,0,initParameters.initHeight+initParameters.honeycombThickness/2];
 structures(9).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
 structures(9).Top_Vertices = topVert;
+structures(8).Plane = 'XY';
+
 % 
 % Bottom Panel Inside Face
 structures(9).Surface(1).Mountable = 'Payload'; % Don't need any specifics
 structures(9).Surface(1).normalFace = '+Z';
-structures(9).Surface(1).buildableDir = '+Z';
+structures(9).Surface(1).buildableDir = 'XY';
 structures(9).Surface(1).availableX = [-panelWidth/2,+panelWidth/2];
 structures(9).Surface(1).availableY = [-initParameters.cylinderDiam/2-shearWidth,initParameters.cylinderDiam/2+shearWidth];
 structures(9).Surface(1).availableZ = [initParameters.initHeight,inf];
@@ -560,7 +578,6 @@ structures(9).Surface(1).availableZ = [initParameters.initHeight,inf];
 % structures(6).Surface(1).availableY = [-initParameters.cylinderDiam/2-shearWidth+initParameters.honeycombThickness,initParameters.cylinderDiam/2+shearWidth-initParameters.honeycombThickness];
 % structures(6).Surface(1).availableZ = [0,initParameters.initHeight];
  
-
 
 function structuresIndices = OrderedSurfaces(structureType)
 % This allows someone to decide what surfaces to mount on first for inside
