@@ -36,8 +36,12 @@ function PlotComponents(components)
 % function to plot the components
 nr = length(components);
 for i = 1:nr
-    [FaceColor,EdgeColor] = ColorSelection(components(i).Subsystem);
-    ShapePlotter(components(i).Shape,components(i).Dim,components(i).Vertices,components(i).CG_XYZ,FaceColor,EdgeColor);
+    if ~isempty(components(i).CG_XYZ )
+        [FaceColor,EdgeColor] = ColorSelection(components(i).Subsystem);
+        ShapePlotter(components(i).Shape,components(i).Dim,components(i).Vertices,components(i).CG_XYZ,FaceColor,EdgeColor);
+    else
+        fprintf([components(i).Name,' not added to satellite because it doesn"t fit\n'])
+    end
 end
 
 function obj = PlotStructures(structures)
