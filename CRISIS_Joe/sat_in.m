@@ -1,0 +1,36 @@
+function sat_in()
+
+sat_in.MaxTorque = 10;
+sat_in.Period = 2;
+sat_in.MaxPointing = .1;
+%dt      = sat_in.MaxSlewTime;
+sat_in.InTheaterAccessDuration = 5;
+sat_in.RWMarginFactor = 1;
+sat_in.Izz = 90;
+sat_in.Altitude = 400;
+sat_in.RWMomentum = 50;
+sat_in.ADCSConf = 2;
+sat_in.ThrusterMomentArm = 7;
+sat_in.Ntargets = 3;
+sat_in.NumberofRW = 2;
+sat_in.Lifetime = 90;
+sat_in.ADCSSpecificImpulse = 5;
+sat_in.Mass = 400;
+sat_in.Iyy = 60;
+sat_in.SurfaceArea = 3;
+sat_in.Reflectance = 2;
+sat_in.MaxSolarAngle = 30;
+sat_in.OffsetCPsolar = .3;
+sat_in.OffsetCPaero = .2;
+sat_in.ResidualDipole = 1;
+sat_in.DragCoefficient = 2;
+sat_in.Velocity = 7387;
+sat_in.Density = 3;
+sat_in.RWTorque = 7;
+sat_in.MGTorquersDipole = 2;
+sat_in.NumberofMagneticTorquers = 2;
+sat_in.NumberofSunSensors = 1;
+sat_in.NumberofMagnetometers = 1;
+sat_in.ADCSPropellantMass = 100;
+sat_in.choice = 1;
+sat_in.Power = .5;
