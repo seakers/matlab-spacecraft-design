@@ -117,18 +117,21 @@ function [power,components]=power_analysis2(params,vars)
     % Mass Estimates
     % -------------------------------------------------------------------------
     Msa = .04*Psa;  % for planar array(0.04*Psa*4 for omnidirectional body mounted and 0.04*Psa*pi for cylindrical body-mounted)
-    L=sqrt(Asa);
-    W=L; %we suppose a square solar array
-    aspectfactor=30; %aspect factor= Asa/h
-    H=Asa/aspectfactor;
+    Asai=Asa/2; %we'll have two solar panels
+    L=sqrt(3*Asai);
+    W=L/3; %we suppose a square solar array
+    aspectfactor=20; %aspect factor= W/h
+    H=W/aspectfactor;
     Mpcu = .02*Psa;%power control unit
     Mregconv=0.025*Psa;%regulator/converter
     Mwiring=(0.01+0.04)/2*params.drymass;
     
     %Outputs for Structures (Anjit)
     
-    components(1) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
-    components(2) = struct('Name','Battery','Subsystem','EPS','Shape','Rectangle','Mass',Mbatt,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+    components(1) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+    components(2) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+    components(3) = struct('Name','Battery','Subsystem','EPS','Shape','Rectangle','Mass',Mbatt,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+    components(4) = struct('Name','Wiring','Subsystem','EPS','Shape','Rectangle','Mass',Mpcu+Mregconv+Mwiring,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
 
     power.mass = Msa + Mbatt + Mpcu + Mregconv + Mwiring;  % in kg
     power.solararraymass=Msa;
