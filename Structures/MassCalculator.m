@@ -31,7 +31,7 @@ for i = 1:n1
             r = structures(i).Dim(2);
             volume = (pi*r^2)*h; 
         end
-        structures(i).Mass = materials(matInd-1).Density*volume;
+        structures(i).Mass = materials(matInd-1).Density*volume/2;
     end
 end
 
