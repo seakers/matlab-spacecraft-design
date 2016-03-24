@@ -1,4 +1,4 @@
-function ConcurrentDesignMain()
+function [avionics, comms , power, components, structures, thermal, cost]=ConcurrentDesignMain()
 
 % Add folders
 addpath ADCS
@@ -9,34 +9,33 @@ addpath Structures
 addpath Thermal
 
 %  Inputs
-h = 800;            % Altitude
+h = 400;            % Altitude
 i = 100;            % Inclination
-dataperday = 10e12;   % Data per day
-lifetime = 6;     % Lifetime
-payloadpower=1000;
-
+dataperday = 5e9;   % Data per day
+lifetime = 3;     % Lifetime
+payloadpower=5;
+[payload] = CreatePayload();
 % Estimated dry mass
-drymass_est = 100;
+drymass_est = 3*payload.Mass;
 
 drymass_ok = 0;
 
 
-
 % Fuel Tank
-fueltank(1) = struct('Name','Fuel Tank','Subsystem','Propulsion','Shape','Sphere','Mass',150,'Dim',0.4,'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+% fueltank(1) = struct('Name','Fuel Tank','Subsystem','Propulsion','Shape','Sphere','Mass',150,'Dim',0.4,'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
 tic
 
 time = 0;
 
-while (time < 50) && ~drymass_ok
+while (time < 250) && ~drymass_ok
     
     [avionics, avionics_comp] = structOBC(dataperday,1);
     
     [comms, comms_comp] = comms_main(drymass_est,dataperday,h,i,lifetime);
 
-    [power, power_comp] = power_main(h,lifetime,payloadpower,comms.power,10,avionics.AvgPwr,drymass_est);
+    [power, power_comp] = power_main(h,lifetime,payloadpower,comms.power,2,avionics.AvgPwr,drymass_est);
     
-    components = [fueltank comms_comp avionics_comp power_comp];
+    components = [payload comms_comp avionics_comp power_comp];
     
     [StructuresSub,drymass_calc,~,components,structures] = structures_main(components);
     
@@ -47,7 +46,7 @@ while (time < 50) && ~drymass_ok
     cost = avionics.Cost/1000 + comms.cost + power.cost + thermal.cost; 
     
     drymass_est = drymass_calc;
-    
+    fprintf('Total mass (kg): %f\n',drymass_calc)
     time = toc;
     
 end
