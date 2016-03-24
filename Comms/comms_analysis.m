@@ -105,6 +105,8 @@ for Band=1:4
                             AntennaType='Patch';
                             massA_DL=patchMassFromDimensions(W,L);
                             linkBudgetClosed=true;
+                            W=W/100;
+                            L=L/100;
                             
 %                          elseif (9<Gtx)&&(Gtx<15)
 %                              lambda=3e8/f_DL;
@@ -290,6 +292,8 @@ if optfound
     end
     
     comms.mass=MassOpt;
+    comms.RFpower=P_tx;
+    comms.GainAntenna=Gtx;
     comms.power=power_comms_opt;
     comms.frequency=f_OPT;
     comms.modulation=MOD_opt;

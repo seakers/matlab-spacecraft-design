@@ -136,6 +136,8 @@ function [power,components]=power_analysis2(params,vars)
     power.mass = Msa + Mbatt + Mpcu + Mregconv + Mwiring;  % in kg
     power.solararraymass=Msa;
     power.solararraypower = Psa;
+    power.cells=CellType;
+    power.batteries=BatteryType;
     
     %penalty if solar array does not meet the power requirements
     %(unfeasible solution--> Super high Cost)
