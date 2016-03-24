@@ -133,7 +133,7 @@ for Band=1:4
                             
                             %massA=(massA_DL)*params.Red + 0.01*structures.drymass;
                             massA=massA_DL;
-                            massE=massCommElectronics(P_tx)*params.Red + 0.01*params.drymass;
+                            massE=massCommElectronics(P_tx,params.drymass,Band)*params.Red + 0.01*params.drymass;
                             
                             costAntenna=CostAntenna(massA,AntennaType);
                             costElectronics=CostCommElectronics(massE,Nchannels);

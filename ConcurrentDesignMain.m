@@ -33,7 +33,7 @@ while (time < 250) && ~drymass_ok
     
     [comms, comms_comp] = comms_main(drymass_est,dataperday,h,i,lifetime);
 
-    [power, power_comp] = power_main(h,lifetime,payloadpower,comms.power,10,avionics.AvgPwr,drymass_est);
+    [power, power_comp] = power_main(h,lifetime,payloadpower,comms.power,2,avionics.AvgPwr,drymass_est);
     
     components = [payload comms_comp avionics_comp power_comp];
     
