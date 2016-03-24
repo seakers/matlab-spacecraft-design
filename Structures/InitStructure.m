@@ -21,21 +21,21 @@ elseif strcmp(structureType,'Stacked')
     generalParameters.tolerance = 0.01; % tolerance for space between components.
     generalParameters.aluminumThickness = .002; % Initial thickness of aluminum
     generalParameters.carbonfiberThickness = .03; % Initial thickness of carbon fiber
-%     if componentSize <= 0.1
+    if componentSize <= 0.1
         % If the largest component is smaller than 10 centimeters, create a
         % cubesat shape
         generalParameters.initWidth = .1; % Initial Length
         generalParameters.initLength = .1; % Initial Width
         generalParameters.initHeight = .1; % Initial Height    
-%     else 
-%         % Else just use a ratio that scales the size of the satellite
-%         % compared to the biggest component to get the width, length, and
-%         % height
-%         ratios.size_component = 1.8;
-%         generalParameters.initWidth = ratios.size_component*componentSize; % Initial Length
-%         generalParameters.initLength = ratios.size_component*componentSize; % Initial Width
-%         generalParameters.initHeight = ratios.size_component*componentSize; % Initial Height    
-%     end
+    else 
+        % Else just use a ratio that scales the size of the satellite
+        % compared to the biggest component to get the width, length, and
+        % height
+        ratios.size_component = 1.8;
+        generalParameters.initWidth = ratios.size_component*componentSize; % Initial Length
+        generalParameters.initLength = ratios.size_component*componentSize; % Initial Width
+        generalParameters.initHeight = ratios.size_component*componentSize; % Initial Height    
+    end
 
     structures = StackedStructure(generalParameters);
     generalParameters.buildableIndices = OrderedSurfaces(structureType);
