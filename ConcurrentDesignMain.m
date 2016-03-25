@@ -11,9 +11,12 @@ addpath Thermal
 %  Inputs
 h = 400;            % Altitude
 i = 100;            % Inclination
-dataperday = 5e9;   % Data per day
+dataperday = 5e9;   % Data per day cubesat
+%dataperday=100e9;    %Large sat
 lifetime = 3;     % Lifetime
-payloadpower=5;
+payloadpower=5;    %cubesat
+%payloadpower=1000;     %large sat
+
 [payload] = CreatePayload();
 % Estimated dry mass
 drymass_est = 3*payload.Mass;
