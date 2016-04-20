@@ -122,7 +122,7 @@ function [power,components]=power_analysis2(params,vars)
     W=L/3; %we suppose a square solar array
     aspectfactor=20; %aspect factor= W/h
     H=W/aspectfactor;
-    if params.drymass<10
+    if params.drymass<30
         Mpcu=.02*Psa/10;%power control unit
         Mregconv=0.025*Psa/10;%regulator/converter
         Mwiring=(0.01+0.04)/2*params.drymass/10;

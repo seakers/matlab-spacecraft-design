@@ -121,9 +121,15 @@ function Cost=power_analysis(params,vars)
     W=L; %we suppose a square solar array
     aspectfactor=30; %aspect factor= Asa/h
     H=Asa/aspectfactor;
-    Mpcu = .02*Psa;%power control unit
-    Mregconv=0.025*Psa;%regulator/converter
-    Mwiring=(0.01+0.04)/2*params.drymass;
+    if params.drymass<30
+        Mpcu=.02*Psa/10;%power control unit
+        Mregconv=0.025*Psa/10;%regulator/converter
+        Mwiring=(0.01+0.04)/2*params.drymass/10;
+    else
+        Mpcu = .02*Psa;%power control unit
+        Mregconv=0.025*Psa;%regulator/converter
+        Mwiring=(0.01+0.04)/2*params.drymass;
+    end
     
     %Outputs for Structures (Anjit)
     

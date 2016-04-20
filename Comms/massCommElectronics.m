@@ -14,7 +14,7 @@ function m = massCommElectronics(Ptx,drymass,Band)
 % massFactor=0.005kg/W
 % baseMass=2kg
 % efficency=0.7
-if drymass<10
+if drymass<30
     if Band==1
         m=.1;
     elseif Band==2
