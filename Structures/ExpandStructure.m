@@ -4,7 +4,7 @@ function [components,structures, genParameters] = ExpandStructure(components,str
 
 % Checks to see if this is a stacking satellite or otherwise
 newHeight = max(genParameters.needExpand(:,2));
-if strcmp(genParameters.spacecraftType,'Stacked')
+if strfind(genParameters.spacecraftType,'Cubesat')
     % If the newHeight to expand to is less than the current top height of
     % the spacecraft, just add another panel
     % Create more panels in which to pack the components on.
@@ -16,7 +16,7 @@ if strcmp(genParameters.spacecraftType,'Stacked')
             structureHeight = genParameters.initHeight + 0.1;
         else
             % Else just add an arbitrary height.
-            structureHeight = newHeight + 1;
+            structureHeight = newHeight + .1;
         end
         % Actually expand the structure
         structures = Expansion(structures,structureHeight,genParameters.initHeight);
@@ -24,6 +24,8 @@ if strcmp(genParameters.spacecraftType,'Stacked')
     end
     % Create the panel 
     [components,structures] = CreateStackedPanels(newHeight,components,structures,genParameters);
+elseif strfind(genParameters.spacecraftType,'Stacked')
+
 else
     % Expand the structure for any structure that doesn't have mounting
     % panels

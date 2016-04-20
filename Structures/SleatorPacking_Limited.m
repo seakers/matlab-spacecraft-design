@@ -1,4 +1,4 @@
-function [packedCG,packedDim,needExpand,isFit] = SleatorPacking_Limited(rectangleDim,rectangleMass,tolerance,Width,Height)
+function [packedCG,packedDim,needExpand,isFit] = SleatorPacking_Limited(rectangleDim,rectangleMass,tolerance,Width,Length,Height)
 % Limited because the panel height is restricted.
 
 % Rectangles come in with height, width, and length, with the height and
@@ -11,8 +11,7 @@ function [packedCG,packedDim,needExpand,isFit] = SleatorPacking_Limited(rectangl
 % PanelWidth and PanelHeight are ranges from where the components start out
 % to where they end on the panel.
 
-needExpand = 0;
-rectangleDim = rectangleDim + tolerance;
+needExpand = [0,0];
 
 isFit = ones(size(rectangleDim,1),1);
 packedCG = zeros(size(rectangleDim,1),3);
@@ -25,7 +24,7 @@ rectangleMass = rectangleMass(indices,:);
 rectangleDim = rectangleDim(indices,:);
 
 for i = 1:size(indices,1)        
-    if rectangleDim(i,1) > rectangleDim(i,2) && rectangleDim(i,1) < Width
+    if rectangleDim(i,1) > rectangleDim(i,2) && rectangleDim(i,1) <= Width
     % Check each component to see if height is greater than the width but less
     % than the panelwidth, and then make the height the width and vice versa.
         w = rectangleDim(i,2);
@@ -39,7 +38,7 @@ for i = 1:size(indices,1)
         isFit(i) = 0;
         rectangleDim(i,1:3) = 0;        
     end
-    if rectangleDim(i,1) > Height
+    if rectangleDim(i,1) > Length
         % If the component is too large in terms of height, then add it to
         % the list of components that don't fit on the panel.
         isFit(i) = 0;
@@ -47,6 +46,7 @@ for i = 1:size(indices,1)
     end
 end
 
+rectangleDim = rectangleDim + tolerance;
 % Stack initial rectangles greater than half the width.
 
 onehalfInd = (rectangleDim(:,2)./Width > .5);
@@ -79,6 +79,8 @@ if ~isempty(unpackedDim)
 else
     h0 = 0;
 end
+maxHeight = h0;
+
 unpackedIndices = indices(~onehalfInd);
 rectangleDim = rectangleDim(~onehalfInd,:);
 rectangleMass = rectangleMass(~onehalfInd,:);
@@ -90,7 +92,7 @@ h1 = 0;
 d1 = 0;
 w0 = 0;
 while i <= size(rectangleDim,1) && Width > (w0 + rectangleDim(i,2))
-    if (h0 + rectangleDim(i,1)) > Height
+    if (h0 + rectangleDim(i,1)) > Length
         % If the component is too large in terms of height, then add it to
         % the list of components that don't fit on the panel.
         isFit(unpackedIndices(i)) = 0;
@@ -107,14 +109,14 @@ while i <= size(rectangleDim,1) && Width > (w0 + rectangleDim(i,2))
     packedDim(unpackedIndices(i),3) = rectangleDim(i,3);
     
 %   Calculate the highest height for both halves of the panel.
-    if w0 < Width/2 && (w0+rectangleDim(i,2)) > Width/2
+    if w0 <= Width/2 && (w0+rectangleDim(i,2)) > Width/2
         if h1 < (rectangleDim(i,1)+h0)
             h1 = rectangleDim(i,1)+h0;
         end
         if d1 < (rectangleDim(i,1)+h0)
             d1 = rectangleDim(i,1)+h0;
         end
-    elseif w0 < Width/2
+    elseif w0 <= Width/2
         if h1 < (rectangleDim(i,1)+h0)
             h1 = rectangleDim(i,1)+h0;
         end
@@ -131,9 +133,8 @@ end
 
 
 % Stack more into the two sections
-if i > size(rectangleDim,1)
-    maxHeight = max(h1,d1);
-else     
+maxHeight = max(h1,d1);  
+if i <= size(rectangleDim,1)    
     while i <= size(rectangleDim,1)
         % Remove the components already packed.
         rectangleDim = rectangleDim(i:end,:);
@@ -144,15 +145,15 @@ else
         if h1 <= d1
             w0 = 0;
             w = Width/2;
-            height = h1;
+            length = h1;
         else
             w0 = Width/2;
             w = Width;
-            height = d1;
+            length = d1;
         end
         % Place components in their sections.
-        while i <= size(rectangleDim,1) && w > (w0 + rectangleDim(i,2))
-            if (height + rectangleDim(i,1)) > Height
+        while i <= size(rectangleDim,1) && w >= (w0 + rectangleDim(i,2))
+            if (length + rectangleDim(i,1)) > Length
                 % If the component is too large in terms of height, then add it to
                 % the list of components that don't fit on the panel.
                 isFit(unpackedIndices(i)) = 0;
@@ -160,7 +161,7 @@ else
             end
             
             packedVertices(unpackedIndices(i),1) = w0;
-            packedVertices(unpackedIndices(i),2) = height;
+            packedVertices(unpackedIndices(i),2) = length;
             
             packedCG(unpackedIndices(i),3) = packedVertices(unpackedIndices(i),2) + (rectangleDim(i,1)-tolerance)/2;
             packedCG(unpackedIndices(i),2) = packedVertices(unpackedIndices(i),1) + (rectangleDim(i,2)-tolerance)/2;
@@ -172,8 +173,8 @@ else
             packedDim(unpackedIndices(i),2) = rectangleDim(i,2);
             packedDim(unpackedIndices(i),3) = rectangleDim(i,3);
     
-            if maxHeight < (height+rectangleDim(i,1))
-                maxHeight = height+rectangleDim(i,1);
+            if maxHeight < (length+rectangleDim(i,1))
+                maxHeight = length+rectangleDim(i,1);
             end
             i = i+1;
         end
@@ -199,7 +200,11 @@ maxHeight = max(packedDim(:,3));
 
 % In this case, since there is no max protrusion from the board allowed
 % (yet), just record what the height is in the needExpand vector.
-needExpand = [1,maxHeight];
+if any(~isFit)
+    if maxHeight > Height
+        needExpand = [1,maxHeight];
+    end
+end
 
 % Remove the tolerance from the dimensions.
 packedDim = packedDim - tolerance;

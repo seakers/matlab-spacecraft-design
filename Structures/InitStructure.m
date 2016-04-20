@@ -16,26 +16,28 @@ if strcmp(structureType,'Central Cylinder')
     [structures] = CylinderStructure(generalParameters,ratios);  
     generalParameters.buildableIndices = OrderedSurfaces(structureType);
 elseif strcmp(structureType,'Stacked')
-    % Create a stacked satellite
-    generalParameters.spacecraftType = 'Stacked';
-    generalParameters.tolerance = 0.01; % tolerance for space between components.
+    generalParameters.tolerance = 0.001; % tolerance for space between components.
     generalParameters.aluminumThickness = .002; % Initial thickness of aluminum
     generalParameters.carbonfiberThickness = .03; % Initial thickness of carbon fiber
-%     if componentSize <= 0.1
+    if componentSize <= 0.3
+        % Create a stacked satellite
+        generalParameters.spacecraftType = 'Stacked - Cubesat';
         % If the largest component is smaller than 10 centimeters, create a
         % cubesat shape
         generalParameters.initWidth = .1; % Initial Length
         generalParameters.initLength = .1; % Initial Width
         generalParameters.initHeight = .1; % Initial Height    
-%     else 
-%         % Else just use a ratio that scales the size of the satellite
-%         % compared to the biggest component to get the width, length, and
-%         % height
-%         ratios.size_component = 1.8;
-%         generalParameters.initWidth = ratios.size_component*componentSize; % Initial Length
-%         generalParameters.initLength = ratios.size_component*componentSize; % Initial Width
-%         generalParameters.initHeight = ratios.size_component*componentSize; % Initial Height    
-%     end
+    else 
+        % Create a stacked satellite
+        generalParameters.spacecraftType = 'Stacked';
+        % Else just use a ratio that scales the size of the satellite
+        % compared to the biggest component to get the width, length, and
+        % height
+        ratios.size_component = 1.8;
+        generalParameters.initWidth = ratios.size_component*componentSize; % Initial Length
+        generalParameters.initLength = ratios.size_component*componentSize; % Initial Width
+        generalParameters.initHeight = .1; % Initial Height    
+    end
 
     structures = StackedStructure(generalParameters);
     generalParameters.buildableIndices = OrderedSurfaces(structureType);
@@ -48,10 +50,10 @@ function structures = StackedStructure(initParameters)
 % structure.
 
 %% 1, Bottom Panel (Normal to -Z)
-bottomVert = [initParameters.initLength/2,initParameters.initWidth/2,0;
+bottomVert = [initParameters.initLength/2,initParameters.initWidth/2-initParameters.aluminumThickness,0;
+                 -initParameters.initLength/2,initParameters.initWidth/2-initParameters.aluminumThickness,0;
                  -initParameters.initLength/2,initParameters.initWidth/2,0;
-                 -initParameters.initLength/2,-initParameters.initWidth/2,0;
-                 initParameters.initLength/2,-initParameters.initWidth/2,0];
+                 initParameters.initLength/2,initParameters.initWidth/2,0];
 
 topVert = bottomVert;
 topVert(:,3) = topVert(:,3)+initParameters.aluminumThickness;
@@ -101,7 +103,7 @@ structures(2).Surface(1).buildableDir = 'XZ';
 structures(2).Surface(1).normalFace = '+Y';
 structures(2).Surface(1).availableX = [initParameters.initLength/2,-initParameters.initLength/2];
 structures(2).Surface(1).availableY = [initParameters.initWidth/2,inf];
-structures(2).Surface(1).availableZ = [initParameters.aluminumThickness,initParameters.initHeight-initParameters.aluminumThickness];
+structures(2).Surface(1).availableZ = [0,initParameters.initHeight];
 
 %% 3, South Face Panel (normal to -Y)
 bottomVert = [initParameters.initLength/2,-(initParameters.initWidth/2-initParameters.aluminumThickness),initParameters.aluminumThickness;
@@ -128,7 +130,7 @@ structures(3).Surface(1).buildableDir = 'XZ';
 structures(3).Surface(1).normalFace = '-Y';
 structures(3).Surface(1).availableX = [-initParameters.initLength/2,initParameters.initLength/2];
 structures(3).Surface(1).availableY = [-initParameters.initWidth/2,-inf];
-structures(3).Surface(1).availableZ = [initParameters.aluminumThickness,initParameters.initHeight-initParameters.aluminumThickness];
+structures(3).Surface(1).availableZ = [0,initParameters.initHeight];
 
 
 %% 4, East Face Panel (normal to +X)
@@ -156,7 +158,7 @@ structures(4).Surface(1).buildableDir = 'YZ';
 structures(4).Surface(1).normalFace = '+X';
 structures(4).Surface(1).availableX = [initParameters.initLength/2,inf];
 structures(4).Surface(1).availableY = [-initParameters.initWidth/2,initParameters.initWidth/2];
-structures(4).Surface(1).availableZ = [initParameters.aluminumThickness,initParameters.initHeight-initParameters.aluminumThickness];
+structures(4).Surface(1).availableZ = [0,initParameters.initHeight];
 
 
 %% 5, West Face Panel (normal to -X)
@@ -184,7 +186,7 @@ structures(5).Surface(1).buildableDir = 'YZ';
 structures(5).Surface(1).normalFace = '-X';
 structures(5).Surface(1).availableX = [-initParameters.initLength/2,-inf];
 structures(5).Surface(1).availableY = [initParameters.initWidth/2,-initParameters.initWidth/2];
-structures(5).Surface(1).availableZ = [initParameters.aluminumThickness,initParameters.initHeight-initParameters.aluminumThickness];
+structures(5).Surface(1).availableZ = [0,initParameters.initHeight];
 
 
 %% 6, Top Panel (normal to +Z)
@@ -609,13 +611,13 @@ if strcmp(structureType,'Central Cylinder')
     structuresIndices.Specific(3).Index = [1,1];
 elseif strcmp(structureType,'Stacked')
     structuresIndices.Inside = [7,1]; 
-%     structuresIndices.Outside = [6,1];
-    structuresIndices.Outside = [2,1;
-                                3,1;
-                                4,1;
-                                5,1;
-                                6,1;
-                                1,1];
+    structuresIndices.Outside = [3,1];
+%     structuresIndices.Outside = [2,1;
+%                                 3,1;
+%                                 4,1;
+%                                 5,1;
+%                                 6,1;
+%                                 1,1];
     structuresIndices.Specific(1).Name = 'Payload';
     structuresIndices.Specific(1).Index = [6,1];
 end

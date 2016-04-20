@@ -28,8 +28,8 @@ i = 1;
 % components(2).LocationReq = 'Specific';
 
 % 
-% % ADCS Computer
 
+% % ADCS Computer
 components(i).Name = 'Computer';
 components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Rectangle';
@@ -78,17 +78,18 @@ i = i + 1;
 % components(4).LocationReq = 'Inside';
 
 % Solar Panels
-nPanels = 50;
+nPanels = 1;
 for j = i:i+nPanels
 components(j).Name = 'Solar Panels';
 components(j).Subsystem = 'EPS';
 components(j).Shape = 'Rectangle';
 components(j).Mass = .007;
 components(j).isFit = 0;
-components(j).Dim = [0.006,0.006,0.0002];
+components(j).Dim = [0.2,0.1,0.0002];
 components(j).LocationReq = 'Outside';
 end
 i = i + nPanels+1;
+
 % components(5).LocationReq = 'Inside';
 % 
 % Batteries
@@ -200,7 +201,7 @@ components(i).Dim = [0.02,0.01,0.001];
 components(i).LocationReq = 'Inside';
 i = i + 1;
 
-for j = i:i+20
+for j = i:i+1
     components(j).Name = 'Electronics 2';
     components(j).Subsystem = 'EPS';
     components(j).Shape = 'Rectangle';
@@ -211,5 +212,13 @@ for j = i:i+20
 end
 % i = i + 1;
 
-% 
-
+% Comms Electronics
+components(i).Name = 'Paload';
+components(i).Subsystem = 'Payload';
+components(i).Shape = 'Rectangle';
+components(i).Mass = 1;
+components(i).isFit = 0;
+components(i).Dim = [0.1,0.1,0.1];
+components(i).LocationReq = 'Inside';
+i = i + 1;
+%

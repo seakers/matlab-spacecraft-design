@@ -2,19 +2,19 @@ function StructuresSubsystem()
 
 % load('sampleComponents.mat')
 
-% [components] = CreateSampleComponents_Cubesat();
-[components] = CreateSampleComponents_Cylinder();
+[components] = CreateSampleComponents_Cubesat();
+% [components] = CreateSampleComponents_Cylinder();
 
 [structures,genParameters]= StructureBuilder(components);
 counter = 1;
 old.InertiaTensor = ones(3,3)*inf;
 old.CG = [inf,inf,inf];
-while counter <= 100;
+while counter <= 50;
 % while the total inertia matrix doesn't reach a certain parameter,
 
     % Allocate the components either the first time or randomized their
     % locations the next few times around.
-    if counter == 1   
+    if counter == 1
         components = ComponentSort(components); % Sort the components by their mass
         components = InitialAllocateComponents(components,genParameters.buildableIndices); % Assign the components to specific parts
         % Initialize the way these structures are set up.

@@ -1,4 +1,4 @@
-function [packedCG,packedDim,needExpand,isFit] = SleatorPacking_Limitless(rectangleDim,rectangleMass,tolerance,Width,Height)
+function [packedCG,packedDim,needExpand,isFit] = SleatorPacking_Limitless(rectangleDim,rectangleMass,tolerance,Width,Length,Height)
 % Limitless because the panel height can expand until everything fits.
 
 % Rectangles come in with height, width, and length, with the height and
@@ -12,7 +12,6 @@ function [packedCG,packedDim,needExpand,isFit] = SleatorPacking_Limitless(rectan
 % to where they end on the panel.
 
 needExpand = [0,0];
-rectangleDim = rectangleDim + tolerance;
 
 isFit = ones(size(rectangleDim,1),1);
 packedCG = zeros(size(rectangleDim,1),3);
@@ -25,7 +24,7 @@ rectangleMass = rectangleMass(indices,:);
 rectangleDim = rectangleDim(indices,:);
 
 for i = 1:size(indices,1)        
-    if rectangleDim(i,1) > rectangleDim(i,2) && rectangleDim(i,1) < Width
+    if rectangleDim(i,1) > rectangleDim(i,2) && rectangleDim(i,1) <= Width
     % Check each component to see if height is greater than the width but less
     % than the panelwidth, and then make the height the width and vice versa.
         w = rectangleDim(i,2);
@@ -41,6 +40,7 @@ for i = 1:size(indices,1)
     end
 end
 
+rectangleDim = rectangleDim + tolerance;
 % Stack initial rectangles greater than half the width.
 
 onehalfInd = (rectangleDim(:,2)./Width> .5);
@@ -73,6 +73,7 @@ if ~isempty(unpackedDim)
 else
     h0 = 0;
 end
+maxHeight = h0;
 unpackedIndices = indices(~onehalfInd);
 rectangleDim = rectangleDim(~onehalfInd,:);
 rectangleMass = rectangleMass(~onehalfInd,:);
@@ -80,8 +81,8 @@ rectangleMass = rectangleMass(~onehalfInd,:);
 i = 1;
 % A1 = 0;
 % A2 = 0;
-h1 = 0;
-d1 = 0;
+h1 = h0;
+d1 = h0;
 w0 = 0;
 while i <= size(rectangleDim,1) && Width > (w0 + rectangleDim(i,2))
 
@@ -120,9 +121,8 @@ end
 
 
 % Stack more into the two sections
-if i > size(rectangleDim,1)
-    maxHeight = max(h1,d1);
-else     
+maxHeight = max(h1,d1);  
+if i <= size(rectangleDim,1) 
     while i <= size(rectangleDim,1)
         % Remove the components already packed.
         rectangleDim = rectangleDim(i:end,:);
@@ -175,7 +175,7 @@ end
 packedDim = packedDim - tolerance;
 
 isFit = logical(isFit);
-
+maxHeight = maxHeight-tolerance;
 % Include a comparing to the maximum height
 if maxHeight > Height
     needExpand = [1,maxHeight];
