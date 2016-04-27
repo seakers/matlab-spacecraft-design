@@ -11,24 +11,24 @@ i = 1;
 % components(1).Dim = 0.4;
 % % components(1).isFit = 0;
 % components(1).CG_XYZ = [];
-% components(1).Vertices = [];
-% components(1).LocationReq = 'Specific';
-% components(1).Orientation = [];
-% components(1).Thermal = [];
-% components(1).InertiaMatrix = [];
-% components(1).RotateToSatBodyFrame = [];
+% % components(1).Vertices = [];
+% % components(1).LocationReq = 'Specific';
+% % components(1).Orientation = [];
+% % components(1).Thermal = [];
+% % components(1).InertiaMatrix = [];
+% % components(1).RotateToSatBodyFrame = [];
+% % 
+% % % Fuel Tank
+% % components(2).Name = 'Fuel Tank 2';
+% % components(2).Subsystem = 'Propulsion';
+% % components(2).Shape = 'Sphere';
+% % components(2).Mass = 150;
+% % components(2).Dim = 0.3;
+% % components(2).isFit = 0;
+% % components(2).LocationReq = 'Specific';
 % 
-% % Fuel Tank
-% components(2).Name = 'Fuel Tank 2';
-% components(2).Subsystem = 'Propulsion';
-% components(2).Shape = 'Sphere';
-% components(2).Mass = 150;
-% components(2).Dim = 0.3;
-% components(2).isFit = 0;
-% components(2).LocationReq = 'Specific';
-
+% % 
 % 
-
 % % ADCS Computer
 components(i).Name = 'Computer';
 components(i).Subsystem = 'ADCS';

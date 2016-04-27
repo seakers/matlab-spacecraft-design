@@ -1,20 +1,6 @@
-function [structures,genParameters]= StructureBuilder(components)
-% STRUCTUREBUILDER: Building the structures based on the components that
-% are inputted.
-% 
-%   XYG = Configuration(POSE,XYR) returns the 2D point in global coordinates
-%   corresponding to a 2D point in robot coordinates.
-% 
-%   INPUTS
-%       pose    robot's current pose [x y z alpha beta gamma] (1-by-6)
-%               alpha = rotation around x axis; beta = rotation around y axis; gamma = rotation around z axis;
-%       xyR     3D point in robot coordinates (1-by-3)
-% 
-%   OUTPUTS
-%       xyG     3D point in global coordinates (1-by-3)
-% 
-% 
-% 
+function [genParameters]= initGenParameters(components)
+
+
 
 % Check the size of the tank to make sure it fits the size of central
 % cylinders available. Central Cylinders are sized based on the size of the
@@ -43,8 +29,8 @@ if ~isempty(tankInd)
             tankDiam = placeHolder;
         end
     end
-    cylinderDiam = ClampbandSizer(tankDiam);
-    [structures,genParameters] = InitStructure(cylinderDiam,'Central Cylinder');
+    largestComponent = ClampbandSizer(tankDiam);
+    structureType = 'Central Cylinder';
 else
     % If there is no tank find the largest component on the satellite.
     largestComponent = 0;
@@ -69,8 +55,49 @@ else
 
         end
     end
-    [structures,genParameters] = InitStructure(largestComponent,'Stacked');
+    structureType = 'Stacked';
 % [structures,buildableIndices,genParameters] = InitStructure('Stacked');
+end
+
+genParameters.isFit = zeros(length(components),1);
+% Define different general parameters depending on the satellite type.
+if strcmp(structureType,'Central Cylinder')
+    % the component is the tank
+    % Aspect ratios used for the satellite.
+    genParameters.spacecraftType = 'Central Cylinder';
+    genParameters.cylinderDiam = componentSize;
+    genParameters.satHeight = 0.2;
+    genParameters.tolerance = 0.025; % tolerance for space between components.
+    ratios.shear_cylinder = 0.3;
+    ratios.panel_cylinder = 1.2;
+    genParameters.honeycombThickness = .02;
+    genParameters.carbonfiberThickness = .03;
+    genParameters.ratios = ratios;
+ 
+elseif strcmp(structureType,'Stacked')
+    genParameters.tolerance = 0.001; % tolerance for space between components.
+    genParameters.aluminumThickness = .002; % Initial thickness of aluminum
+    genParameters.carbonfiberThickness = .03; % Initial thickness of carbon fiber
+    genParameters.trays = [1,genParameters.aluminumThickness]; % a parameter that says the number of trays on the satellite and where they should start.
+    if largestComponent <= 0.3
+        % Create a stacked satellite
+        genParameters.spacecraftType = 'Stacked - Cubesat';
+        % If the largest component is smaller than 10 centimeters, create a
+        % cubesat shape
+        genParameters.satWidth = .1; % Initial Length
+        genParameters.satLength = .1; % Initial Width
+        genParameters.satHeight = .1; % Initial Height    
+    else 
+        % Create a stacked satellite
+        genParameters.spacecraftType = 'Stacked';
+        % Else just use a ratio that scales the size of the satellite
+        % compared to the biggest component to get the width, length, and
+        % height
+        ratios.size_component = 1.8;
+        genParameters.satWidth = ratios.size_component*componentSize; % Initial Length
+        genParameters.satLength = ratios.size_component*componentSize; % Initial Width
+        genParameters.satHeight = .1; % Initial Height    
+    end
 end
 
 function clampbandSize = ClampbandSizer(componentSize,tank_part)

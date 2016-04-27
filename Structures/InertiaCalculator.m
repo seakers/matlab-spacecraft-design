@@ -14,7 +14,7 @@ for i = 1:n1
         components(i).InertiaMatrix = components(i).RotateToSatBodyFrame*I*components(i).RotateToSatBodyFrame';
         [totalI,totalCM,totalMass] = ParallelAxis(totalMass,components(i).Mass,totalCM,components(i).CG_XYZ,totalI,components(i).InertiaMatrix);  
     else
-        fprintf([components(i).Name,' not added to satellite because it doesn"t fit\n'])
+        fprintf([components(i).Name,' not added to satellite because it doesn''t fit\n'])
     end
 end
 

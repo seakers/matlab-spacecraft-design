@@ -11,7 +11,7 @@ function [packedCG,packedDim,needExpand,isFit] = SleatorPacking_Limitless(rectan
 % PanelWidth and PanelHeight are ranges from where the components start out
 % to where they end on the panel.
 
-needExpand = [0,0];
+needExpand = zeros(size(rectangleDim,1),4);
 
 isFit = ones(size(rectangleDim,1),1);
 packedCG = zeros(size(rectangleDim,1),3);
@@ -24,23 +24,48 @@ rectangleMass = rectangleMass(indices,:);
 rectangleDim = rectangleDim(indices,:);
 
 for i = 1:size(indices,1)        
-    if rectangleDim(i,1) > rectangleDim(i,2) && rectangleDim(i,1) <= Width
-    % Check each component to see if height is greater than the width but less
-    % than the panelwidth, and then make the height the width and vice versa.
-        w = rectangleDim(i,2);
-        rectangleDim(i,2) = rectangleDim(i,1);
-        rectangleDim(i,1) = w;
-    elseif rectangleDim(i,2) > Width
-        % Else if the component is too large to fit on the panel
-        % Width-wise, then add it to the list of components that do not fit
-        % on this panel. Make the dimensions 0 so that it doesn't add to
-        % anything in the algorithm
-        isFit(i) = 0;
-        rectangleDim(i,1:3) = 0;        
+    if rectangleDim(i,2) > Width || rectangleDim(i,1) > Height || rectangleDim(i,3) > Length
+        if rectangleDim(i,1) > rectangleDim(i,2) && rectangleDim(i,1) <= Width
+        % Check each component to see if height is greater than the width but less
+        % than the panelwidth, and then make the height the width and vice versa.
+            w = rectangleDim(i,2);
+            rectangleDim(i,2) = rectangleDim(i,1);
+            rectangleDim(i,1) = w;
+        elseif rectangleDim(i,2) > Width
+            % Else if the component is too large to fit on the panel
+            % Width-wise, then add it to the list of components that do not fit
+            % on this panel. Make the dimensions 0 so that it doesn't add to
+            % anything in the algorithm
+            isFit(i) = 0;
+            needExpand(i,1) = 1;
+            needExpand(i,3) = rectangleDim(i,2);
+        end
+        if rectangleDim(i,1) > Height
+            % Else if the component is too large to fit on the panel
+            % Width-wise, then add it to the list of components that do not fit
+            % on this panel. Make the dimensions 0 so that it doesn't add to
+            % anything in the algorithm
+            isFit(i) = 0;
+            needExpand(i,1) = 1;
+            needExpand(i,2) = rectangleDim(i,1);
+     
+        end
+        if rectangleDim(i,3) > Length
+            % Else if the component is too large to fit on the panel
+            % Width-wise, then add it to the list of components that do not fit
+            % on this panel. Make the dimensions 0 so that it doesn't add to
+            % anything in the algorithm
+            isFit(i) = 0;
+            needExpand(i,1) = 1;
+            needExpand(i,4) = rectangleDim(i,3);
+        end
+    rectangleDim(i,1:3) = 0;
     end
 end
 
+
 rectangleDim = rectangleDim + tolerance;
+
 % Stack initial rectangles greater than half the width.
 
 onehalfInd = (rectangleDim(:,2)./Width> .5);
@@ -177,7 +202,10 @@ packedDim = packedDim - tolerance;
 isFit = logical(isFit);
 maxHeight = maxHeight-tolerance;
 % Include a comparing to the maximum height
-if maxHeight > Height
-    needExpand = [1,maxHeight];
+
+if any(~isFit)
+    needExpand = [1,max(max(needExpand(:,2)),maxHeight),max(needExpand(:,3)),max(needExpand(:,4))];
+else
+    needExpand = [0,0,0,0];
 end
 

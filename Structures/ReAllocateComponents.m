@@ -1,4 +1,4 @@
-function components = LocalSearch(components,buildableIndices)
+function components = ReAllocateComponents(components,buildableIndices)
 % Switches a randomly selected component in order to search for optimized
 % location placement of components.
 
