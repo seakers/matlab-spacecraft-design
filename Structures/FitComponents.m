@@ -40,6 +40,7 @@ while i <= length(structures)
     end
     i =i+1;
 end
+j = 1;
 
 
 % Allocate the components to parts.

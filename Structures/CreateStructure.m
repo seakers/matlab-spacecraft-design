@@ -210,7 +210,7 @@ for i = 1:size(genParameters.trays,1)
     structures(6+i).Surface(1).normalFace = '+Z';
     structures(6+i).Surface(1).availableX = -[-genParameters.satLength/2+genParameters.aluminumThickness,genParameters.satLength/2-genParameters.aluminumThickness];
     structures(6+i).Surface(1).availableY = [-genParameters.satWidth/2+genParameters.aluminumThickness,genParameters.satWidth/2-genParameters.aluminumThickness];
-    structures(6+i).Surface(1).availableZ = [2*genParameters.aluminumThickness,genParameters.satHeight-genParameters.aluminumThickness];
+    structures(6+i).Surface(1).availableZ = [2*genParameters.aluminumThickness+height,genParameters.satHeight-genParameters.aluminumThickness];
 end
 
 

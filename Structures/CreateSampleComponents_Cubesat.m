@@ -201,7 +201,8 @@ components(i).Dim = [0.02,0.01,0.001];
 components(i).LocationReq = 'Inside';
 i = i + 1;
 
-for j = i:i+1
+nElectronics = 50;
+for j = i:i+nElectronics
     components(j).Name = 'Electronics 2';
     components(j).Subsystem = 'EPS';
     components(j).Shape = 'Rectangle';
@@ -210,7 +211,7 @@ for j = i:i+1
     components(j).Dim = [0.02,0.01,0.001];
     components(j).LocationReq = 'Inside';
 end
-% i = i + 1;
+i = i + nElectronics+1;
 
 % Comms Electronics
 components(i).Name = 'Paload';

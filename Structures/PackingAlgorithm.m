@@ -11,7 +11,10 @@ function [components,structures,needExpand,isFit] = PackingAlgorithm(components,
 [panelWidth,panelHeight,panelLength] = StructuresConversionForPacking(structures(structuresIndices(1)).Surface(structuresIndices(2)));
 
 % Use the limited Sleator Packing Algorithm.
+
 [rectangleCG,rectangleDim,needExpand,isFit] = SleatorPacking_Limitless(rectangleDim,rectangleMass,genParameters.tolerance,abs(panelWidth(2)-panelWidth(1)),abs(panelLength(2)-panelLength(1)),panelHeight(2)-panelHeight(1));      
+
+
 
 [rectangleCG,rotationMatrix,needExpand] = StructuresConversionFromAlgorithm(rectangleCG(isFit,:),structures(structuresIndices(1)).Surface(structuresIndices(2)),panelWidth,panelHeight,panelLength,needExpand);
 % Convert from Algorithm Format to the original format by rotating the components around and converting back to the original shapes.         

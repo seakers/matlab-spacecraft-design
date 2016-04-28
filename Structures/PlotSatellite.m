@@ -2,7 +2,6 @@ function PlotSatellite(components, structures)
 % hwlRectangle = [2,3,1];
 % xyzRectangle = [0,0,0];
 
-figure('units','normalized','position',[.1 .5 .7 .7])
 hold on
 grid 'on'
 xlabel('X')

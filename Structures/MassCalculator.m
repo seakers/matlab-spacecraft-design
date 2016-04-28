@@ -1,4 +1,4 @@
-function [totMass,structures] = MassCalculator(components,structures)
+function [structures,structuresMass,componentsMass,totalMass] = MassCalculator(components,structures)
 load('materials.mat')
 
 n1 = length(structures);
@@ -38,4 +38,4 @@ end
 componentsMass = sum([components.Mass]);
 structuresMass = sum([structures.Mass]);
 
-totMass = componentsMass + structuresMass;
+totalMass = componentsMass + structuresMass;

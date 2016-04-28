@@ -59,7 +59,7 @@ for i = 1:size(indices,1)
             needExpand(i,1) = 1;
             needExpand(i,4) = rectangleDim(i,3);
         end
-    rectangleDim(i,1:3) = 0;
+%     rectangleDim(i,1:3) = 0;
     end
 end
 
@@ -110,7 +110,11 @@ h1 = h0;
 d1 = h0;
 w0 = 0;
 while i <= size(rectangleDim,1) && Width > (w0 + rectangleDim(i,2))
-
+    if (h0 + rectangleDim(i,1)) > Height
+        % If the component is too large in terms of height, then add it to
+        % the list of components that don't fit on the panel.
+        isFit(unpackedIndices(i)) = 0;        
+    end
     packedVertices(unpackedIndices(i),1) = w0;
     packedVertices(unpackedIndices(i),2) = h0;
     
@@ -166,7 +170,11 @@ if i <= size(rectangleDim,1)
         end
         % Place components in their sections.
         while i <= size(rectangleDim,1) && w > (w0 + rectangleDim(i,2))
-            
+            if (height + rectangleDim(i,1)) > Height
+                % If the component is too large in terms of height, then add it to
+                % the list of components that don't fit on the panel.
+                isFit(unpackedIndices(i)) = 0;       
+            end
             packedVertices(unpackedIndices(i),1) = w0;
             packedVertices(unpackedIndices(i),2) = height;
             
