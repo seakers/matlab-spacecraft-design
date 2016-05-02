@@ -10,5 +10,7 @@ for i = 1:n1
     components(i).Vertices = [];
     components(i).InertiaMatrix = [];
     components(i).RotateToSatBodyFrame = [];
-    components(i).structuresAssignment = [];
+    if ~strcmp('Specific',components(i).LocationReq)
+        components(i).structuresAssignment = [];
+    end
 end

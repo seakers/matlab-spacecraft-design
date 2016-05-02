@@ -3,21 +3,17 @@ function components = ReAllocateComponents(components,buildableIndices)
 % location placement of components.
 
 n1 = length(components);
+n2 = size(buildableIndices.Inside,1);
+n3 = size(buildableIndices.Outside,1);
 
-ok = 0;
-while ~ok
+for i = 1:n1
     % Search through the components that aren't "Specific"
-    index1 = ceil(rand()*n1);
-    if strcmp('Inside',components(index1).LocationReq)  
-        ok = 1;
-        n2 = size(buildableIndices.Inside,1);
-        index2 = ceil(rand()*n2);
-        components(index1).structuresAssignment = buildableIndices.Inside(index2,:);
-    elseif strcmp('Outside',components(index1).LocationReq)
-        ok = 1;
-        n2 = size(buildableIndices.Outside,1);
-        index2 = ceil(rand()*n2);
-        components(index1).structuresAssignment = buildableIndices.Outside(index2,:);
+    if strcmp('Inside',components(i).LocationReq)  
+        index1 = ceil(rand()*n2);
+        components(i).structuresAssignment = buildableIndices.Inside(index1,:);
+    elseif strcmp('Outside',components(i).LocationReq)
+        index1 = ceil(rand()*n3);    
+        components(i).structuresAssignment = buildableIndices.Outside(index1,:);
     end
 end
     

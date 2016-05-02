@@ -24,22 +24,14 @@ rectangleMass = rectangleMass(indices,:);
 rectangleDim = rectangleDim(indices,:);
 
 for i = 1:size(indices,1)        
-    if rectangleDim(i,2) > Width || rectangleDim(i,1) > Height || rectangleDim(i,3) > Length
-        if rectangleDim(i,1) > rectangleDim(i,2) && rectangleDim(i,1) <= Width
-        % Check each component to see if height is greater than the width but less
-        % than the panelwidth, and then make the height the width and vice versa.
-            w = rectangleDim(i,2);
-            rectangleDim(i,2) = rectangleDim(i,1);
-            rectangleDim(i,1) = w;
-        elseif rectangleDim(i,2) > Width
-            % Else if the component is too large to fit on the panel
-            % Width-wise, then add it to the list of components that do not fit
-            % on this panel. Make the dimensions 0 so that it doesn't add to
-            % anything in the algorithm
-            isFit(i) = 0;
-            needExpand(i,1) = 1;
-            needExpand(i,3) = rectangleDim(i,2);
-        end
+    if rectangleDim(i,1) > rectangleDim(i,2) && rectangleDim(i,1) <= Width
+    % Check each component to see if height is greater than the width but less
+    % than the panelwidth, and then make the height the width and vice versa.
+        w = rectangleDim(i,2);
+        rectangleDim(i,2) = rectangleDim(i,1);
+        rectangleDim(i,1) = w;
+    end
+%     if rectangleDim(i,1) > Height || rectangleDim(i,3) > Length || rectangleDim(i,2) > Width
         if rectangleDim(i,1) > Height
             % Else if the component is too large to fit on the panel
             % Width-wise, then add it to the list of components that do not fit
@@ -48,7 +40,6 @@ for i = 1:size(indices,1)
             isFit(i) = 0;
             needExpand(i,1) = 1;
             needExpand(i,2) = rectangleDim(i,1);
-     
         end
         if rectangleDim(i,3) > Length
             % Else if the component is too large to fit on the panel
@@ -59,8 +50,17 @@ for i = 1:size(indices,1)
             needExpand(i,1) = 1;
             needExpand(i,4) = rectangleDim(i,3);
         end
+        if rectangleDim(i,2) > Width
+            % Else if the component is too large to fit on the panel
+            % Width-wise, then add it to the list of components that do not fit
+            % on this panel. Make the dimensions 0 so that it doesn't add to
+            % anything in the algorithm
+            isFit(i) = 0;
+            needExpand(i,1) = 1;
+            needExpand(i,3) = rectangleDim(i,2);
+        end
 %     rectangleDim(i,1:3) = 0;
-    end
+%     end
 end
 
 
@@ -76,22 +76,24 @@ unpackedIndices = indices(onehalfInd);
 % A0 = 0;
 if ~isempty(unpackedDim)
     for i = 1:size(unpackedDim,1)
-        if i == 1
-            %   Leave the vertex of the first rectangle at (0,0)
-        else
-            % Increase the height of the current vertex by the
-            % height of the previous rectangle.
-            packedVertices(unpackedIndices(i),2) = packedVertices(unpackedIndices(i-1),2)+unpackedDim(i-1,1);
+        if isFit(unpackedIndices(i))
+            if i == 1
+                %   Leave the vertex of the first rectangle at (0,0)
+            else
+                % Increase the height of the current vertex by the
+                % height of the previous rectangle.
+                packedVertices(unpackedIndices(i),2) = packedVertices(unpackedIndices(i-1),2)+unpackedDim(i-1,1);
+            end
+
+            packedCG(unpackedIndices(i),2) = packedVertices(unpackedIndices(i),1)+(unpackedDim(i,2)-tolerance)/2;
+            packedCG(unpackedIndices(i),3) = packedVertices(unpackedIndices(i),2)+(unpackedDim(i,1)-tolerance)/2;
+            packedCG(unpackedIndices(i),1) = (unpackedDim(i,3)-tolerance)/2;
+            % Calculate the initial area
+        %     A0 = A0 + packedDim(i,1)*packedDim(i,2);
+            packedDim(unpackedIndices(i),1) = unpackedDim(i,1);
+            packedDim(unpackedIndices(i),2) = unpackedDim(i,2);
+            packedDim(unpackedIndices(i),3) = unpackedDim(i,3);
         end
-        
-        packedCG(unpackedIndices(i),2) = packedVertices(unpackedIndices(i),1)+(unpackedDim(i,2)-tolerance)/2;
-        packedCG(unpackedIndices(i),3) = packedVertices(unpackedIndices(i),2)+(unpackedDim(i,1)-tolerance)/2;
-        packedCG(unpackedIndices(i),1) = (unpackedDim(i,3)-tolerance)/2;
-        % Calculate the initial area
-    %     A0 = A0 + packedDim(i,1)*packedDim(i,2);
-        packedDim(unpackedIndices(i),1) = unpackedDim(i,1);
-        packedDim(unpackedIndices(i),2) = unpackedDim(i,2);
-        packedDim(unpackedIndices(i),3) = unpackedDim(i,3);
     end
     % Equals the height of the highest component packed in.
     h0 = packedVertices(unpackedIndices(end),2)+unpackedDim(end,1);
@@ -114,17 +116,17 @@ while i <= size(rectangleDim,1) && Width > (w0 + rectangleDim(i,2))
         % If the component is too large in terms of height, then add it to
         % the list of components that don't fit on the panel.
         isFit(unpackedIndices(i)) = 0;        
+    else
+        packedVertices(unpackedIndices(i),1) = w0;
+        packedVertices(unpackedIndices(i),2) = h0;
+
+        packedCG(unpackedIndices(i),2) = packedVertices(unpackedIndices(i),1) + (rectangleDim(i,2)-tolerance)/2;
+        packedCG(unpackedIndices(i),3) = packedVertices(unpackedIndices(i),2) + (rectangleDim(i,1)-tolerance)/2;
+        packedCG(unpackedIndices(i),1) = (rectangleDim(i,3)-tolerance)/2;
+        packedDim(unpackedIndices(i),1) = rectangleDim(i,1);
+        packedDim(unpackedIndices(i),2) = rectangleDim(i,2);
+        packedDim(unpackedIndices(i),3) = rectangleDim(i,3);
     end
-    packedVertices(unpackedIndices(i),1) = w0;
-    packedVertices(unpackedIndices(i),2) = h0;
-    
-    packedCG(unpackedIndices(i),2) = packedVertices(unpackedIndices(i),1) + (rectangleDim(i,2)-tolerance)/2;
-    packedCG(unpackedIndices(i),3) = packedVertices(unpackedIndices(i),2) + (rectangleDim(i,1)-tolerance)/2;
-    packedCG(unpackedIndices(i),1) = (rectangleDim(i,3)-tolerance)/2;
-    packedDim(unpackedIndices(i),1) = rectangleDim(i,1);
-    packedDim(unpackedIndices(i),2) = rectangleDim(i,2);
-    packedDim(unpackedIndices(i),3) = rectangleDim(i,3);
-    
 %   Calculate the highest height for both halves of the panel.
     if w0 < Width/2 && (w0+rectangleDim(i,2)) > Width/2
         if h1 < (rectangleDim(i,1)+h0)
@@ -174,20 +176,20 @@ if i <= size(rectangleDim,1)
                 % If the component is too large in terms of height, then add it to
                 % the list of components that don't fit on the panel.
                 isFit(unpackedIndices(i)) = 0;       
+            else
+                packedVertices(unpackedIndices(i),1) = w0;
+                packedVertices(unpackedIndices(i),2) = height;
+
+                packedCG(unpackedIndices(i),3) = packedVertices(unpackedIndices(i),2) + (rectangleDim(i,1)-tolerance)/2;
+                packedCG(unpackedIndices(i),2) = packedVertices(unpackedIndices(i),1) + (rectangleDim(i,2)-tolerance)/2;
+                packedCG(unpackedIndices(i),1) = (rectangleDim(i,3)-tolerance)/2;
+                            
+                packedDim(unpackedIndices(i),1) = rectangleDim(i,1);
+                packedDim(unpackedIndices(i),2) = rectangleDim(i,2);
+                packedDim(unpackedIndices(i),3) = rectangleDim(i,3);
             end
-            packedVertices(unpackedIndices(i),1) = w0;
-            packedVertices(unpackedIndices(i),2) = height;
-            
-            packedCG(unpackedIndices(i),3) = packedVertices(unpackedIndices(i),2) + (rectangleDim(i,1)-tolerance)/2;
-            packedCG(unpackedIndices(i),2) = packedVertices(unpackedIndices(i),1) + (rectangleDim(i,2)-tolerance)/2;
-            packedCG(unpackedIndices(i),1) = (rectangleDim(i,3)-tolerance)/2;
-            
             w0 = w0 + rectangleDim(i,2);
-            
-            packedDim(unpackedIndices(i),1) = rectangleDim(i,1);
-            packedDim(unpackedIndices(i),2) = rectangleDim(i,2);
-            packedDim(unpackedIndices(i),3) = rectangleDim(i,3);
-    
+
             if maxHeight < (height+rectangleDim(i,1))
                 maxHeight = height+rectangleDim(i,1);
             end
@@ -210,6 +212,9 @@ packedDim = packedDim - tolerance;
 isFit = logical(isFit);
 maxHeight = maxHeight-tolerance;
 % Include a comparing to the maximum height
+
+packedCG = packedCG(isFit,:);
+packedDim = packedDim(isFit,:);
 
 if any(~isFit)
     needExpand = [1,max(max(needExpand(:,2)),maxHeight),max(needExpand(:,3)),max(needExpand(:,4))];

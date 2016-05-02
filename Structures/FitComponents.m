@@ -21,18 +21,18 @@ while i <= length(structures)
             % Check if there are any components assigned to this surface at
             % all.
 %             while any(~isFit) 
-                if strcmp(structures(i).Surface(j).buildableDir,'XY') || strcmp(structures(i).Surface(j).buildableDir,'YZ') || strcmp(structures(i).Surface(j).buildableDir,'XZ')
-                % Check to see if the components are meant to be packed into
-                % the plane of the panel. If not, then use the stacking
-                % algorithm
-                    [temp_comp,structures,genParameters.needExpand(i,:),isFit] = PackingAlgorithm(temp_comp,structures,[i,j],genParameters);    
-                else
-                    % If not use stacking algorithm
-                    [temp_comp,structures,genParameters.needExpand(i,:)] = StackingAlgorithm(temp_comp,structures,[i,j],genParameters);
-                end
-                components(index) = temp_comp;
-                genParameters.isFit(index) = isFit;
-                structuresAssignment = cat(1,components.structuresAssignment);
+            if strcmp(structures(i).Surface(j).buildableDir,'XY') || strcmp(structures(i).Surface(j).buildableDir,'YZ') || strcmp(structures(i).Surface(j).buildableDir,'XZ')
+            % Check to see if the components are meant to be packed into
+            % the plane of the panel. If not, then use the stacking
+            % algorithm
+                [temp_comp,structures,genParameters.needExpand(i,:),isFit] = PackingAlgorithm(temp_comp,structures,[i,j],genParameters);    
+            else
+                % If not use stacking algorithm
+                [temp_comp,structures,genParameters.needExpand(i,:),isFit] = StackingAlgorithm(temp_comp,structures,[i,j],genParameters);
+            end
+            components(index) = temp_comp;
+            genParameters.isFit(index) = isFit;
+            structuresAssignment = cat(1,components.structuresAssignment);
 %                 index = ismember(structuresAssignment,[i,j],'rows');
 %             end
         end

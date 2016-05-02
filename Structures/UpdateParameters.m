@@ -1,9 +1,9 @@
-function [components,structures, genParameters] = UpdateParameters(components,structures,genParameters)
+function [genParameters] = UpdateParameters(genParameters)
 % Function that expands all the heights of the satellite to the highest height availabe
 % for the component.
 
 % Checks to see if this is a stacking satellite or otherwise
-if any(genParameters.needExpand(:,3))
+if any(genParameters.needExpand(:,1))
     [newHeight,i] = max(genParameters.needExpand(genParameters.needExpand(:,1)==1,2));
     % At the index of the newest height, see if the newWidth is greater than
     % the current width of the satellite's location.
@@ -61,12 +61,14 @@ if any(genParameters.needExpand(:,3))
             end
         end
     elseif strfind(genParameters.spacecraftType,'Stacked')
-
+        
     else
         % Expand the structure for any structure that doesn't have mounting
         % panels
-        if newHeight >= genParameters.satHeight
+        if newHeight > genParameters.satHeight
             genParameters.satHeight = newHeight;
+        elseif newHeight == genParameters.satHeight
+            genParameters.satHeight = newHeight + genParameters.tolerance;
         end
     end
     genParameters.needExpand(:,:) = 0;

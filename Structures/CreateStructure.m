@@ -175,7 +175,7 @@ structures(6).Top_Vertices = topVert;
 structures(6).Plane = 'XY';
 
 % Outside Surface to mount parts on
-structures(6).Surface(1).Mountable = 'N/A';
+structures(6).Surface(1).Mountable = 'Payload';
 structures(6).Surface(1).buildableDir = 'XY';
 structures(6).Surface(1).normalFace = '+Z';
 structures(6).Surface(1).availableX = -[-genParameters.satLength/2,genParameters.satLength/2]; % This needs to be in the negative direciton, as if the x direction is facing you and you're mounting into the page
@@ -366,7 +366,7 @@ structures(4).Surface(3).buildableDir = 'XZ';
 structures(4).Surface(3).Location = 'Outside';
 structures(4).Surface(3).availableX = [-panelWidth/2,panelWidth/2];
 structures(4).Surface(3).availableY = [genParameters.cylinderDiam/2+shearWidth+genParameters.honeycombThickness,inf];
-structures(4).Surface(3).availableZ = [genParameters.honeycombThickness,genParameters.satHeight-genParameters.honeycombThickness];
+structures(4).Surface(3).availableZ = [0,genParameters.satHeight];
 
 
 %% 5, South panel
@@ -413,7 +413,7 @@ structures(5).Surface(3).buildableDir = 'XZ';
 structures(5).Surface(3).Location = 'Outside';
 structures(5).Surface(3).availableX = [panelWidth/2,-panelWidth/2];
 structures(5).Surface(3).availableY = [-(genParameters.cylinderDiam/2+shearWidth+genParameters.honeycombThickness),-inf];
-structures(5).Surface(3).availableZ = [genParameters.honeycombThickness,genParameters.satHeight-genParameters.honeycombThickness];
+structures(5).Surface(3).availableZ = [0,genParameters.satHeight];
 
 %% 6, East panel
 bottomVert = [panelWidth/2,-genParameters.cylinderDiam/2-shearWidth,genParameters.honeycombThickness;
@@ -449,7 +449,7 @@ structures(6).Surface(2).buildableDir = 'YZ';
 structures(6).Surface(2).Location = 'Outside';
 structures(6).Surface(2).availableX = [panelWidth/2,inf];
 structures(6).Surface(2).availableY = [-genParameters.cylinderDiam/2-shearWidth,genParameters.cylinderDiam/2+shearWidth];
-structures(6).Surface(2).availableZ = [genParameters.honeycombThickness,genParameters.satHeight-genParameters.honeycombThickness];
+structures(6).Surface(2).availableZ = [0,genParameters.satHeight];
 
 %% 7, West panel
 bottomVert = [-panelWidth/2,-genParameters.cylinderDiam/2-shearWidth,genParameters.honeycombThickness;
@@ -485,7 +485,7 @@ structures(7).Surface(2).buildableDir = 'YZ';
 structures(7).Surface(2).Location = 'Outside';
 structures(7).Surface(2).availableX = [-panelWidth/2,-inf];
 structures(7).Surface(2).availableY = [-genParameters.cylinderDiam/2-shearWidth,genParameters.cylinderDiam/2+shearWidth];
-structures(7).Surface(2).availableZ = [genParameters.honeycombThickness,genParameters.satHeight-genParameters.honeycombThickness];
+structures(7).Surface(2).availableZ = [0,genParameters.satHeight];
 
 %% 8, Bottom panel
 bottomVert = [-panelWidth/2,-genParameters.cylinderDiam/2-shearWidth,0;
@@ -522,17 +522,16 @@ bottomVert = [-panelWidth/2,-genParameters.cylinderDiam/2-shearWidth,genParamete
                  panelWidth/2,-genParameters.cylinderDiam/2-shearWidth,genParameters.satHeight-genParameters.honeycombThickness];
              
 topVert = bottomVert;
-topVert(:,3) = bottomVert(:,3) + genParameters.satHeight; 
+topVert(:,3) = bottomVert(:,3) + genParameters.honeycombThickness; 
 
-structures(9).Name = 'Bottom Panel';
+structures(9).Name = 'Top Panel';
 structures(9).Shape = 'Rectangle';
 structures(9).Material = 'Honeycomb';
 structures(9).Dim = [genParameters.honeycombThickness,genParameters.cylinderDiam+shearWidth*2+genParameters.honeycombThickness*2,panelWidth];
-structures(9).CG_XYZ = [0,0,genParameters.satHeight+genParameters.honeycombThickness/2];
+structures(9).CG_XYZ = [0,0,genParameters.satHeight-genParameters.honeycombThickness/2];
 structures(9).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are just the bottom center point.
 structures(9).Top_Vertices = topVert;
 structures(8).Plane = 'XY';
-
 % 
 % Bottom Panel Inside Face
 structures(9).Surface(1).Mountable = 'Payload'; % Don't need any specifics

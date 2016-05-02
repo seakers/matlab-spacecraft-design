@@ -23,8 +23,8 @@ avionics.Mass = 54;
 avionics.Power = 100;
 avionics.Cost = 100;
 
-[components] = CreateSampleComponents_Cubesat();
-% [components] = CreateSampleComponents_Cylinder();
+% [components] = CreateSampleComponents_Cubesat();
+[components] = CreateSampleComponents_Cylinder();
 
 [totalMass,InertiaTensor,structures] = structures_main(components);
 

@@ -66,28 +66,29 @@ components(i).LocationReq = 'Inside';
 i = i + 1;
 %
 
-% Antenna
-components(i).Name = 'Antenna';
-components(i).Subsystem = 'Comms';
-components(i).Shape = 'Rectangle';
-components(i).Mass = .005;
-components(i).isFit = 0;
-components(i).Dim = [0.06,0.05,0.01];
-components(i).LocationReq = 'Outside';
-i = i + 1;
+% % Antenna
+% components(i).Name = 'Antenna';
+% components(i).Subsystem = 'Comms';
+% components(i).Shape = 'Rectangle';
+% components(i).Mass = .005;
+% components(i).isFit = 0;
+% components(i).Dim = [0.06,0.05,0.01];
+% components(i).LocationReq = 'Outside';
+% i = i + 1;
+% components(4).LocationReq = 'Inside';
 
 % Solar Panels
-nPanels = 1;
-for j = i:i+nPanels
-components(j).Name = 'Solar Panels';
-components(j).Subsystem = 'EPS';
-components(j).Shape = 'Rectangle';
-components(j).Mass = .007;
-components(j).isFit = 0;
-components(j).Dim = [0.2,0.2,0.0002];
-components(j).LocationReq = 'Outside';
-end
-i = i + nPanels+1;
+% nPanels = 1;
+% for j = i:i+nPanels
+% components(j).Name = 'Solar Panels';
+% components(j).Subsystem = 'EPS';
+% components(j).Shape = 'Rectangle';
+% components(j).Mass = .007;
+% components(j).isFit = 0;
+% components(j).Dim = [0.2,0.1,0.0002];
+% components(j).LocationReq = 'Outside';
+% end
+% i = i + nPanels+1;
 
 % components(5).LocationReq = 'Inside';
 % 
@@ -213,12 +214,12 @@ end
 i = i + nElectronics+1;
 
 % Comms Electronics
-components(i).Name = 'Payload';
+components(i).Name = 'Paload';
 components(i).Subsystem = 'Payload';
 components(i).Shape = 'Rectangle';
 components(i).Mass = 1;
 components(i).isFit = 0;
 components(i).Dim = [0.1,0.1,0.1];
-components(i).LocationReq = 'Specific';
+components(i).LocationReq = 'Inside';
 i = i + 1;
 %

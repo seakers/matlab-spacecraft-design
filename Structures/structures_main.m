@@ -1,36 +1,34 @@
 function [totalMass,InertiaTensor,STRUCTURES] = structures_main(components)
 
-
-
-
 components = ComponentSort(components); % Sort the components by their mass 
 
 counter = 1;
 genParameters = initGenParameters(components);
 while counter <= 100 && any(~genParameters.isFit)
-    [structures, genParameters] = CreateStructure(genParameters);
+    [old_structures, genParameters] = CreateStructure(genParameters);
     components = InitialAllocateComponents(components,genParameters.buildableIndices); % Assign the components to specific parts
-    genParameters.needExpand = zeros(length(structures),4);
+    genParameters.needExpand = zeros(length(old_structures),4);
     
     counter2 = 1;
     keepGoing = 1;
-    while keepGoing && counter2 <= 5*length(components)  
+    while keepGoing && counter2 <= length(components)  
     % Perform local search if all the components don't fit.
-        [components,structures,genParameters]= FitComponents(components,structures,genParameters);
+        new_structures = old_structures;
+        [components,new_structures,genParameters]= FitComponents(components,new_structures,genParameters);
         % Allocate the components either the first time or randomized their
         % locations the next few times around.
         if any(~genParameters.isFit)
-            components(logical(genParameters.isFit)) = CleanComponents(components(logical(genParameters.isFit)));
-            components(logical(genParameters.isFit)) = ReAllocateComponents(components(logical(genParameters.isFit)),genParameters.buildableIndices);            
+            components(logical(~genParameters.isFit)) = CleanComponents(components(logical(~genParameters.isFit)));
+            components(logical(~genParameters.isFit)) = ReAllocateComponents(components(logical(~genParameters.isFit)),genParameters.buildableIndices);            
         else
             keepGoing = 0;
         end
         counter2 = counter2 + 1;
     end
-    [components,structures,genParameters] = UpdateParameters(components,structures,genParameters);
+    [genParameters] = UpdateParameters(genParameters);
     counter = counter +1;
 end
-
+structures = new_structures;
 % counter = 1;
 % old.InertiaTensor = ones(3,3)*inf;
 % old.CG = [inf,inf,inf];

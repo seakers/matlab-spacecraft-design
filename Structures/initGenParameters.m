@@ -65,7 +65,7 @@ if strcmp(structureType,'Central Cylinder')
     % the component is the tank
     % Aspect ratios used for the satellite.
     genParameters.spacecraftType = 'Central Cylinder';
-    genParameters.cylinderDiam = componentSize;
+    genParameters.cylinderDiam = largestComponent;
     genParameters.satHeight = 0.2;
     genParameters.tolerance = 0.025; % tolerance for space between components.
     ratios.shear_cylinder = 0.3;
@@ -94,8 +94,8 @@ elseif strcmp(structureType,'Stacked')
         % compared to the biggest component to get the width, length, and
         % height
         ratios.size_component = 1.8;
-        genParameters.satWidth = ratios.size_component*componentSize; % Initial Length
-        genParameters.satLength = ratios.size_component*componentSize; % Initial Width
+        genParameters.satWidth = ratios.size_component*largestComponent; % Initial Length
+        genParameters.satLength = ratios.size_component*largestComponent; % Initial Width
         genParameters.satHeight = .1; % Initial Height    
     end
 end

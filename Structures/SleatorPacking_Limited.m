@@ -200,11 +200,13 @@ maxHeight = max(packedDim(:,3));
 
 % In this case, since there is no max protrusion from the board allowed
 % (yet), just record what the height is in the needExpand vector.
+
 if any(~isFit)
-    if maxHeight > Height
-        needExpand = [1,maxHeight];
-    end
+    needExpand = [1,max(max(needExpand(:,2)),maxHeight),max(needExpand(:,3)),max(needExpand(:,4))];
+else
+    needExpand = [0,0,0,0];
 end
+
 
 % Remove the tolerance from the dimensions.
 packedDim = packedDim - tolerance;
