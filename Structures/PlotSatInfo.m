@@ -1,7 +1,7 @@
 function PlotSatInfo(payload,comms,eps,avionics,thermal,structures)
 
 % Create the vectors containing the mass info
-mass = [payload.mass,comms.mass,eps.mass,thermal.mass,avionics.Mass,structures.mass];
+mass = [payload.mass,comms.mass,eps.mass,thermal.mass,avionics.Mass,structures.structuresMass];
 mass_subsystemStrings = {'Payload','Comms','EPS','Thermal','Avionics','Structures'};
 
 % Create the vectors containing the power info

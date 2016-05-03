@@ -213,7 +213,6 @@ for i = 1:size(genParameters.trays,1)
     structures(6+i).Surface(1).availableZ = [2*genParameters.aluminumThickness+height,genParameters.satHeight-genParameters.aluminumThickness];
 end
 
-
 function structures = CylinderStructure(genParameters)
 %%
 % A function that creates the structure for a central cylinder-based
@@ -581,7 +580,6 @@ elseif strfind(genParameters.spacecraftType,'Stacked')
                                 3,1;
                                 4,1;
                                 5,1;
-                                6,1;
                                 1,1];
     buildableIndices.Specific(1).Name = 'Payload';
     buildableIndices.Specific(1).Index = [6,1];

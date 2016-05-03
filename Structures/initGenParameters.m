@@ -66,13 +66,17 @@ if strcmp(structureType,'Central Cylinder')
     % Aspect ratios used for the satellite.
     genParameters.spacecraftType = 'Central Cylinder';
     genParameters.cylinderDiam = largestComponent;
-    genParameters.satHeight = 0.2;
-    genParameters.tolerance = 0.025; % tolerance for space between components.
     ratios.shear_cylinder = 0.3;
     ratios.panel_cylinder = 1.2;
+    genParameters.tolerance = 0.025; % tolerance for space between components.
+
     genParameters.honeycombThickness = .02;
     genParameters.carbonfiberThickness = .03;
     genParameters.ratios = ratios;
+    
+    genParameters.satHeight = 0.2;
+    genParameters.satLength = ratios.panel_cylinder*genParameters.cylinderDiam;
+    genParameters.satWidth = genParameters.cylinderDiam+(ratios.shear_cylinder*genParameters.cylinderDiam + genParameters.honeycombThickness)*2;
  
 elseif strcmp(structureType,'Stacked')
     genParameters.tolerance = 0.001; % tolerance for space between components.
