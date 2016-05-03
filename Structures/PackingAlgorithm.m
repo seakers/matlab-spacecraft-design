@@ -111,8 +111,8 @@ rectangleCG(:,3) = rectangleCG(:,3) + structures.availableZ(1);
 
 if strcmp(structures.buildableDir,'XY')
     expandHeight = needExpand(4);
-    expandWidth = needExpand(2);
-    expandLength = needExpand(3);
+    expandWidth = needExpand(3);
+    expandLength = needExpand(2);
 elseif strcmp(structures.buildableDir,'XZ')
     expandHeight = needExpand(2);
     expandWidth = needExpand(4);

@@ -1,11 +1,11 @@
 function test_structures_main() % Include surfaceArea
 % The main function for the structures subsystem. This takes in components
 % from the other subsystems and figures out the structure for them.
+addpath Structures
+addpath LV
 
-
-payload.Mass = 100;
-payload.Power = 120;
-payload.Cost = 50;
+[payload] = CreatePayload(1); % MicroMAS cubesat
+% [payload] = CreatePayload(2); % Comms satellite
 
 comms.mass = 50;
 comms.cost = 12;
@@ -28,6 +28,6 @@ avionics.Cost = 100;
 
 [totalMass,InertiaTensor,structures] = structures_main(components);
 
-LV = LV_selection(structures);
+LV = LV_selection(payload,structures);
 
 PlotSatInfo(payload,comms,power,avionics,thermal,structures)

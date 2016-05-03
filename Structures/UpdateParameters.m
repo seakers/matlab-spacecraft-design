@@ -27,23 +27,23 @@ if any(genParameters.needExpand(:,1))
                 genParameters.satLength = 0.2;
                 genParameters.satWidth = 0.2;
             else
-                fprintf('We can''t make a cubesat bigger than 12u folks')
-            end
-        elseif newHeight >= genParameters.satHeight && newWidth >= genParameters.satWidth
-            if genParameters.satWidth == .1 && genParameters.satLength == .1 && newHeight <= 0.3
-                % If the satellite is a cubesat, expand the satellite up until 3u
-                genParameters.satHeight = 0.3;
-                genParameters.satWidth = 0.2;
-            else
-                fprintf('We can''t make a cubesat bigger than 12u folks')
+                fprintf('We can''t make a cubesat bigger than 12u folks\n')
             end
         elseif newHeight >= genParameters.satHeight && newLength >= genParameters.satLength
             if genParameters.satWidth == .1 && genParameters.satLength == .1 && newHeight <= 0.3
                 % If the satellite is a cubesat, expand the satellite up until 3u
                 genParameters.satHeight = 0.3;
+                genParameters.satWidth = 0.2;
+            else   
+                fprintf('We can''t make a cubesat bigger than 12u folks\n')
+            end
+        elseif newHeight >= genParameters.satHeight && newWidth >= genParameters.satWidth
+            if genParameters.satWidth == .1 && genParameters.satLength == .1 && newHeight <= 0.3
+                % If the satellite is a cubesat, expand the satellite up until 3u
+                genParameters.satHeight = 0.3;
                 genParameters.satLength = 0.2;
             else
-                fprintf('We can''t make a cubesat bigger than 12u folks')
+                fprintf('We can''t make a cubesat bigger than 12u folks\n')
             end
         elseif newHeight >= genParameters.satHeight
             % If the height is more than the current top height of the spacecraft,
@@ -57,7 +57,7 @@ if any(genParameters.needExpand(:,1))
             elseif genParameters.satWidth == .2 && genParameters.satLength == .1 && newHeight == 0.3
                 genParameters.satLength = genParameters.satLength + .1;
             else
-                fprintf('We can''t make a cubesat bigger than 12u folks')
+                fprintf('We can''t make a cubesat bigger than 12u folks\n')
             end
         end
     elseif strfind(genParameters.spacecraftType,'Stacked')

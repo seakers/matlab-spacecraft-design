@@ -84,7 +84,7 @@ components(j).Subsystem = 'EPS';
 components(j).Shape = 'Rectangle';
 components(j).Mass = .007;
 components(j).isFit = 0;
-components(j).Dim = [0.2,0.2,0.0002];
+components(j).Dim = [0.2,0.1,0.0002];
 components(j).LocationReq = 'Outside';
 end
 i = i + nPanels+1;

@@ -53,7 +53,7 @@ structures = new_structures;
 %     [] = Statics();
     
     % Calculate the total mass of the satellite.
-[structures,structuresMass,componentsMass,totalMass] = MassCalculator(components,structures);
+[structures,structuresMass,structuresCost,componentsMass,totalMass] = MassCostCalculator(components,structures);
     
     % Calculate the inertia tensor for the new configuration of the
     % satellite
@@ -69,10 +69,12 @@ structures = new_structures;
 % InertiaTensor = old.InertiaTensor;
 % components = old.components;
 % structures = old.structures;
-
+STRUCTURES.cost = structuresCost;
 STRUCTURES.components = components;
 STRUCTURES.structures = structures;
 STRUCTURES.mass = structuresMass;
+STRUCTURES.width = sqrt(genParameters.satWidth^2+genParameters.satLength^2);
+STRUCTURES.height = genParameters.satHeight;
 
 
 function [old] = CheckInertia(old,new)

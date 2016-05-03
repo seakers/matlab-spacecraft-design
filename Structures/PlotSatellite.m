@@ -4,9 +4,9 @@ function PlotSatellite(components, structures)
 
 hold on
 grid 'on'
-xlabel('X')
-ylabel('Y')
-zlabel('Z')
+xlabel('X (m)')
+ylabel('Y (m)')
+zlabel('Z (m)')
 axis equal
 % S.LN = plot(S.x,S.x,'r');
 
@@ -14,8 +14,9 @@ axis equal
 % SpherePlotter(1.5,0,0,2)
 % CylindricalPlotter(1,2,2,2)
 
-PlotComponents(components)
-obj = PlotStructures(structures);
+outside_obj = PlotComponents(components);
+structures_obj = PlotStructures(structures);
+obj = [outside_obj,structures_obj];
 hold off
 view(3) %sets the default three-dimensional view, az = ?37.5, el = 30.
 % Create a Slider Bar
@@ -31,15 +32,19 @@ function [] = sl_call(varargin)
 [h,obj] = varargin{[1,3]};  % calling handle and data structure.
 set(obj,'FaceAlpha',get(h,'Value'))
 
-function PlotComponents(components)
+function obj = PlotComponents(components)
 % function to plot the components
 nr = length(components);
+obj = [];
 for i = 1:nr
     if ~isempty(components(i).CG_XYZ )
         [FaceColor,EdgeColor] = ColorSelection(components(i).Subsystem);
-        ShapePlotter(components(i).Shape,components(i).Dim,components(i).Vertices,components(i).CG_XYZ,FaceColor,EdgeColor);
+        objnew = ShapePlotter(components(i).Shape,components(i).Dim,components(i).Vertices,components(i).CG_XYZ,FaceColor,EdgeColor);
     else
         fprintf([components(i).Name,' not added to satellite because it doesn"t fit\n'])
+    end
+    if strcmp(components(i).LocationReq,'Outside')
+        obj = [obj,objnew];
     end
 end
 
@@ -55,45 +60,6 @@ for i = 1:nr
     obj = [obj,objnew];
 end
 
-function [FaceColor,EdgeColor] = ColorSelection(Subsystem)
-% Depending on which subsystem the part is located in, we choose different
-% colors to plot them in.
-
-if strcmp('Structures',Subsystem)
-    % Grey faces with dark grey outlines
-    FaceColor = [0.8,0.8,0.8];
-    EdgeColor = [0.3,0.3,0.3];
-    
-elseif strcmp('Avionics',Subsystem)
-    % Reddish colors
-    FaceColor = [0.8,0.2,0.2];
-    EdgeColor = [0.6,0,0.2];
-    
-elseif strcmp('ADCS',Subsystem)
-    % Greenish colors
-    FaceColor = [0.2,0.8,0.4];
-    EdgeColor = [0.2,0.4,0.4];
-    
-elseif strcmp('Comms',Subsystem)
-    % Purplish Colors
-    FaceColor = [0.8,0.6,1];
-    EdgeColor = [0.6,0.2,0.6];
-    
-elseif strcmp('Propulsion',Subsystem)
-    % Orangeish Colors
-    FaceColor = [0.8,0.6,0.4];
-    EdgeColor = [0.8,0.2,0];
-    
-elseif strcmp('EPS',Subsystem)
-    % Blueish colors
-    FaceColor = [0.2,0.8,1];
-    EdgeColor = [0,0.4,0.8]; 
-    
-elseif strcmp('Payload',Subsystem)
-    % Turquoise colors
-    FaceColor = [0,0.8,0.6];
-    EdgeColor = [0,1,1];  
-end
 
 function obj = ShapePlotter(Shape,myDim,myVertices,myCG,FaceColor,EdgeColor)
 

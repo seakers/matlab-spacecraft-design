@@ -26,7 +26,7 @@ topVert(:,3) = topVert(:,3)+genParameters.aluminumThickness;
 
 structures(1).Name = 'Bottom Panel';
 structures(1).Shape = 'Rectangle';
-structures(1).Material = 'Aluminum';
+structures(1).Material = 'Aluminum 6061-T6';
 structures(1).Mass = []; % This will be density times volume
 structures(1).Dim = [genParameters.aluminumThickness,genParameters.satWidth,genParameters.satLength]; % use the satial paramaters.
 structures(1).CG_XYZ = [0,0,genParameters.aluminumThickness/2]; % Make the origin at the middle of the bottom panel.
@@ -55,7 +55,7 @@ topVert(:,3) = topVert(:,3)+genParameters.satHeight-2*genParameters.aluminumThic
 
 structures(2).Name = 'North Face Panel';
 structures(2).Shape = 'Rectangle';
-structures(2).Material = 'Aluminum';
+structures(2).Material = 'Aluminum 6061-T6';
 structures(2).Mass = []; % This will be density times volume
 structures(2).Dim = [genParameters.satHeight-2*genParameters.aluminumThickness,genParameters.aluminumThickness,genParameters.satLength]; % use the satial paramaters.
 structures(2).CG_XYZ = [0,genParameters.satWidth/2-genParameters.aluminumThickness/2,(genParameters.satHeight-genParameters.aluminumThickness)/2+genParameters.aluminumThickness];
@@ -82,7 +82,7 @@ topVert(:,3) = topVert(:,3)+genParameters.satHeight-2*genParameters.aluminumThic
 
 structures(3).Name = 'South Face Panel';
 structures(3).Shape = 'Rectangle';
-structures(3).Material = 'Aluminum';
+structures(3).Material = 'Aluminum 6061-T6';
 structures(3).Mass = []; % This will be density times volume
 structures(3).Dim = [genParameters.satHeight-2*genParameters.aluminumThickness,genParameters.aluminumThickness,genParameters.satLength]; % use the satial paramaters.
 structures(3).CG_XYZ = [0,-genParameters.satWidth/2+genParameters.aluminumThickness/2,(genParameters.satHeight-genParameters.aluminumThickness)/2+genParameters.aluminumThickness];
@@ -110,7 +110,7 @@ topVert(:,3) = topVert(:,3)+genParameters.satHeight-2*genParameters.aluminumThic
 
 structures(4).Name = 'East Face Panel';
 structures(4).Shape = 'Rectangle';
-structures(4).Material = 'Aluminum';
+structures(4).Material = 'Aluminum 6061-T6';
 structures(4).Mass = []; % This will be density times volume
 structures(4).Dim = [genParameters.satHeight-genParameters.aluminumThickness,genParameters.aluminumThickness,genParameters.satLength]; % use the satial paramaters.
 structures(4).CG_XYZ = [genParameters.satLength/2-genParameters.aluminumThickness/2,0,(genParameters.satHeight-genParameters.aluminumThickness)/2+genParameters.aluminumThickness];
@@ -138,7 +138,7 @@ topVert(:,3) = topVert(:,3)+genParameters.satHeight-2*genParameters.aluminumThic
 
 structures(5).Name = 'West Face Panel';
 structures(5).Shape = 'Rectangle';
-structures(5).Material = 'Aluminum';
+structures(5).Material = 'Aluminum 6061-T6';
 structures(5).Mass = []; % This will be density times volume
 structures(5).Dim = [genParameters.satHeight-genParameters.aluminumThickness,genParameters.aluminumThickness,genParameters.satLength]; % use the satial paramaters.
 structures(5).CG_XYZ = [-genParameters.satLength/2+genParameters.aluminumThickness/2,0,(genParameters.satHeight-genParameters.aluminumThickness)/2+genParameters.aluminumThickness];
@@ -166,7 +166,7 @@ topVert(:,3) = topVert(:,3)+genParameters.aluminumThickness;
 
 structures(6).Name = 'Top Panel';
 structures(6).Shape = 'Rectangle';
-structures(6).Material = 'Aluminum';
+structures(6).Material = 'Aluminum 6061-T6';
 structures(6).Mass = []; % This will be density times volume
 structures(6).Dim = [genParameters.aluminumThickness,genParameters.satWidth,genParameters.satLength]; % use the satial paramaters.
 structures(6).CG_XYZ = [0,0,genParameters.satHeight-genParameters.aluminumThickness/2]; % Make the origin at the base of the bottom panel.
@@ -196,7 +196,7 @@ for i = 1:size(genParameters.trays,1)
 
     structures(6+i).Name = 'Inside Mounting Panel';
     structures(6+i).Shape = 'Rectangle';
-    structures(6+i).Material = 'Aluminum';
+    structures(6+i).Material = 'Aluminum 6061-T6';
     structures(6+i).Mass = []; % This will be density times volume
     structures(6+i).Dim = [genParameters.aluminumThickness,genParameters.satWidth,genParameters.satLength]; % use the satial paramaters.
     structures(6+i).CG_XYZ = [0,0,genParameters.aluminumThickness*1.5];
