@@ -9,17 +9,17 @@ addpath Structures
 addpath Thermal
 
 %  Inputs
-h = 400;            % Altitude
-i = 100;            % Inclination
-dataperday = 5e9;   % Data per day cubesat
-%dataperday=100e9;    %Large sat
-lifetime = 3;     % Lifetime
-payloadpower=5;    %cubesat
-%payloadpower=1000;     %large sat
+% h = 400;            % Altitude
+% i = 100;            % Inclination
+% dataperday = 5e9;   % Data per day cubesat
+% dataperday=100e9;    %Large sat
+% lifetime = 3;     % Lifetime
+% payloadpower=5;    %cubesat
+% payloadpower=1000;     %large sat
 
-[payload] = CreatePayload();
+[payload] = CreatePayload(1); % MicroMAS cubesat
 % Estimated dry mass
-drymass_est = 3*payload.Mass;
+drymass_est = 3*payload.mass;
 
 drymass_ok = 0;
 
@@ -32,18 +32,20 @@ time = 0;
 
 while (time < 250) && ~drymass_ok
     
-    [avionics, avionics_comp] = structOBC(dataperday,1);
+    [avionics, avionics_comp] = structOBC(payload.dataperday,1);
     
-    [comms, comms_comp] = comms_main(drymass_est,dataperday,h,i,lifetime);
+    [comms, comms_comp] = comms_main(drymass_est,payload.dataperday,payload.h,payload.i,payload.lifetime);
 
-    [power, power_comp] = power_main(h,lifetime,payloadpower,comms.power,2,avionics.AvgPwr,drymass_est);
+    [power, power_comp] = power_main(payload.h,payload.lifetime,payload.power,comms.power,2,avionics.AvgPwr,drymass_est);
     
-    components = [payload comms_comp avionics_comp power_comp];
+    components = [payload.comp comms_comp avionics_comp power_comp];
     
-    [StructuresSub,drymass_calc,~,components,structures] = structures_main(components);
+    [structures,drymass_calc,~,components,structures] = structures_main(components);
+    
+    LV = LV_selection(payload,structures);
     
     thermal=thermal_main(drymass_calc);
-   
+    
     drymass_ok = abs(drymass_est - drymass_calc)/drymass_calc < 0.05;
     
     cost = avionics.Cost/1000 + comms.cost + power.cost + thermal.cost; 
@@ -57,7 +59,8 @@ PieChartCreator(payload,comms,power,avionics,thermal,structures)
 if drymass_ok
     fprintf('Total mass (kg): %f\n',drymass_calc)
     fprintf('Total Cost (k$): %f\n',cost)
-    PlotSatellite(components,structures)
+%     PlotSatellite(components,structures)
+    PlotSatInfo(payload,comms,power,avionics,thermal,structures)
 end
 end
 
