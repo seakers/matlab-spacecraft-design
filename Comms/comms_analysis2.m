@@ -10,7 +10,7 @@ k = 1.38e-23;
 optfound=false;
 comms.mass=0;
 comms.power=0;
-comms.frequency=0;
+comms.f=0;
 comms.modulation=0;
 comms.antennaType='';
 
@@ -146,9 +146,15 @@ for Band=1:4
                                 comms.cost=comms_cost_new;
                                 MassOpt=massA+massE;
                                 MOD_opt=MOD;
-                                f_OPT=Band;
+                                f_OPT=f_DL;
                                 AntennaTypeOPT=AntennaType;
-                                power_comms_opt=power_comms;  
+                                power_comms_opt=power_comms; 
+                                R_opt=R;
+                                lambda_opt=lambda;
+                                G_GS_opt=G_GS;
+                                Tgs_opt=Tgs;
+                                EbN0_opt=EbN0;
+                                EbN0_min_opt=EbN0_min;
                                 
                                 %Outputs Anjit (Sizing Components)
                                 %Filters/Diplexers --> SMAD
@@ -292,11 +298,24 @@ if optfound
     end
     
     comms.mass=MassOpt;
-    comms.RFpower=P_tx;
-    comms.GainAntenna=Gtx;
     comms.power=power_comms_opt;
-    comms.frequency=f_OPT;
+    comms.f=f_OPT;
     comms.modulation=MOD_opt;
     comms.antennaType=AntennaTypeOPT;
+    if strcmp(AntennaTypeOPT,'Parabolic')
+        comms.D=Dtx;
+    end
+    comms.Pt=P_tx;
+    comms.Gt=Gtx;
+    comms.R=R_opt;
+    comms.Rb=Rb_DL;
+    comms.Ls=-2*lin2dB(lambda_opt/(4*pi*R_opt));
+    comms.Gr=G_GS_opt;
+    comms.Dr=Gain2Diameter(G_GS_opt,f_OPT/1e9,0.6);
+    comms.Tr=Tgs_opt;
+    comms.EbN0=EbN0_opt;
+    comms.EbN0min=EbN0_min_opt;
+    comms.Margin=EbN0_opt-EbN0_min_opt;
+    
 end
 end
