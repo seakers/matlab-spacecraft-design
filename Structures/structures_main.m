@@ -43,9 +43,9 @@ new = old;
 counter = 1;
 while counter <= 5*length(old.components)
     new.components = RandomAllocationComponents(old.components,old.genParameters.buildableIndices);
-    
+    [new.structures, new.genParameters] = CreateStructure(old.genParameters); % This might need to be done better, pretty sure it's very inefficient/wrong here.
     % Place the components in their locations
-    [new.components,new.structures,new.genParameters]= FitComponents(new.components,old.structures,old.genParameters);       
+    [new.components,new.structures,new.genParameters]= FitComponents(new.components,new.structures,new.genParameters);       
     [new.genParameters] = UpdateParameters(new.genParameters);
     [new.structures, new.genParameters] = CreateStructure(new.genParameters);
     % Statics

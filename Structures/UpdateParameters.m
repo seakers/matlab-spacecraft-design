@@ -65,9 +65,9 @@ if any(genParameters.needExpand(:,1))
     else
         % Expand the structure for any structure that doesn't have mounting
         % panels
-        if newHeight > genParameters.satHeight
-            genParameters.satHeight = newHeight;
-        elseif newHeight == genParameters.satHeight
+        if newHeight >= genParameters.satHeight
+%             genParameters.satHeight = newHeight;
+%         elseif newHeight == genParameters.satHeight
             genParameters.satHeight = newHeight + genParameters.tolerance;
         end
     end

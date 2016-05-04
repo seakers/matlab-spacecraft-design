@@ -515,12 +515,11 @@ structures(8).Surface(1).availableY = [-genParameters.cylinderDiam/2-shearWidth,
 structures(8).Surface(1).availableZ = [genParameters.honeycombThickness,genParameters.satHeight];
 
 % Bottom Panel Outside Face
-structures(8).Surface(2).Mountable = 'N/A'; % Don't need any specifics
+structures(8).Surface(2).Mountable = 'Thruster';
 structures(8).Surface(2).normalFace = '-Z';
 structures(8).Surface(2).buildableDir = '-Z';
-structures(8).Surface(2).Location = 'Inside';
 structures(8).Surface(2).availableX = [-panelWidth/2,+panelWidth/2];
-structures(8).Surface(2).availableY = [-genParameters.cylinderDiam/2-shearWidth,genParameters.cylinderDiam/2+shearWidth];
+structures(8).Surface(2).availableY = -[-genParameters.cylinderDiam/2-shearWidth,genParameters.cylinderDiam/2+shearWidth];
 structures(8).Surface(2).availableZ = [0,-inf];
 
 %% 9, Top panel
@@ -541,7 +540,7 @@ structures(9).Bottom_Vertices = bottomVert; % For a cylinder the Vertices are ju
 structures(9).Top_Vertices = topVert;
 structures(8).Plane = 'XY';
 % 
-% Bottom Panel Inside Face
+% Top Panel Outside Face
 structures(9).Surface(1).Mountable = 'Payload'; % Don't need any specifics
 structures(9).Surface(1).normalFace = '+Z';
 structures(9).Surface(1).buildableDir = '+Z';
@@ -576,7 +575,7 @@ if strcmp(genParameters.spacecraftType,'Central Cylinder')
     buildableIndices.Specific(2).Name = 'Fuel Tank';
     buildableIndices.Specific(2).Index = [1,1];
     buildableIndices.Specific(3).Name = 'Thruster';
-    buildableIndices.Specific(3).Index = [8,1];
+    buildableIndices.Specific(3).Index = [8,2];
 elseif strfind(genParameters.spacecraftType,'Stacked')
 
     n = size(genParameters.trays,1);

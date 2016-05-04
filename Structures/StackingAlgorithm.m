@@ -110,7 +110,7 @@ structureSurface.availableX = surfaceXYZ(1,:);
 structureSurface.availableY = surfaceXYZ(2,:);
 structureSurface.availableZ = surfaceXYZ(3,:);
 
-if surfaceXYZ(3,1) > surfaceXYZ(3,2)
+if abs(surfaceXYZ(3,1)) > abs(surfaceXYZ(3,2))
     needExpand = [1, surfaceXYZ(3,1),0,0];
     isFit = 0;
 end
