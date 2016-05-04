@@ -5,8 +5,8 @@ mass = [payload.mass,comms.mass,eps.mass,thermal.mass,avionics.Mass,structures.s
 mass_subsystemStrings = {'Payload','Comms','EPS','Thermal','Avionics','Structures'};
 
 % Create the vectors containing the power info
-power = [payload.power,comms.power,eps.power,thermal.power,avionics.Power];
-power_subsystemStrings = {'Payload','Comms','EPS','Thermal','Avionics'};
+power = [payload.power,comms.power,avionics.AvgPwr];
+power_subsystemStrings = {'Payload','Comms','Avionics'};
 
 % Create the vectors containing the cost info
 cost = [avionics.Cost/1000, comms.cost, eps.cost, thermal.cost];
@@ -17,7 +17,7 @@ figure('units','normalized','outerposition',[0 0 1 1])
 
 % Plot the Pie chart for the mass
 subplot(2, 3, 2);
-PieChartPlotter(mass,mass_subsystemStrings,'Mass (kg)')
+mass_subsystemStrings = PieChartPlotter(mass,mass_subsystemStrings,'Mass (kg)');
 legend(mass_subsystemStrings)
 
 subplot(2, 3, 3);
@@ -46,7 +46,7 @@ PlotSatellite(structures.components,structures.structures)
 % newUnits = 'normalized';
 % set(hL,'Position', newPosition,'Units', newUnits);
 
-function PieChartPlotter(data,dataSubsystems,dataTitle)
+function dataSubsystems = PieChartPlotter(data,dataSubsystems,dataTitle)
 
 % sort the data from largest to smallest
 [data,ind] = sort(data);

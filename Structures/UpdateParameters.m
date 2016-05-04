@@ -4,12 +4,13 @@ function [genParameters] = UpdateParameters(genParameters)
 
 % Checks to see if this is a stacking satellite or otherwise
 if any(genParameters.needExpand(:,1))
-    [newHeight,i] = max(genParameters.needExpand(genParameters.needExpand(:,1)==1,2));
+    needExpand = genParameters.needExpand(genParameters.needExpand(:,1)==1,:);
+    [newHeight,i] = max(needExpand(:,2));
     % At the index of the newest height, see if the newWidth is greater than
     % the current width of the satellite's location.
-    newWidth = genParameters.needExpand(i,3);
+    newWidth = needExpand(i,3);
     % Same for Length.
-    newLength = genParameters.needExpand(i,4);
+    newLength = needExpand(i,4);
 
     if strfind(genParameters.spacecraftType,'Cubesat')
         % If the newHeight to expand to is less than the current top height of
@@ -61,7 +62,23 @@ if any(genParameters.needExpand(:,1))
             end
         end
     elseif strfind(genParameters.spacecraftType,'Stacked')
-        
+        if newHeight > genParameters.satHeight
+%             genParameters.satHeight = newHeight;
+%         elseif newHeight == genParameters.satHeight
+            genParameters.satHeight = newHeight + genParameters.tolerance;
+        elseif newHeight == genParameters.satHeight
+            genParameters.satHeight = genParameters.satHeight + genParameters.tolerance;
+        end
+        if newWidth > genParameters.satWidth
+            genParameters.satWidth = newWidth + genParameters.tolerance;
+        elseif newWidth == genParameters.satWidth
+            genParameters.satWidth = genParameters.satWidth + genParameters.tolerance;
+        end
+        if newLength > genParameters.satLength
+            genParameters.satLength = newLength + genParameters.tolerance;
+        elseif newLength == genParameters.satLength
+            genParameters.satLength = genParameters.satLength + genParameters.tolerance;
+        end    
     else
         % Expand the structure for any structure that doesn't have mounting
         % panels

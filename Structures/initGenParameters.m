@@ -97,7 +97,7 @@ elseif strcmp(structureType,'Stacked')
         % Else just use a ratio that scales the size of the satellite
         % compared to the biggest component to get the width, length, and
         % height
-        ratios.size_component = 1.8;
+        ratios.size_component = .5;
         genParameters.satWidth = ratios.size_component*largestComponent; % Initial Length
         genParameters.satLength = ratios.size_component*largestComponent; % Initial Width
         genParameters.satHeight = .1; % Initial Height    

@@ -7,6 +7,7 @@ addpath Power
 addpath Avionics
 addpath Structures
 addpath Thermal
+addpath LV
 
 %  Inputs
 % h = 400;            % Altitude
@@ -40,9 +41,10 @@ while (time < 250) && ~drymass_ok
     
     components = [payload.comp comms_comp avionics_comp power_comp];
     
-    [structures,drymass_calc,~,components,structures] = structures_main(components);
+    [structures] = structures_main(components);
     
     LV = LV_selection(payload,structures);
+    drymass_calc = structures.totalMass;
     
     thermal=thermal_main(drymass_calc);
     
@@ -55,7 +57,6 @@ while (time < 250) && ~drymass_ok
     time = toc;
     
 end
-PieChartCreator(payload,comms,power,avionics,thermal,structures)
 if drymass_ok
     fprintf('Total mass (kg): %f\n',drymass_calc)
     fprintf('Total Cost (k$): %f\n',cost)
