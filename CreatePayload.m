@@ -19,7 +19,7 @@ elseif option == 2
     payload.Orbit = 'LEO';
     payload.h = 800; % Altitude %km
     payload.i = 30; % Inclination
-    payload.dataperday = 13.61*3600*24*10^3;   %GB/s converted to MB/days (data/day)
+    payload.dataperday = 13.61*3600*24*10^6;   %MB/s converted to bit/day (data/day)
     payload.lifetime = 3;     % Lifetime
     payload.mass = 500; %kg
     payload.power = 120; % Watts
