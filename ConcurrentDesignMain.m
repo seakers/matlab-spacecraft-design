@@ -19,7 +19,7 @@ addpath Propulsion
 % payloadpower=5;    %cubesat
 % payloadpower=1000;     %large sat
 
-[payload] = CreatePayload(1); % MicroMAS cubesat
+% [payload] = CreatePayload(1); % MicroMAS cubesat
 [payload] = CreatePayload(2); % MicroMAS cubesat
 % Estimated dry mass
 drymass_est = 3*payload.mass;
@@ -65,7 +65,7 @@ if drymass_ok
     fprintf('Total mass (kg): %f\n',drymass_calc)
     fprintf('Total Cost (k$): %f\n',cost)
 %     PlotSatellite(components,structures)
-    PlotSatInfo(payload,comms,power,avionics,thermal,structures)
+    PlotSatInfo(payload,comms,power,avionics,thermal,structures,propulsion)
 end
 end
 

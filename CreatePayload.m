@@ -14,15 +14,15 @@ if option == 1
     payload.cost = 200; %($ in thousands of dollars)
 elseif option == 2
     % Comms satellite.
-    comp = struct('Name','Payload','Subsystem','Payload','Shape','Cylinder','Mass',1,'Dim',[.1,.5],'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+    comp = struct('Name','Payload','Subsystem','Payload','Shape','Cylinder','Mass',500,'Dim',[1,.75],'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
     payload.comp = comp;
     payload.Orbit = 'LEO';
-    payload.h = 1440; % Altitude %km
-    payload.i = 0; % Inclination
+    payload.h = 800; % Altitude %km
+    payload.i = 30; % Inclination
     payload.dataperday = 13.61*3600*24*10^3;   %GB/s converted to MB/days (data/day)
     payload.lifetime = 3;     % Lifetime
-    payload.mass = 100; %kg
-    payload.power = 120;
+    payload.mass = 500; %kg
+    payload.power = 120; % Watts
     payload.cost = 100;
 end
 

@@ -28,7 +28,7 @@ function dV = DeltaV(h,life)
         dVd = compute_dV_graveyard(a,B);
     else
         dVi = 0;
-        dVd = compute_dV_deorbit(a,RE);
+        dVd = compute_dV_deorbit(a,RE+3E5);
     end
     
     % Find Delta-V for Orbit Maintenance

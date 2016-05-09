@@ -30,6 +30,8 @@ if strcmp(params.GS,'NEN')
                 Naccessesday_GS_SAT_MAX=params.rawTime{nr,6};
                 meanAccessTime=params.rawTime{nr,7};
                 info1=true;
+            else
+                
             end
         end
         nr=0;
