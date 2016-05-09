@@ -4,8 +4,8 @@ function test_structures_main() % Include surfaceArea
 addpath Structures
 addpath LV
 
-[payload] = CreatePayload(1); % MicroMAS cubesat
-% [payload] = CreatePayload(2); % Comms satellite
+% [payload] = CreatePayload(1); % MicroMAS cubesat
+[payload] = CreatePayload(1); % Comms satellite
 
 comms.mass = 50;
 comms.cost = 12;
@@ -20,11 +20,13 @@ power.cost = 134;
 power.power = 120;
  
 avionics.Mass = 54;
-avionics.Power = 100;
+avionics.AvgPwr = 100;
 avionics.Cost = 100;
 
-% [components] = CreateSampleComponents_Cubesat();
-[components] = CreateSampleComponents_Cylinder();
+[components] = CreateSampleComponents_Cubesat();
+% [components] = CreateSampleComponents_Cylinder();
+% [components] = CreateSampleComponents_Stacked();
+components = [components, payload.comp];
 
 [structures] = structures_main(components);
 

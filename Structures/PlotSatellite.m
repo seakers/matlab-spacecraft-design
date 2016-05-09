@@ -91,7 +91,7 @@ elseif strcmp(Shape,'Sphere')
     [x,y,z] = sphere();
      obj = surf(r*x+myCG(1), r*y+myCG(2), r*z+myCG(3),'FaceColor', FaceColor,'EdgeColor',EdgeColor);
 elseif strcmp(Shape,'Cone')
- 
+    obj = [];
 elseif ~(isempty(strfind(Shape,'Cylinder')))
     % A function that plots a cylinder of radius r and with the bottom centered at location (a,b,c)
     r = myDim(1,2);

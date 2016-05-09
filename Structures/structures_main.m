@@ -4,7 +4,7 @@ components = ComponentSort(components); % Sort the components by their mass
 
 counter = 1;
 genParameters = initGenParameters(components);
-while counter <= 100 && any(~genParameters.isFit)
+while counter <= 50 && any(~genParameters.isFit)
     [old_structures, genParameters] = CreateStructure(genParameters);
     components = InitialAllocateComponents(components,genParameters.buildableIndices); % Assign the components to specific parts
     genParameters.needExpand = zeros(length(old_structures),4);

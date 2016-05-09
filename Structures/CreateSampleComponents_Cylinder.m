@@ -1,4 +1,4 @@
-function [components] = CreateSampleComponents_Cylinder()
+function [components] = CreateSampleComponents_Cylinder(payload)
 % Create sample components to be used by the code. They have arbitrary
 % sizes and masses, not at all based on accurate calculations.
 
@@ -58,15 +58,15 @@ components(i).LocationReq = 'Inside';
 i = i + 1;
 %
 
-% Payload
-components(i).Name = 'Payload';
-components(i).Subsystem = 'Payload';
-components(i).Shape = 'Rectangle';
-components(i).Mass = 10;
-components(i).isFit = 0;
-components(i).Dim = [.5,0.5,0.3];
-components(i).LocationReq = 'Specific';
-i = i + 1;
+% % Payload
+% components(i).Name = 'Payload';
+% components(i).Subsystem = 'Payload';
+% components(i).Shape = 'Rectangle';
+% components(i).Mass = 10;
+% components(i).isFit = 0;
+% components(i).Dim = [.5,0.5,0.3];
+% components(i).LocationReq = 'Specific';
+% i = i + 1;
 
 % Antenna
 components(i).Name = 'Antenna';
@@ -173,7 +173,7 @@ i = i + 1;
 % Thruster
 components(i).Name = 'Thruster';
 components(i).Subsystem = 'Propulsion';
-components(i).Shape = 'Cylinder';
+components(i).Shape = 'Cone';
 components(i).Mass = 30;
 components(i).isFit = 0;
 components(i).Dim = [0.2,0.1,0.3];
@@ -199,4 +199,4 @@ components(i).isFit = 0;
 components(i).Dim = [0.2,0.1,0.1];
 components(i).LocationReq = 'Inside';
 i = i + 1;
-% 
+

@@ -43,6 +43,15 @@ for i = 1:n1
         [components(i).CG_XYZ,structures(structuresIndices(1)).Surface(structuresIndices(2)),needExpand,isFit(i)] = StackComponent(Dim,structures(structuresIndices(1)).Surface(structuresIndices(2)),genParameters);
     elseif strcmp(components(i).Shape,'Cone')
         % Come back to this one.
+        h = components(i).Dim(1);
+        r1 = components(i).Dim(2); 
+        r2 = components(i).Dim(2);
+        if r1 > r2
+            r = r1;
+        else
+            r = r2;
+        end
+        Dim = [h,r*2,r*2];
         [components(i).CG_XYZ,structures(structuresIndices(1)).Surface(structuresIndices(2)),needExpand,isFit(i)] = StackComponent(Dim,structures(structuresIndices(1)).Surface(structuresIndices(2)),genParameters);
     end
     

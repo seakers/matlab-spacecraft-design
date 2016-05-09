@@ -212,13 +212,13 @@ for j = i:i+nElectronics
 end
 i = i + nElectronics+1;
 
-% Comms Electronics
-components(i).Name = 'Payload';
-components(i).Subsystem = 'Payload';
-components(i).Shape = 'Rectangle';
-components(i).Mass = 1;
-components(i).isFit = 0;
-components(i).Dim = [0.1,0.1,0.1];
-components(i).LocationReq = 'Specific';
-i = i + 1;
+% % Comms Electronics
+% components(i).Name = 'Payload';
+% components(i).Subsystem = 'Payload';
+% components(i).Shape = 'Rectangle';
+% components(i).Mass = 1;
+% components(i).isFit = 0;
+% components(i).Dim = [0.1,0.1,0.1];
+% components(i).LocationReq = 'Specific';
+% i = i + 1;
 %

@@ -222,9 +222,6 @@ for i = 1:n1
         components(i).Dim = r;
         components(i).CG_XYZ = (components(i).RotateToSatBodyFrame*rectangleCG(i,:)')';
     elseif strcmp(components(i).Shape,'Cone')
-        components(i).CG_XYZ = (components(i).RotateToSatBodyFrame*rectangleCG(i,:)')';
-    % If it is a cylinder
-    elseif strcmp(components(i).Shape,'Cylinder')
         r1 = components(i).Dim(2);
         r2 = components(i).Dim(3);
         if r1 > r2
@@ -234,12 +231,16 @@ for i = 1:n1
             l = r2*2;
             w = r2*2;
         end
+        components(i).CG_XYZ = (components(i).RotateToSatBodyFrame*rectangleCG(i,:)')';
+    % If it is a cylinder
+    elseif strcmp(components(i).Shape,'Cylinder')
         % Need to find a way to record the height and the width here.
-%         h = components(i).Dim(1);
-%         r = components(i).Dim(2);
-%         w = 2*r;
-%         l = 2*r;
-%         components(i).CG_XYZ = (components(i).RotateToSatBodyFrame*rectangleCG(i,:)')';
+        h = components(i).Dim(1);
+        r = components(i).Dim(2)/2;
+        w = 2*r;
+        l = 2*r;
+        components(i).Dim = [h,r];
+        components(i).CG_XYZ = (components(i).RotateToSatBodyFrame*rectangleCG(i,:)')';
         components(i).CG_XYZ = rectangleCG(i,:);
     end
 end

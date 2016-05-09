@@ -62,6 +62,11 @@ if any(genParameters.needExpand(:,1))
             end
         end
     elseif strfind(genParameters.spacecraftType,'Stacked')
+        if any(genParameters.needExpand(7:end,1));
+            nTrays = size(genParameters.trays,1);
+            trayHeight = max(genParameters.needExpand(7:end,2));
+            genParameters.trays = [genParameters.trays; nTrays+1,trayHeight];
+        end
         if newHeight > genParameters.satHeight
 %             genParameters.satHeight = newHeight;
 %         elseif newHeight == genParameters.satHeight
@@ -69,15 +74,15 @@ if any(genParameters.needExpand(:,1))
         elseif newHeight == genParameters.satHeight
             genParameters.satHeight = genParameters.satHeight + genParameters.tolerance;
         end
-        if newWidth > genParameters.satWidth
+        if newWidth >= genParameters.satWidth
             genParameters.satWidth = newWidth + genParameters.tolerance;
-        elseif newWidth == genParameters.satWidth
-            genParameters.satWidth = genParameters.satWidth + genParameters.tolerance;
+%         elseif newWidth == genParameters.satWidth
+%             genParameters.satWidth = genParameters.satWidth + genParameters.tolerance;
         end
-        if newLength > genParameters.satLength
+        if newLength >= genParameters.satLength
             genParameters.satLength = newLength + genParameters.tolerance;
-        elseif newLength == genParameters.satLength
-            genParameters.satLength = genParameters.satLength + genParameters.tolerance;
+%         elseif newLength == genParameters.satLength
+%             genParameters.satLength = genParameters.satLength + genParameters.tolerance;
         end    
     else
         % Expand the structure for any structure that doesn't have mounting
