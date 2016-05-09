@@ -2,7 +2,7 @@ function [payload] = CreatePayload(option)
 
 if option == 1
     % MicroMAS
-    comp = struct('Name','Payload','Subsystem','Payload','Shape','Rectangle','Mass',1,'Dim',[.1,.1,.1],'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'isFit',[]);
+    comp = struct('Name','Payload','Subsystem','Payload','Shape','Rectangle','Mass',1,'Dim',[.1,.1,.1],'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
     payload.comp = comp;
     payload.Orbit = 'LEO';
     payload.h = 400; % Altitude %km
@@ -14,7 +14,7 @@ if option == 1
     payload.cost = 200; %($ in thousands of dollars)
 elseif option == 2
     % Comms satellite.
-    comp = struct('Name','Payload','Subsystem','Payload','Shape','Cylinder','Mass',1,'Dim',[.1,.5],'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'isFit',[]);
+    comp = struct('Name','Payload','Subsystem','Payload','Shape','Cylinder','Mass',1,'Dim',[.1,.5],'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
     payload.comp = comp;
     payload.Orbit = 'LEO';
     payload.h = 1440; % Altitude %km

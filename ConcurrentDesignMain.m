@@ -8,6 +8,7 @@ addpath Avionics
 addpath Structures
 addpath Thermal
 addpath LV
+addpath Propulsion
 
 %  Inputs
 % h = 400;            % Altitude
@@ -19,6 +20,7 @@ addpath LV
 % payloadpower=1000;     %large sat
 
 [payload] = CreatePayload(1); % MicroMAS cubesat
+[payload] = CreatePayload(2); % MicroMAS cubesat
 % Estimated dry mass
 drymass_est = 3*payload.mass;
 
@@ -39,7 +41,9 @@ while (time < 250) && ~drymass_ok
 
     [power, power_comp] = power_main(payload.h,payload.lifetime,payload.power,comms.power,2,avionics.AvgPwr,drymass_est);
     
-    components = [payload.comp comms_comp avionics_comp power_comp];
+    [propulsion] = Propulsion(drymass_est,payload.h,payload.lifetime);
+    
+    components = [payload.comp comms_comp avionics_comp power_comp propulsion.comp];
     
     [structures] = structures_main(components);
     
