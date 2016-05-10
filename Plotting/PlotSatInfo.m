@@ -1,4 +1,4 @@
-function PlotSatInfo(payload,comms,eps,avionics,thermal,structures, propulsion)
+function PlotSatInfo(payload,comms,eps,avionics,thermal,structures, propulsion,LV)
 
 % Create the vectors containing the mass info
 mass = [payload.mass,comms.mass,eps.mass,thermal.mass,avionics.Mass,structures.structuresMass,propulsion.mass];
@@ -27,7 +27,7 @@ subplot(2, 3, 5);
 PieChartPlotter(cost,cost_subsystemStrings,'Cost (Thousands $)');
 
 subplot(1, 3, 1);
-PlotSatellite(structures.components,structures.structures);
+PlotSatellite(structures.components,structures.structures,LV);
 
 linkbudget = {'Pt',comms.Pt,'L_l',[],'D_r',comms.Dr,'Eb_no',comms.EbN0;
             'D',comms.D,'L_a',comms.Pt,'G_r',comms.Gr,'Eb/No',comms.EbN0min;
@@ -48,6 +48,8 @@ pos = get(subplot(2,3,6),'position');
 delete(subplot(2,3,6))
 set(t,'units','normalized')
 set(t,'position',pos)
+
+fprintf(['The LV selected is', LV.id,'\n'])
 
 
 % [FaceColor,EdgeColor] = ColorSelection(Subsystem);

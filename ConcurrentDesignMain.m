@@ -22,7 +22,7 @@ addpath Payload
 % payloadpower=1000;     %large sat
 
 % [payload] = CreatePayload(1); % MicroMAS cubesat
-[payload] = CreatePayload(2); % comms cubesat
+[payload] = CreatePayload(2); % comms sat
 % Estimated dry mass
 drymass_est = 3*payload.mass;
 
@@ -45,7 +45,7 @@ while (time < 250) && ~drymass_ok
     
     [propulsion] = Propulsion(drymass_est,payload.h,payload.lifetime);
     
-%     [adcs,components] = adcs_main(pointingaccuracy,Iyy,Izz,SurfaceArea,ThrusterMomentArm);
+%     [adcs] = adcs_main(pointingaccuracy,structures.InertiaMatrix(2,2),structures.InertiaMatrix(3,3),structures.SA,ThrusterMomentArm);
     
     components = [payload.comp comms.comp avionics.comp eps.comp propulsion.comp];
     
@@ -69,7 +69,7 @@ if drymass_ok
     fprintf('Total mass (kg): %f\n',drymass_calc)
     fprintf('Total Cost (k$): %f\n',cost)
 %     PlotSatellite(components,structures)
-    PlotSatInfo(payload,comms,eps,avionics,thermal,structures,propulsion)
+    PlotSatInfo(payload,comms,eps,avionics,thermal,structures,propulsion,LV)
 end
 
 

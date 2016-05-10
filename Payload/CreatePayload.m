@@ -3,6 +3,8 @@ function [payload] = CreatePayload(option)
 if option == 1
     % MicroMAS
     comp = struct('Name','Payload','Subsystem','Payload','Shape','Rectangle','Mass',1,'Dim',[.1,.1,.1],'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+%     comp2 = struct('Name','Payload','Subsystem','Payload','Shape','Rectangle','Mass',1,'Dim',[.1,.1,.1],'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+%     comp = [comp1,comp2];
     payload.comp = comp;
     payload.Orbit = 'LEO';
     payload.h = 400; % Altitude %km

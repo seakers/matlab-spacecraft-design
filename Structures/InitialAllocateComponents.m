@@ -50,7 +50,7 @@ for i = 1:n1
         % index of components assigned to certain structures.     
         componentName = components(i).Name;
         componentAssignedtoStructure = structures_buildableIndices.Specific(count_Specific).Name;
-        while isempty(strfind(componentAssignedtoStructure,componentName))
+        while isempty(strfind(componentName,componentAssignedtoStructure))
             count_Specific = count_Specific + 1;
             componentAssignedtoStructure = structures_buildableIndices.Specific(count_Specific).Name;
         end

@@ -30,6 +30,7 @@ while counter <= 50 && any(~genParameters.isFit)
     counter = counter +1;
 end
 [new_structures,old.structuresMass,old.structuresCost,old.componentsMass,old.totalMass] = MassCostCalculator(components,new_structures);
+[old.SA] = SurfaceAreaCalculator(genParameters.satHeight,genParameters.satLength,genParameters.satWidth);
 [old.InertiaTensor,old.CG] = InertiaCalculator(components,new_structures);
 
 old.components = components;
@@ -42,18 +43,31 @@ new = old;
 % Perform local search for optimal placement of components
 counter = 1;
 while counter <= 5*length(old.components)
-    new.components = RandomAllocationComponents(old.components,old.genParameters.buildableIndices);
-    [new.structures, new.genParameters] = CreateStructure(old.genParameters); % This might need to be done better, pretty sure it's very inefficient/wrong here.
-    % Place the components in their locations
-    [new.components,new.structures,new.genParameters]= FitComponents(new.components,new.structures,new.genParameters);       
-    [new.genParameters] = UpdateParameters(new.genParameters);
-    [new.structures, new.genParameters] = CreateStructure(new.genParameters);
-    % Statics
+    
+    structNotOK = 0;
+    while ~structNotOK && counter <= 10
+    % If, when you randomly allocate components, you accidentally move a
+    % component to a place where it wouldn't fit, and only attempt this for
+    % 10 times before trying again.
+        new.components = RandomAllocationComponents(old.components,old.genParameters.buildableIndices);
+        [new.structures, new.genParameters] = CreateStructure(old.genParameters); % This might need to be done better, pretty sure it's very inefficient/wrong here.
+        % Place the components in their locations
+        [new.components,new.structures,new.genParameters]= FitComponents(new.components,new.structures,new.genParameters);       
+%         [new.genParameters] = UpdateParameters(new.genParameters);
+%         [new.structures, new.genParameters] = CreateStructure(new.genParameters);
+        if any(~genParameters.isFit)
+            structNotOK = 0;
+        else
+            structNotOK = 1;
+        end
+        counter = counter + 1;
+    end
+        % Statics
     %     [] = Statics();
 
     % Calculate the total mass of the satellite.
     [new.structures,new.structuresMass,new.structuresCost,new.componentsMass,new.totalMass] = MassCostCalculator(new.components,new.structures);
-
+    [new.SA] = SurfaceAreaCalculator(new.genParameters.satHeight,new.genParameters.satLength,new.genParameters.satWidth);
     % Calculate the inertia tensor for the new configuration of the
     % satellite
     [new.InertiaTensor,new.CG] = InertiaCalculator(new.components,new.structures);
@@ -81,6 +95,8 @@ function [old] = CheckInertia(old,new)
 rold = sqrt(old.CG(1)^2+old.CG(2)^2);
 rnew = sqrt(new.CG(1)^2+new.CG(2)^2);
 % 
+hold = old.CG(3);
+hnew = new.CG(3);
 if rnew < rold
     old = new;
 end

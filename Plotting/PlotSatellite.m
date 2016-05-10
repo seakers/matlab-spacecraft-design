@@ -1,4 +1,4 @@
-function PlotSatellite(components, structures)
+function PlotSatellite(components, structures,LV)
 % hwlRectangle = [2,3,1];
 % xyzRectangle = [0,0,0];
 
@@ -17,20 +17,63 @@ axis equal
 outside_obj = PlotComponents(components);
 structures_obj = PlotStructures(structures);
 obj = [outside_obj,structures_obj];
-hold off
-view(3) %sets the default three-dimensional view, az = ?37.5, el = 30.
+
+
+hp = uipanel('Title','Plot Controls','FontSize',12,'Units', 'normalized','Position',[0.05,0.05,.1,.2]);
+
 % Create a Slider Bar
-sl_handle = uicontrol('style','slide',...
+sl_handle = uicontrol(hp,'String','Satellite Outside Transparancy','style','slide',...
          'min',0,'max',1,'val',1,...
-         'Units', 'normalized','Position',[0.95,0.3,.05,.4], ...
+         'Units', 'normalized','Position',[0.05,0.2,.9,.05], ...
         'callback',{@sl_call,obj});
+% Plot the LV and 
+if ~isempty(LV)
+    % If the launch vehicle is not empty, plot it and create the UI that
+    % will allow the user to see it inside the LV or not.
+    LV_obj = PlotLV(LV);  
+    hObject = uicontrol(hp,'style','togglebutton','Units', 'normalized','Position',[0.05,0.5,.8,.4],'Callback',{@setLVvisibility,LV_obj});
+    set(hObject,'Value',0)
+    setLVvisibility(hObject,[],LV_obj)
+    set(hObject,'String',[LV.id,' Fairing'])
+%     ht2 = uicontrol('Style','Text','Position',[.05,.7,.8,.4]);
+%     instring = {['View inside ',LV.id,' Launch Vehicle Fairing']};
+%     outstring = textwrap(hObject,instring);
+%     set(ht2,'String',outstring);
+end   
+
+hold off
+view(3) %sets the default three-dimensional view, az = ?37.5, el = 30. 
+    
 %  set(sl_handle,'ylabel','Structures Transparancy'),
+
+function setLVvisibility(hObject,~,LV_obj)
+    on = get(hObject,'Value');
+    if on
+        set(LV_obj,'Visible','on')
+    else
+        set(LV_obj,'Visible','off')
+    end
+
+
+
+
 
 % ConePlotter()
 function [] = sl_call(varargin)
 % Callback for the slider.
 [h,obj] = varargin{[1,3]};  % calling handle and data structure.
 set(obj,'FaceAlpha',get(h,'Value'))
+
+function obj = PlotLV(LV)
+% a function to plot the Launch Vehicle
+Shape = 'Cylinder';
+myDim = [LV.height, LV.diameter/2];
+myVertices = [];
+FaceColor = [0,0,0];
+EdgeColor = [0,0,0];
+myCG = [0,0,LV.height/2];
+obj = ShapePlotter(Shape,myDim,myVertices,myCG,FaceColor,EdgeColor);
+set(obj,'FaceAlpha',0.2);
 
 function obj = PlotComponents(components)
 % function to plot the components
