@@ -2,7 +2,7 @@ function PlotSatInfo(payload,comms,eps,avionics,thermal,structures, propulsion)
 
 % Create the vectors containing the mass info
 mass = [payload.mass,comms.mass,eps.mass,thermal.mass,avionics.Mass,structures.structuresMass,propulsion.mass];
-mass_subsystemStrings = {'Payload','Comms','EPS','Thermal','Avionics','Structures','Propulsion};
+mass_subsystemStrings = {'Payload','Comms','EPS','Thermal','Avionics','Structures','Propulsion'};
 
 % Create the vectors containing the power info
 power = [payload.power,comms.power,avionics.AvgPwr,propulsion.power];
@@ -24,7 +24,7 @@ subplot(2, 3, 3);
 PieChartPlotter(power,power_subsystemStrings,'Power (W)')
 
 subplot(2, 3, 5);
-PieChartPlotter(cost,cost_subsystemStrings,'Cost ($)')
+PieChartPlotter(cost,cost_subsystemStrings,'Cost (Thousands $)')
 
 subplot(1, 3, 1);
 PlotSatellite(structures.components,structures.structures)

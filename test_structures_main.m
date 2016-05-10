@@ -7,6 +7,10 @@ addpath LV
 % [payload] = CreatePayload(1); % MicroMAS cubesat
 [payload] = CreatePayload(1); % Comms satellite
 
+propulsion.mass = 30;
+propulsion.power = 23;
+propulsion.cost = 12;
+
 comms.mass = 50;
 comms.cost = 12;
 comms.power = 120;
@@ -32,4 +36,4 @@ components = [components, payload.comp];
 
 LV = LV_selection(payload,structures);
 
-PlotSatInfo(payload,comms,power,avionics,thermal,structures)
+PlotSatInfo(payload,comms,power,avionics,thermal,structures,propulsion)
