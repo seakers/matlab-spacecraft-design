@@ -20,7 +20,7 @@ addpath Propulsion
 % payloadpower=1000;     %large sat
 
 % [payload] = CreatePayload(1); % MicroMAS cubesat
-[payload] = CreatePayload(2); % MicroMAS cubesat
+[payload] = CreatePayload(2); % comms cubesat
 % Estimated dry mass
 drymass_est = 3*payload.mass;
 

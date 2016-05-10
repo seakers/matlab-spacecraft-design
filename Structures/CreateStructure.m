@@ -591,6 +591,10 @@ elseif strfind(genParameters.spacecraftType,'Stacked')
                                 1,1];
     buildableIndices.Specific(1).Name = 'Payload';
     buildableIndices.Specific(1).Index = [6,1];
+    buildableIndices.Specific(2).Name = 'Fuel Tank';
+    buildableIndices.Specific(2).Index = [7,1];
+    buildableIndices.Specific(3).Name = 'Thruster';
+    buildableIndices.Specific(3).Index = [1,1];
 end
 genParameters.buildableIndices = buildableIndices;
 

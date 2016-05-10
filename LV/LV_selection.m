@@ -24,6 +24,7 @@ index = strfind(fieldnames(LVData),payload.Orbit);
 
 i = 1;
 keepGoing = 1;
+LV = [];
 while i <= n1 && keepGoing
 %     index = ismember(structuresAssignment,[i,j],'rows');
     n2 = size(index,1);

@@ -5,11 +5,11 @@ mass = [payload.mass,comms.mass,eps.mass,thermal.mass,avionics.Mass,structures.s
 mass_subsystemStrings = {'Payload','Comms','EPS','Thermal','Avionics','Structures','Propulsion};
 
 % Create the vectors containing the power info
-power = [payload.power,comms.power,avionics.AvgPwr,propulsion.power];
+power = [payload.power,comms.power,avionics.AvgPwr];
 power_subsystemStrings = {'Payload','Comms','Avionics','Propulsion'};
 
 % Create the vectors containing the cost info
-cost = [avionics.Cost/1000, comms.cost, eps.cost, thermal.cost,propulsion.cost];
+cost = [avionics.Cost/1000, comms.cost, eps.cost, thermal.cost];
 cost_subsystemStrings = {'Avionics','Comms','EPS','Thermal','Propulsion'};
 
 % Establish the figure

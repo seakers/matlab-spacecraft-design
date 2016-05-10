@@ -1,7 +1,4 @@
 function [genParameters]= initGenParameters(components)
-
-
-
 % Check the size of the tank to make sure it fits the size of central
 % cylinders available. Central Cylinders are sized based on the size of the
 % payload adapters. If the payload adapters are too small, then you can
@@ -10,8 +7,8 @@ function [genParameters]= initGenParameters(components)
 
 % Get size of multiple fuel tanks if there are multiple fuel tanks.
 tankInd = [];
-for i = 1:size(components,1) 
-    if strcmp(components(i).Name,'Fuel Tank')
+for i = 1:length(components) 
+    if strfind(components(i).Name,'Tank')
         tankInd = [tankInd,i];
     end
 end
