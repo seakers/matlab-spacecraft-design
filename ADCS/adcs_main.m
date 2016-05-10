@@ -1,4 +1,4 @@
-function [adcs,components]=adcs_main(pointingaccuracy,Iyy,Izz,SurfaceArea,ThrusterMomentArm)
+function [adcs]=adcs_main(pointingaccuracy,Iyy,Izz,SurfaceArea,ThrusterMomentArm)
 %sat inizialization for ADCS
 format long;
 initConstants;
@@ -52,7 +52,8 @@ sat.ThrusterMomentArm       = ThrusterMomentArm;          % Moment Arm for calcu
 
 
 adcs = sat_adcs(sat);
-components=adcs.Components;
+% components=adcs.comp;
+
 end
 
 

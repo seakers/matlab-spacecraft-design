@@ -219,8 +219,8 @@ for i = 1:n1
              
     elseif strcmp(components(i).Shape,'Sphere')
         h = rectangleDim(i,1);
-%         r = h/2;
-        components(i).Dim = h;
+        r = h/2;
+        components(i).Dim = r;
         components(i).CG_XYZ = (components(i).RotateToSatBodyFrame*rectangleCG(i,:)')';
     elseif strcmp(components(i).Shape,'Cone')
         r1 = components(i).Dim(2);

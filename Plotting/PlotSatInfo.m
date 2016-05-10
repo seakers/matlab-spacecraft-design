@@ -13,7 +13,7 @@ cost = [avionics.Cost/1000, comms.cost, eps.cost, thermal.cost,propulsion.cost];
 cost_subsystemStrings = {'Avionics','Comms','EPS','Thermal','Propulsion'};
 
 % Establish the figure
-figure('units','normalized','outerposition',[0 0 1 1])
+f = figure('units','normalized','outerposition',[0 0 1 1]);
 
 % Plot the Pie chart for the mass
 subplot(2, 3, 2);
@@ -21,13 +21,34 @@ mass_subsystemStrings = PieChartPlotter(mass,mass_subsystemStrings,'Mass (kg)');
 legend(mass_subsystemStrings)
 
 subplot(2, 3, 3);
-PieChartPlotter(power,power_subsystemStrings,'Power (W)')
+PieChartPlotter(power,power_subsystemStrings,'Power (W)');
 
 subplot(2, 3, 5);
-PieChartPlotter(cost,cost_subsystemStrings,'Cost (Thousands $)')
+PieChartPlotter(cost,cost_subsystemStrings,'Cost (Thousands $)');
 
 subplot(1, 3, 1);
-PlotSatellite(structures.components,structures.structures)
+PlotSatellite(structures.components,structures.structures);
+
+linkbudget = {'Pt',comms.Pt,'L_l',[],'D_r',comms.Dr,'Eb_no',comms.EbN0;
+            'D',comms.D,'L_a',comms.Pt,'G_r',comms.Gr,'Eb/No',comms.EbN0min;
+            'G_t',comms.Gt,'L_s',comms.Ls,'T_r',comms.Tr,'Margin',comms.Margin;
+            'f/\lambda',comms.f,'R_b',comms.Rb,[],[],[],[];
+            'R',comms.R,'Modulation',comms.modulation,[],[],[],[]};
+
+% Create the uitable
+cnames = {[],'Tx',[],'Cx',[],'Rx',[],'Out'};
+t = uitable(f,'Data',linkbudget,...
+            'ColumnName',cnames,...
+            'ColumnWidth','auto');
+%             'RowName',rnames,...
+            
+            
+subplot(2,3,6),plot(3)
+pos = get(subplot(2,3,6),'position');
+delete(subplot(2,3,6))
+set(t,'units','normalized')
+set(t,'position',pos)
+
 
 % [FaceColor,EdgeColor] = ColorSelection(Subsystem);
 
@@ -51,6 +72,12 @@ function dataSubsystems = PieChartPlotter(data,dataSubsystems,dataTitle)
 % sort the data from largest to smallest
 [data,ind] = sort(data);
 dataSubsystems = dataSubsystems(ind);
+zeroData = data <= 0;
+if any(zeroData)
+    data(zeroData) = [];
+    dataSubsystems(zeroData) = [];
+end  
+
 
 h = pie(data);
 rotate(h,[0 0 1],270);
@@ -64,7 +91,7 @@ for i = 1:length(hp)
     percentValue = get(hText(i),'String'); % percent values
     str = num2str(data(i)); % strings
     combinedstrings = [str,' (',percentValue,')']; % strings and percent values
-    set(hText(i),'String',combinedstrings)
+    set(hText(i),'String',combinedstrings);
 end
 
-title([dataTitle, ' Total: ',num2str(sum(data))])
+title([dataTitle, ' Total: ',num2str(sum(data))]);

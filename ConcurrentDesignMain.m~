@@ -1,4 +1,4 @@
-function [SatelliteInfo]=ConcurrentDesignMain()
+function [avionics, comms , power, components, structures, thermal, cost]=ConcurrentDesignMain()
 
 % Add folders
 addpath ADCS
@@ -71,19 +71,13 @@ if drymass_ok
 %     PlotSatellite(components,structures)
     PlotSatInfo(payload,comms,eps,avionics,thermal,structures,propulsion)
 end
+end
 
-
-SatelliteInfo.mass = drymass_calc;
-SatelliteInfo.cost = cost;
 SatelliteInfo.avionics = avionics;
 SatelliteInfo.eps = eps;
-SatelliteInfo.comms = comms;
-SatelliteInfo.structures = structures;
-SatelliteInfo.thermal = thermal;
-SatelliteInfo.payload = payload;
-SatelliteInfo.propulsion = propulsion;
-
-
+SatelliteInfo.comms = comms;, components, structures, thermal]
+SatelliteInfo.structures;
+SatelliteInfo.thermal
 
 
 
