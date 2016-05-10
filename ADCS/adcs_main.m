@@ -1,4 +1,4 @@
-function [adcs]=adcs_main(pointingaccuracy,Iyy,Izz,SurfaceArea,ThrusterMomentArm)
+function [adcs]=adcs_main(pointingaccuracy,Iyy,Izz,SurfaceArea)
 %sat inizialization for ADCS
 format long;
 initConstants;
@@ -25,7 +25,7 @@ sat.DragCoefficient         = 2;            % Aerodynamic drag coefficient of th
 sat.RWMarginFactor          = 1.5;          % Margin for sizing of reaction wheels
 
 
-sat.NumberofThrusters       = 3;
+sat.NumberofThrusters       = 0;
 sat.NumberofRW              = 4;            % Number of reaction wheels (>=3) [#] 
 sat.NumberofMagneticTorquers= 3;            % Number of Magnetic torquers(>=3) [#]
 sat.NumberofSunSensors      = 3;            % Number of sun sensors(>=2) [#]
@@ -45,7 +45,7 @@ sat.MaxPointing= .1;                     %MaxPointing(theta)
 sat.Iyy=Iyy;
 sat.Izz=Izz;
 sat.SurfaceArea=SurfaceArea;
-sat.ThrusterMomentArm       = ThrusterMomentArm;          % Moment Arm for calculation of thrusters' torque
+sat.ThrusterMomentArm       = 0;          % Moment Arm for calculation of thrusters' torque
 
 
 
