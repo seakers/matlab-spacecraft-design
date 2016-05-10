@@ -9,6 +9,8 @@ addpath Structures
 addpath Thermal
 addpath LV
 addpath Propulsion
+addpath Plotting
+addpath Payload
 
 %  Inputs
 % h = 400;            % Altitude

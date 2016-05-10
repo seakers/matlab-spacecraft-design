@@ -3,6 +3,8 @@ function test_structures_main() % Include surfaceArea
 % from the other subsystems and figures out the structure for them.
 addpath Structures
 addpath LV
+addpath Plotting
+addpath Payload
 
 % [payload] = CreatePayload(1); % MicroMAS cubesat
 [payload] = CreatePayload(1); % Comms satellite
