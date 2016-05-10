@@ -6,7 +6,7 @@ function dV = DeltaV(h,life)
 %   h:    Altitude [km]
 %   life: Satellite lifetime [years]
 % Output
-% dV: Total Delta-V for the mission [m/s]
+%   dV: Total Delta-V for the mission [m/s]
 %--------------------------------------------------------------------------
     
     % Constants
@@ -28,7 +28,7 @@ function dV = DeltaV(h,life)
         dVd = compute_dV_graveyard(a,B);
     else
         dVi = 0;
-        dVd = compute_dV_deorbit(a,RE+3E5);
+        dVd = compute_dV_deorbit(a,RE);
     end
     
     % Find Delta-V for Orbit Maintenance

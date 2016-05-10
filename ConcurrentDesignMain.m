@@ -35,15 +35,15 @@ time = 0;
 
 while (time < 250) && ~drymass_ok
     
-    [avionics, avionics_comp] = structOBC(payload.dataperday,1);
+    [avionics] = structOBC(payload.dataperday,1);
     
-    [comms, comms_comp] = comms_main(drymass_est,payload.dataperday,payload.h,payload.i,payload.lifetime);
+    [comms] = comms_main(drymass_est,payload.dataperday,payload.h,payload.i,payload.lifetime);
 
-    [power, power_comp] = power_main(payload.h,payload.lifetime,payload.power,comms.power,2,avionics.AvgPwr,drymass_est);
+    [eps] = power_main(payload.h,payload.lifetime,payload.power,comms.power,2,avionics.AvgPwr,drymass_est);
     
     [propulsion] = Propulsion(drymass_est,payload.h,payload.lifetime);
     
-    components = [payload.comp comms_comp avionics_comp power_comp propulsion.comp];
+    components = [payload.comp comms.comp avionics.comp eps.comp propulsion.comp];
     
     [structures] = structures_main(components);
     
@@ -54,7 +54,7 @@ while (time < 250) && ~drymass_ok
     
     drymass_ok = abs(drymass_est - drymass_calc)/drymass_calc < 0.05;
     
-    cost = avionics.Cost/1000 + comms.cost + power.cost + thermal.cost; 
+    cost = avionics.Cost/1000 + comms.cost + eps.cost + thermal.cost; 
     
     drymass_est = drymass_calc;
     fprintf('Total mass (kg): %f\n',drymass_calc)
@@ -65,7 +65,7 @@ if drymass_ok
     fprintf('Total mass (kg): %f\n',drymass_calc)
     fprintf('Total Cost (k$): %f\n',cost)
 %     PlotSatellite(components,structures)
-    PlotSatInfo(payload,comms,power,avionics,thermal,structures,propulsion)
+    PlotSatInfo(payload,comms,eps,avionics,thermal,structures,propulsion)
 end
 end
 

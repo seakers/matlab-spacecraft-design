@@ -1,7 +1,7 @@
 % Creates a Struct array with estimated specifications for a satellite's
 %  on-board computers, from the data downloaded per and redundancy
 
-function [obc, components] = structOBC(ddpd, redundancy)
+function [obc] = structOBC(ddpd, redundancy)
 
         %  Units used:
         %     cost -- $
@@ -81,7 +81,7 @@ function [obc, components] = structOBC(ddpd, redundancy)
       for i = 1:redundancy
           components(i) = struct('Name','OBC','Subsystem','Avionics','Shape','Rectangle','Mass',obc.Mass,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,85],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
       end
-      
+      obc.comp = components;
       
 end
       
