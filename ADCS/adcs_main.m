@@ -1,15 +1,15 @@
-function [adcs]=adcs_main(pointingaccuracy,Iyy,Izz,SurfaceArea)
+function [adcs]=adcs_main(h,pointingaccuracy,Iyy,Izz,SurfaceArea)
 %sat inizialization for ADCS
 format long;
 initConstants;
 wgs84data;
 
 %ORBIT
-sat.Altitude = 400;%orbit
-R = RE+sat.Altitude; %R = RE+h = a Semimajor axis [m]
+sat.Altitude = h*10^3;%orbit
+R = RE+sat.Altitude; %R = RE+h = a Semimajor axis [km]
 sat.Velocity=OrbitVelocity(R,R);
 sat.Density=Atmosphere(R);
-sat.Period=2*pi*sqrt(R^3/398600.5); %period [s]
+sat.Period=2*pi*sqrt(R^3/3.98600e14); %period [s]
 
 % ADCS INPUTS
 
@@ -37,8 +37,8 @@ sat.ADCSSpecificImpulse     = 70;            % specific impulse in s (70s for co
 sat.rho_RW = 2700;                          %Density of reaction wheel assumed to be Al-6061 (kg/m^3)
 sat.ratio_RW = .1;                          %Aspect ratio of thickness/Radius (assume)
 sat.BurnTime = 1;                           %Burn time of 1 second
-sat.InTheaterAccessDuration = 5;
-sat.MaxPointing= .1;                     %MaxPointing(theta)
+sat.InTheaterAccessDuration = 30;           % duration of slewing maneuver [s]
+sat.MaxPointing= 30;                        % Maximum slewing angle [degrees]
 
 
 %Structures (Anjit)

@@ -208,7 +208,7 @@ for i = 1:size(genParameters.trays,1)
     structures(6+i).Surface(1).Mountable = 'N/A';
     structures(6+i).Surface(1).buildableDir = 'XY';
     structures(6+i).Surface(1).normalFace = '+Z';
-    structures(6+i).Surface(1).availableX = -[-genParameters.satLength/2+genParameters.aluminumThickness,genParameters.satLength/2-genParameters.aluminumThickness];
+    structures(6+i).Surface(1).availableX = [-genParameters.satLength/2+genParameters.aluminumThickness,genParameters.satLength/2-genParameters.aluminumThickness];
     structures(6+i).Surface(1).availableY = [-genParameters.satWidth/2+genParameters.aluminumThickness,genParameters.satWidth/2-genParameters.aluminumThickness];
     structures(6+i).Surface(1).availableZ = [2*genParameters.aluminumThickness+height,genParameters.satHeight-genParameters.aluminumThickness];
 end
@@ -544,7 +544,7 @@ structures(8).Plane = 'XY';
 structures(9).Surface(1).Mountable = 'Payload'; % Don't need any specifics
 structures(9).Surface(1).normalFace = '+Z';
 structures(9).Surface(1).buildableDir = '+Z';
-structures(9).Surface(1).availableX = [-panelWidth/2,+panelWidth/2];
+structures(9).Surface(1).availableX = [-panelWidth/2,panelWidth/2];
 structures(9).Surface(1).availableY = [-genParameters.cylinderDiam/2-shearWidth,genParameters.cylinderDiam/2+shearWidth];
 structures(9).Surface(1).availableZ = [genParameters.satHeight,inf];
 

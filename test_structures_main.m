@@ -7,7 +7,7 @@ addpath Plotting
 addpath Payload
 
 % [payload] = CreatePayload(1); % MicroMAS cubesat
-[payload] = CreatePayload(2); % Comms satellite
+[payload] = CreatePayload(1); % Comms satellite
 
 propulsion.mass = 30;
 propulsion.power = 23;
@@ -45,8 +45,8 @@ avionics.AvgPwr = 100;
 avionics.Cost = 100;
 
 % [components] = CreateSampleComponents_Cubesat();
-[components] = CreateSampleComponents_Cylinder(payload);
-% [components] = CreateSampleComponents_Stacked();
+% [components] = CreateSampleComponents_Cylinder(payload);
+[components] = CreateSampleComponents_Stacked();
 components = [components, payload.comp];
 
 [structures] = structures_main(components);

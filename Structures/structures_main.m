@@ -6,9 +6,8 @@ counter = 1;
 genParameters = initGenParameters(components);
 while counter <= 50 && any(~genParameters.isFit)
     [old_structures, genParameters] = CreateStructure(genParameters);
-    components = InitialAllocateComponents(components,genParameters.buildableIndices); % Assign the components to specific parts
+    components = InitialAllocateComponents(components,genParameters); % Assign the components to specific parts
     genParameters.needExpand = zeros(length(old_structures),4);
-    
     counter2 = 1;
     keepGoing = 1;
     while keepGoing && counter2 <= length(components)  

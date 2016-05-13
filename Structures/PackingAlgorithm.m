@@ -90,7 +90,7 @@ end
 
 % Check To see if the Z goes in the negative direction
 if abs(panelHeight(2)) >= abs(panelHeight(1)) && panelHeight(2) < panelHeight(1)
-    rectangleCG(:,3) = -rectangleCG(:,3);
+    rectangleCG(:,3) = rectangleCG(:,3);
 end
 
 % Check to see if the X goes in the negative direction
@@ -110,9 +110,9 @@ rectangleCG(:,3) = rectangleCG(:,3) + structures.availableZ(1);
 
 
 if strcmp(structures.buildableDir,'XY')
-    expandHeight = needExpand(4);
+    expandHeight = needExpand(2);
     expandWidth = needExpand(3);
-    expandLength = needExpand(2);
+    expandLength = needExpand(4);
 elseif strcmp(structures.buildableDir,'XZ')
     expandHeight = needExpand(2);
     expandWidth = needExpand(4);

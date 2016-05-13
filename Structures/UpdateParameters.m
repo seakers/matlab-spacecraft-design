@@ -1,4 +1,4 @@
-function [genParameters] = UpdateParameters(genParameters)
+function [genParameters,components] = UpdateParameters(genParameters,components)
 % Function that expands all the heights of the satellite to the highest height availabe
 % for the component.
 

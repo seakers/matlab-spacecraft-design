@@ -14,10 +14,11 @@ if option == 1
     payload.mass = 1; %kg
     payload.power = 5;
     payload.cost = 200; %($ in thousands of dollars)
+    payload.pointingaccuracy = .1;
 elseif option == 2
     % Comms satellite.
     payload.mass = 500; %kg
-    comp = struct('Name','Payload','Subsystem','Payload','Shape','Cylinder','Mass',payload.mass,'Dim',[1,.75],'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+    comp = struct('Name','Payload','Subsystem','Payload','Shape','Cylinder','Mass',payload.mass,'Dim',[1,1],'CG_XYZ',[],'Vertices',[],'LocationReq','Specific','Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
     payload.comp = comp;
     payload.Orbit = 'LEO';
     payload.h = 800; % Altitude %km
@@ -26,6 +27,7 @@ elseif option == 2
     payload.lifetime = 3;     % Lifetime
     payload.power = 120; % Watts
     payload.cost = 100;
+    payload.pointingaccuracy = .1;
 end
 
 % components(i).Name = 'Fuel Tank';

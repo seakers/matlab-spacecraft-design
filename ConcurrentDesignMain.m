@@ -25,6 +25,16 @@ addpath Payload
 [payload] = CreatePayload(2); % comms sat
 % Estimated dry mass
 drymass_est = 3*payload.mass;
+% Initialize the structures just to work with the first iteration of the
+% tool
+satelliteDenisty = 100;
+L = (drymass_est/satelliteDenisty)^(1/3);
+structures.InertiaMatrix = zeros(3,3);
+structures.InertiaMatrix(1,1) = drymass_est^(5/3)*satelliteDenisty^(-2/3)/12;
+structures.InertiaMatrix(2,2) = drymass_est^(5/3)*satelliteDenisty^(-2/3)/12;
+structures.InertiaMatrix(3,3) = drymass_est^(5/3)*satelliteDenisty^(-2/3)/12;
+
+structures.SA = L^2;
 
 drymass_ok = 0;
 
@@ -45,7 +55,7 @@ while (time < 250) && ~drymass_ok
     
     [propulsion] = Propulsion(drymass_est,payload.h,payload.lifetime);
     
-%     [adcs] = adcs_main(pointingaccuracy,structures.InertiaMatrix(2,2),structures.InertiaMatrix(3,3),structures.SA,ThrusterMomentArm);
+    [adcs] = adcs_main(payload.h,payload.pointingaccuracy,structures.InertiaMatrix(2,2),structures.InertiaMatrix(3,3),structures.SA);
     
     components = [payload.comp comms.comp avionics.comp eps.comp propulsion.comp];
     
