@@ -21,7 +21,14 @@ pointing_acc = sat_in.MaxPointingADCS;
 
 %Iteration for the sensors
 acc_choice = 0;
-cost = 10000;
+cost = inf;
+
+% Initialize variables
+name_choice = []; 
+reliability = [];
+mass_allSensors = [];
+cost_allSensors = [];
+
 for s = 1:13
     if pointing_acc >= Sensor_cat(s,4) && cost >= Sensor_cat(s,5)
         acc_choice = Sensor_cat(s,4);

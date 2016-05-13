@@ -13,6 +13,25 @@ comms.power=0;
 comms.f=0;
 comms.modulation=0;
 comms.antennaType='';
+% Initialize the parameters
+comms.mass=[];
+comms.power=[];
+comms.f=[];
+comms.modulation=[];
+comms.antennaType=[];
+comms.D=[];
+comms.Pt=[];
+comms.Gt=[];
+comms.R=[];
+comms.Rb=[];
+comms.Ls=[];
+comms.Gr=[];
+comms.Dr=[];
+comms.Tr=[];
+comms.EbN0=[];
+comms.EbN0min=[];
+comms.Margin=[];
+
 
 %DATA INFORMATION
 if strcmp(params.GS,'NEN')
@@ -304,6 +323,8 @@ if optfound
     comms.antennaType=AntennaTypeOPT;
     if strcmp(AntennaTypeOPT,'Parabolic')
         comms.D=Dtx;
+    else
+        comms.D = [];
     end
     comms.Pt=P_tx;
     comms.Gt=Gtx;

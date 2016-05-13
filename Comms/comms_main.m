@@ -1,5 +1,5 @@
 %% Inputs
-function [comms,components]=comms_main(drymass,dataperday,h,inc,lifetime)
+function [comms]=comms_main(drymass,dataperday,h,inc,lifetime)
 %GS: Ground station type ('NEN', 'TDRSS', 'MOBILE')
 paramscomms.GS='NEN';
 
@@ -62,8 +62,8 @@ paramscomms.EIRP_TDRSS_forward=[43.6 46.5 56.2];
 %x = fmincon(myfunc,[10,10],[],[],[],[],[0 20],[0.1 50],[]);
 
 options = gaoptimset('display','off');
-[x,Cost]=ga(@(x)comms_analysis(paramscomms,x),2,[],[],[],[],[0 0.1],[20 30],[],options);
+[x,~]=ga(@(x)comms_analysis(paramscomms,x),2,[],[],[],[],[0 0.1],[20 30],[],options);
 [comms,components]=comms_analysis2(paramscomms,x);
-
+comms.comp = components;
 
 end

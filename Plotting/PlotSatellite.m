@@ -1,13 +1,12 @@
-function PlotSatellite(components, structures)
+function PlotSatellite(components, structures,LV)
 % hwlRectangle = [2,3,1];
 % xyzRectangle = [0,0,0];
 
-figure('units','normalized','position',[.1 .5 .7 .7])
 hold on
 grid 'on'
-xlabel('X')
-ylabel('Y')
-zlabel('Z')
+xlabel('X (m)')
+ylabel('Y (m)')
+zlabel('Z (m)')
 axis equal
 % S.LN = plot(S.x,S.x,'r');
 
@@ -15,16 +14,49 @@ axis equal
 % SpherePlotter(1.5,0,0,2)
 % CylindricalPlotter(1,2,2,2)
 
-PlotComponents(components)
-obj = PlotStructures(structures);
-hold off
-view(3) %sets the default three-dimensional view, az = ?37.5, el = 30.
+outside_obj = PlotComponents(components);
+structures_obj = PlotStructures(structures);
+obj = [outside_obj,structures_obj];
+
+
+hp = uipanel('Title','Plot Controls','FontSize',12,'Units', 'normalized','Position',[0.05,0.05,.1,.2]);
+
 % Create a Slider Bar
-sl_handle = uicontrol('style','slide',...
+sl_handle = uicontrol(hp,'String','Satellite Outside Transparancy','style','slide',...
          'min',0,'max',1,'val',1,...
-         'Units', 'normalized','Position',[0.95,0.3,.05,.4], ...
+         'Units', 'normalized','Position',[0.05,0.2,.9,.05], ...
         'callback',{@sl_call,obj});
+% Plot the LV and 
+if ~isempty(LV)
+    % If the launch vehicle is not empty, plot it and create the UI that
+    % will allow the user to see it inside the LV or not.
+    LV_obj = PlotLV(LV);  
+    hObject = uicontrol(hp,'style','togglebutton','Units', 'normalized','Position',[0.05,0.5,.8,.4],'Callback',{@setLVvisibility,LV_obj});
+    set(hObject,'Value',0)
+    setLVvisibility(hObject,[],LV_obj)
+    set(hObject,'String',[LV.id,' Fairing'])
+%     ht2 = uicontrol('Style','Text','Position',[.05,.7,.8,.4]);
+%     instring = {['View inside ',LV.id,' Launch Vehicle Fairing']};
+%     outstring = textwrap(hObject,instring);
+%     set(ht2,'String',outstring);
+end   
+
+hold off
+view(3) %sets the default three-dimensional view, az = ?37.5, el = 30. 
+    
 %  set(sl_handle,'ylabel','Structures Transparancy'),
+
+function setLVvisibility(hObject,~,LV_obj)
+    on = get(hObject,'Value');
+    if on
+        set(LV_obj,'Visible','on')
+    else
+        set(LV_obj,'Visible','off')
+    end
+
+
+
+
 
 % ConePlotter()
 function [] = sl_call(varargin)
@@ -32,15 +64,30 @@ function [] = sl_call(varargin)
 [h,obj] = varargin{[1,3]};  % calling handle and data structure.
 set(obj,'FaceAlpha',get(h,'Value'))
 
-function PlotComponents(components)
+function obj = PlotLV(LV)
+% a function to plot the Launch Vehicle
+Shape = 'Cylinder';
+myDim = [LV.height, LV.diameter/2];
+myVertices = [];
+FaceColor = [0,0,0];
+EdgeColor = [0,0,0];
+myCG = [0,0,LV.height/2];
+obj = ShapePlotter(Shape,myDim,myVertices,myCG,FaceColor,EdgeColor);
+set(obj,'FaceAlpha',0.2);
+
+function obj = PlotComponents(components)
 % function to plot the components
 nr = length(components);
+obj = [];
 for i = 1:nr
     if ~isempty(components(i).CG_XYZ )
         [FaceColor,EdgeColor] = ColorSelection(components(i).Subsystem);
-        ShapePlotter(components(i).Shape,components(i).Dim,components(i).Vertices,components(i).CG_XYZ,FaceColor,EdgeColor);
+        objnew = ShapePlotter(components(i).Shape,components(i).Dim,components(i).Vertices,components(i).CG_XYZ,FaceColor,EdgeColor);
     else
         fprintf([components(i).Name,' not added to satellite because it doesn"t fit\n'])
+    end
+    if strcmp(components(i).LocationReq,'Outside')
+        obj = [obj,objnew];
     end
 end
 
@@ -56,45 +103,6 @@ for i = 1:nr
     obj = [obj,objnew];
 end
 
-function [FaceColor,EdgeColor] = ColorSelection(Subsystem)
-% Depending on which subsystem the part is located in, we choose different
-% colors to plot them in.
-
-if strcmp('Structures',Subsystem)
-    % Grey faces with dark grey outlines
-    FaceColor = [0.8,0.8,0.8];
-    EdgeColor = [0.3,0.3,0.3];
-    
-elseif strcmp('Avionics',Subsystem)
-    % Reddish colors
-    FaceColor = [0.8,0.2,0.2];
-    EdgeColor = [0.6,0,0.2];
-    
-elseif strcmp('ADCS',Subsystem)
-    % Greenish colors
-    FaceColor = [0.2,0.8,0.4];
-    EdgeColor = [0.2,0.4,0.4];
-    
-elseif strcmp('Comms',Subsystem)
-    % Purplish Colors
-    FaceColor = [0.8,0.6,1];
-    EdgeColor = [0.6,0.2,0.6];
-    
-elseif strcmp('Propulsion',Subsystem)
-    % Orangeish Colors
-    FaceColor = [0.8,0.6,0.4];
-    EdgeColor = [0.8,0.2,0];
-    
-elseif strcmp('EPS',Subsystem)
-    % Blueish colors
-    FaceColor = [0.2,0.8,1];
-    EdgeColor = [0,0.4,0.8]; 
-    
-elseif strcmp('Payload',Subsystem)
-    % Turquoise colors
-    FaceColor = [0,0.8,0.6];
-    EdgeColor = [0,1,1];  
-end
 
 function obj = ShapePlotter(Shape,myDim,myVertices,myCG,FaceColor,EdgeColor)
 
@@ -126,7 +134,7 @@ elseif strcmp(Shape,'Sphere')
     [x,y,z] = sphere();
      obj = surf(r*x+myCG(1), r*y+myCG(2), r*z+myCG(3),'FaceColor', FaceColor,'EdgeColor',EdgeColor);
 elseif strcmp(Shape,'Cone')
- 
+    obj = [];
 elseif ~(isempty(strfind(Shape,'Cylinder')))
     % A function that plots a cylinder of radius r and with the bottom centered at location (a,b,c)
     r = myDim(1,2);

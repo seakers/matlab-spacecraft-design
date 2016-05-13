@@ -1,7 +1,8 @@
-function [totMass,structures] = MassCalculator(components,structures)
-load('materials.mat')
+function [structures,structuresMass,structuresCost,componentsMass,totalMass] = MassCostCalculator(components,structures)
+materials = MaterialTable();
 
 n1 = length(structures);
+structuresCost = zeros(n1,1);
 for i = 1:n1
 % Go through each of the structures and see if the material for the
 % component can be found in the materials table.
@@ -32,10 +33,13 @@ for i = 1:n1
             volume = (pi*r^2)*h; 
         end
         structures(i).Mass = materials(matInd-1).Density*volume/2;
+        structuresCost(i) = materials(matInd-1).Cost*structures(i).Mass;
     end
 end
 
 componentsMass = sum([components.Mass]);
 structuresMass = sum([structures.Mass]);
 
-totMass = componentsMass + structuresMass;
+structuresCost = sum(structuresCost);
+
+totalMass = componentsMass + structuresMass;

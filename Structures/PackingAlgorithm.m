@@ -10,22 +10,34 @@ function [components,structures,needExpand,isFit] = PackingAlgorithm(components,
 % work with the packing algorithm
 [panelWidth,panelHeight,panelLength] = StructuresConversionForPacking(structures(structuresIndices(1)).Surface(structuresIndices(2)));
 
-% Need different packing algorithms for different types of spacecraft
-% designs
-if strcmp(genParameters.spacecraftType,'Stacked')
-    % If it is a spacecraft that uses a stacking type configuration, with
-    % components on shelfs inside, especially cubesats, then a limited
-    % packing algorithm that will restrict the panel size will be used.
-    [rectangleCG,rectangleDim,needExpand,isFit] = SleatorPacking_Limited(rectangleDim,rectangleMass,genParameters.tolerance,abs(panelWidth(2)-panelWidth(1)),panelHeight(2)-panelHeight(1));      
+% Use the limited Sleator Packing Algorithm.
+% if strfind(genParameters.spacecraftType,'Stacked')
+%     % If it is a spacecraft that uses a stacking type configuration, with
+%     % components on shelfs inside, especially cubesats, then a limited
+%     % packing algorithm that will restrict the panel size will be used.
+%     
+%     if strcmp(structures(structuresIndices(1)).Surface(structuresIndices(2)).buildableDir,'XY')
+%     % If the panel is in the XY direction, then use the limited packing algorithm                
+%         [rectangleCG,rectangleDim,needExpand,isFit] = SleatorPacking_Limited(rectangleDim,rectangleMass,genParameters.tolerance,abs(panelWidth(2)-panelWidth(1)),abs(panelLength(2)-panelLength(1)),panelHeight(2)-panelHeight(1));      
+%     else
+%     % If not, use the normal limitless algorithm.
+%         [rectangleCG,rectangleDim,needExpand,isFit] = SleatorPacking_Limitless(rectangleDim,rectangleMass,genParameters.tolerance,abs(panelWidth(2)-panelWidth(1)),abs(panelLength(2)-panelLength(1)),panelHeight(2)-panelHeight(1));
+%     end
+% else 
+%     % If it is a Cylinder or Panel Mounted, the design can expand in the Z
+%     % direction until everything fits.
+%     [rectangleCG,rectangleDim,needExpand,isFit] = SleatorPacking_Limitless(rectangleDim,rectangleMass,genParameters.tolerance,abs(panelWidth(2)-panelWidth(1)),abs(panelLength(2)-panelLength(1)),panelHeight(2)-panelHeight(1));
+% end
 
-else 
-    % If it is a Cylinder or Panel Mounted, the design can expand in the Z
-    % direction until everything fits.
-    [rectangleCG,rectangleDim,needExpand,isFit] = SleatorPacking_Limitless(rectangleDim,rectangleMass,genParameters.tolerance,abs(panelWidth(2)-panelWidth(1)),panelHeight(2)-panelHeight(1));
-end
-[rectangleCG,rotationMatrix,needExpand] = StructuresConversionFromAlgorithm(rectangleCG(isFit,:),structures(structuresIndices(1)).Surface(structuresIndices(2)),panelWidth,panelHeight,panelLength,needExpand);
+
+
+[rectangleCG,rectangleDim,needExpand,isFit] = SleatorPacking_Limitless(rectangleDim,rectangleMass,genParameters.tolerance,abs(panelWidth(2)-panelWidth(1)),abs(panelLength(2)-panelLength(1)),panelHeight(2)-panelHeight(1));      
+
+
+
+[rectangleCG,rotationMatrix,needExpand] = StructuresConversionFromAlgorithm(rectangleCG,structures(structuresIndices(1)).Surface(structuresIndices(2)),panelWidth,panelHeight,panelLength,needExpand);
 % Convert from Algorithm Format to the original format by rotating the components around and converting back to the original shapes.         
-components(isFit) = ComponentsConversionFromAlgorithm(rectangleCG,rectangleDim(isFit,:),components(isFit),rotationMatrix);
+components(isFit) = ComponentsConversionFromAlgorithm(rectangleCG,rectangleDim,components(isFit),rotationMatrix);
 
 
 function [panelWidth,panelHeight,panelLength] = StructuresConversionForPacking(structures)
@@ -78,7 +90,7 @@ end
 
 % Check To see if the Z goes in the negative direction
 if abs(panelHeight(2)) >= abs(panelHeight(1)) && panelHeight(2) < panelHeight(1)
-    rectangleCG(:,3) = -rectangleCG(:,3);
+    rectangleCG(:,3) = rectangleCG(:,3);
 end
 
 % Check to see if the X goes in the negative direction
@@ -95,7 +107,30 @@ rectangleCG = (rotationMatrix*rectangleCG')';
 rectangleCG(:,1) = rectangleCG(:,1) + structures.availableX(1);
 rectangleCG(:,2) = rectangleCG(:,2) + structures.availableY(1);
 rectangleCG(:,3) = rectangleCG(:,3) + structures.availableZ(1);
-needExpand(2) = needExpand(2) + structures.availableZ(1);
+
+
+if strcmp(structures.buildableDir,'XY')
+    expandHeight = needExpand(2);
+    expandWidth = needExpand(3);
+    expandLength = needExpand(4);
+elseif strcmp(structures.buildableDir,'XZ')
+    expandHeight = needExpand(2);
+    expandWidth = needExpand(4);
+    expandLength = needExpand(3);
+elseif strcmp(structures.buildableDir,'YZ')
+    expandHeight = needExpand(2);
+    expandWidth = needExpand(3);
+    expandLength = needExpand(4);
+else
+    expandHeight = 0;
+    expandWidth = 0;
+    expandLength = 0;
+end
+
+needExpand(2) = expandHeight + structures.availableZ(1);
+needExpand(3) = expandWidth;
+needExpand(4) = expandLength;
+
 
 
 function [rectangleDim,rectangleMass] = ComponentConversionForPacking(components)
@@ -120,7 +155,16 @@ for i = 1:nr
         w = 2*r;
         l = 2*r;
     elseif strcmp(components(i).Shape,'Cone')
-
+        h = components(i).Dim(1);
+        r1 = components(i).Dim(2);
+        r2 = components(i).Dim(3);
+        if r1 > r2
+            l = r1*2;
+            w = r1*2;
+        else
+            l = r2*2;
+            w = r2*2;
+        end
     % If it is a cylinder
     elseif strcmp(components(i).Shape,'Cylinder')
         h = components(i).Dim(1);
@@ -174,22 +218,32 @@ for i = 1:n1
         components(i).Vertices =  xyzVertices + [X,Y,Z];
              
     elseif strcmp(components(i).Shape,'Sphere')
+        h = rectangleDim(i,1);
         r = h/2;
         components(i).Dim = r;
         components(i).CG_XYZ = (components(i).RotateToSatBodyFrame*rectangleCG(i,:)')';
     elseif strcmp(components(i).Shape,'Cone')
+        r1 = components(i).Dim(2);
+        r2 = components(i).Dim(3);
+        if r1 > r2
+            l = r1*2;
+            w = r1*2;
+        else
+            l = r2*2;
+            w = r2*2;
+        end
         components(i).CG_XYZ = (components(i).RotateToSatBodyFrame*rectangleCG(i,:)')';
     % If it is a cylinder
     elseif strcmp(components(i).Shape,'Cylinder')
         % Need to find a way to record the height and the width here.
-%         h = components(i).Dim(1);
-%         r = components(i).Dim(2);
-%         w = 2*r;
-%         l = 2*r;
-%         components(i).CG_XYZ = (components(i).RotateToSatBodyFrame*rectangleCG(i,:)')';
+        h = components(i).Dim(1);
+        r = components(i).Dim(2)/2;
+        w = 2*r;
+        l = 2*r;
+        components(i).Dim = [h,r];
+        components(i).CG_XYZ = (components(i).RotateToSatBodyFrame*rectangleCG(i,:)')';
         components(i).CG_XYZ = rectangleCG(i,:);
     end
-
 end
 
 

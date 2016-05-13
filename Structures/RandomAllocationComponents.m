@@ -1,11 +1,11 @@
-function components = LocalSearch(components,buildableIndices)
+function components = RandomAllocationComponents(components,buildableIndices)
 % Switches a randomly selected component in order to search for optimized
 % location placement of components.
 
 n1 = length(components);
-
+n2 = buildableIndices;
 ok = 0;
-while ~ok
+for i = 1:n1
     % Search through the components that aren't "Specific"
     index1 = ceil(rand()*n1);
     if strcmp('Inside',components(index1).LocationReq)  

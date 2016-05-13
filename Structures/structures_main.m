@@ -1,57 +1,91 @@
-function [StructuresSub,totalMass,InertiaTensor,components,structures] = structures_main(components) % Include surfaceArea
-% The main function for the structures subsystem. This takes in components
-% from the other subsystems and figures out the structure for them.
+function [STRUCTURES] = structures_main(components)
 
+components = ComponentSort(components); % Sort the components by their mass 
 
-[structures,genParameters]= StructureBuilder(components);
 counter = 1;
-old.InertiaTensor = ones(3,3)*inf;
-old.CG = [inf,inf,inf];
-while counter <= 100;
-% while the total inertia matrix doesn't reach a certain parameter,
-
-    % Allocate the components either the first time or randomized their
-    % locations the next few times around.
-    if counter == 1   
-        components = ComponentSort(components); % Sort the components by their mass
-        components = InitialAllocateComponents(components,genParameters.buildableIndices); % Assign the components to specific parts
-        % Initialize the way these structures are set up.
-        old.components = components;
-        old.structures = structures;
-        old.genParameters = genParameters;
-        new = old;
-    else
-        new.structures = structures;
-        new.components = LocalSearch(components,genParameters.buildableIndices);
+genParameters = initGenParameters(components);
+while counter <= 50 && any(~genParameters.isFit)
+    [old_structures, genParameters] = CreateStructure(genParameters);
+    components = InitialAllocateComponents(components,genParameters); % Assign the components to specific parts
+    genParameters.needExpand = zeros(length(old_structures),4);
+    counter2 = 1;
+    keepGoing = 1;
+    while keepGoing && counter2 <= length(components)  
+    % Perform local search if all the components don't fit.
+        new_structures = old_structures;
+        [components,new_structures,genParameters]= FitComponents(components,new_structures,genParameters);
+        % Allocate the components either the first time or randomized their
+        % locations the next few times around.
+        if any(~genParameters.isFit)
+            components(logical(~genParameters.isFit)) = CleanComponents(components(logical(~genParameters.isFit)));
+            components(logical(~genParameters.isFit)) = ReAllocateComponents(components(logical(~genParameters.isFit)),genParameters.buildableIndices);            
+        else
+            keepGoing = 0;
+        end
+        counter2 = counter2 + 1;
     end
-    % Place the components in their locations
-    [new.components,new.structures,new.genParameters]= ComponentConfiguration(new.components,new.structures,genParameters);
+
+    [genParameters] = UpdateParameters(genParameters);
+    counter = counter +1;
+end
+[new_structures,old.structuresMass,old.structuresCost,old.componentsMass,old.totalMass] = MassCostCalculator(components,new_structures);
+[old.SA] = SurfaceAreaCalculator(genParameters.satHeight,genParameters.satLength,genParameters.satWidth);
+[old.InertiaTensor,old.CG] = InertiaCalculator(components,new_structures);
+
+old.components = components;
+old.structures = new_structures;
+old.genParameters = genParameters;
+% old.InertiaTensor = ones(3,3)*inf;
+% old.CG = [inf,inf,inf];
+new = old;
+
+% Perform local search for optimal placement of components
+counter = 1;
+while counter <= 5*length(old.components)
     
-    % Statics
-%     [] = Statics();
-    
+    structNotOK = 0;
+    while ~structNotOK && counter <= 10
+    % If, when you randomly allocate components, you accidentally move a
+    % component to a place where it wouldn't fit, and only attempt this for
+    % 10 times before trying again.
+        new.components = RandomAllocationComponents(old.components,old.genParameters.buildableIndices);
+        [new.structures, new.genParameters] = CreateStructure(old.genParameters); % This might need to be done better, pretty sure it's very inefficient/wrong here.
+        % Place the components in their locations
+        [new.components,new.structures,new.genParameters]= FitComponents(new.components,new.structures,new.genParameters);       
+%         [new.genParameters] = UpdateParameters(new.genParameters);
+%         [new.structures, new.genParameters] = CreateStructure(new.genParameters);
+        if any(~genParameters.isFit)
+            structNotOK = 0;
+        else
+            structNotOK = 1;
+        end
+        counter = counter + 1;
+    end
+        % Statics
+    %     [] = Statics();
+
     % Calculate the total mass of the satellite.
-    [new.totalMass,new.structures] = MassCalculator(new.components,new.structures);
-    
+    [new.structures,new.structuresMass,new.structuresCost,new.componentsMass,new.totalMass] = MassCostCalculator(new.components,new.structures);
+    [new.SA] = SurfaceAreaCalculator(new.genParameters.satHeight,new.genParameters.satLength,new.genParameters.satWidth);
     % Calculate the inertia tensor for the new configuration of the
     % satellite
     [new.InertiaTensor,new.CG] = InertiaCalculator(new.components,new.structures);
     
-    % Check the new inertia tensor compared to the old one.
+    % Check the new CG compared to the old one.
     old = CheckInertia(old,new);
-
     counter = counter + 1;
 end
-% InertiaCalculator(structures);
-% display(old.totalMass)
-% display(old.InertiaTensor)
-totalMass = old.totalMass;
-InertiaTensor = old.InertiaTensor;
-components = old.components;
-structures = old.structures;
-StructuresSub.Mass = cat(1,structures.Mass);
+% [old.structures, old.genParameters] = CreateStructure(genParameters);
+% totalMass = old.totalMass;
+% InertiaTensor = old.InertiaTensor;
+% components = old.components;
+% structures = old.structures;
 
-% PlotSatellite(components,structures)
+
+STRUCTURES = old;
+STRUCTURES.width = sqrt(old.genParameters.satWidth^2+old.genParameters.satLength^2);
+STRUCTURES.height = old.genParameters.satHeight;
+
 
 function [old] = CheckInertia(old,new)
 % Checks to see if the new inertia matrix passes the threshhold of what's
@@ -60,12 +94,11 @@ function [old] = CheckInertia(old,new)
 rold = sqrt(old.CG(1)^2+old.CG(2)^2);
 rnew = sqrt(new.CG(1)^2+new.CG(2)^2);
 % 
+hold = old.CG(3);
+hnew = new.CG(3);
 if rnew < rold
     old = new;
 end
-
-
-
 
 
 

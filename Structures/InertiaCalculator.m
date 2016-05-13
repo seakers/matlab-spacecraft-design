@@ -14,7 +14,7 @@ for i = 1:n1
         components(i).InertiaMatrix = components(i).RotateToSatBodyFrame*I*components(i).RotateToSatBodyFrame';
         [totalI,totalCM,totalMass] = ParallelAxis(totalMass,components(i).Mass,totalCM,components(i).CG_XYZ,totalI,components(i).InertiaMatrix);  
     else
-        fprintf([components(i).Name,' not added to satellite because it doesn"t fit\n'])
+        fprintf([components(i).Name,' not added to satellite because it doesn''t fit\n'])
     end
 end
 
@@ -49,7 +49,25 @@ elseif strcmp(object.Shape,'Cylinder Hollow')
    R = object.Dim(2);
    t = object.Dim(3);
    I = CylinderHollowInertia(m,R,t,h);
+elseif strfind(object.Shape,'Cone')
+    m = object.Mass;
+    h = object.Dim(1);
+    r1 = object.Dim(2);
+    r2 = object.Dim(3);
+    I = Cone(m,h,r1,r2);  
 end
+
+function I = Cone(m,h,r1,r2)
+% This is not entirely correct, needs work.
+I2=m*r2^2/2;
+I1 = I2;
+
+I = [I1,0,0;
+    0,I1,0;
+    0,0,I2];
+
+
+
 
 function I = SphereInertia(m,R)
 % Calculating the inertia tensor of a sphere
