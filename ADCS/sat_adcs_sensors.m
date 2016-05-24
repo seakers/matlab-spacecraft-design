@@ -3,7 +3,7 @@ function sat_out = sat_adcs_sensors (sat_in)
 %Open the excel file
 filename = 'Components Database-Real.xlsx';
 sheet = 2; %ADCS catalogue is located in the 2nd sheet
-xlRange = 'A14:M26'; %this represents the sensors for CubeSats
+xlRange = 'A17:M34'; %this represents the sensors for CubeSats
 [Sensor_cat,Sensor_name]  = xlsread(filename,sheet,xlRange);
 
 %Initialize number of star trackers, sun sensors, earth sensors, and

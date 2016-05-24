@@ -115,6 +115,8 @@ if i <= size(payloadAdapter,1)
     % Make the size of the cylinder the size of the smallest payload adapter able
     % to fit the fuel tank.
     clampbandSize = payloadAdapter(i);
+else
+    clampbandSize = [];
 end
 
 

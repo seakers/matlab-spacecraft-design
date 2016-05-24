@@ -6,7 +6,7 @@ wgs84data;
 
 %ORBIT
 sat.Altitude = h*10^3;%orbit
-R = RE+sat.Altitude; %R = RE+h = a Semimajor axis [km]
+R = RE+sat.Altitude; %R = RE+h = a Semimajor axis [m]
 sat.Velocity=OrbitVelocity(R,R);
 sat.Density=Atmosphere(R);
 sat.Period=2*pi*sqrt(R^3/3.98600e14); %period [s]
