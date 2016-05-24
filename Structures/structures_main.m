@@ -30,12 +30,12 @@ while counter <= 50 && any(~genParameters.isFit)
 end
 [new_structures,old.structuresMass,old.structuresCost,old.componentsMass,old.totalMass] = MassCostCalculator(components,new_structures);
 [old.SA] = SurfaceAreaCalculator(genParameters.satHeight,genParameters.satLength,genParameters.satWidth);
-[old.InertiaTensor,old.CG] = InertiaCalculator(components,new_structures);
+[old.InertiaMatrix,old.CG] = InertiaCalculator(components,new_structures);
 
 old.components = components;
 old.structures = new_structures;
 old.genParameters = genParameters;
-% old.InertiaTensor = ones(3,3)*inf;
+% old.InertiaMatrix = ones(3,3)*inf;
 % old.CG = [inf,inf,inf];
 new = old;
 
@@ -69,7 +69,7 @@ while counter <= 5*length(old.components)
     [new.SA] = SurfaceAreaCalculator(new.genParameters.satHeight,new.genParameters.satLength,new.genParameters.satWidth);
     % Calculate the inertia tensor for the new configuration of the
     % satellite
-    [new.InertiaTensor,new.CG] = InertiaCalculator(new.components,new.structures);
+    [new.InertiaMatrix,new.CG] = InertiaCalculator(new.components,new.structures);
     
     % Check the new CG compared to the old one.
     old = CheckInertia(old,new);
@@ -77,7 +77,7 @@ while counter <= 5*length(old.components)
 end
 % [old.structures, old.genParameters] = CreateStructure(genParameters);
 % totalMass = old.totalMass;
-% InertiaTensor = old.InertiaTensor;
+% InertiaMatrix = old.InertiaMatrix;
 % components = old.components;
 % structures = old.structures;
 

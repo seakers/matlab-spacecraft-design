@@ -117,7 +117,7 @@ function [power,components]=power_analysis2(params,vars)
     % Mass Estimates
     % -------------------------------------------------------------------------
     Msa = .04*Psa;  % for planar array(0.04*Psa*4 for omnidirectional body mounted and 0.04*Psa*pi for cylindrical body-mounted)
-    Asai=Asa/2; %we'll have two solar panels
+    Asai=Asa/4; %we'll have two solar panels
     L=sqrt(3*Asai);
     W=L/3; %we suppose a square solar array
     aspectfactor=20; %aspect factor= W/h

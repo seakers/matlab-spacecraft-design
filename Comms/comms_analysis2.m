@@ -337,6 +337,5 @@ if optfound
     comms.EbN0=EbN0_opt;
     comms.EbN0min=EbN0_min_opt;
     comms.Margin=EbN0_opt-EbN0_min_opt;
-    
 end
 end

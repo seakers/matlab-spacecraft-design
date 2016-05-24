@@ -63,8 +63,8 @@ if sat_in.ADCSChoice == 1 %When you want to choose ADCS from a catalogue
        fprintf('The reaction wheel chosen is: %s\n',char(sat3.RWChoice));
        mass = sat3.RWMass + sat5.SensorMass; %sat4.MGTMass 
        cost = sat3.RWCost + sat5.SensorCost; %+ sat4.MGTCost
-       sat6.MassADCS = mass;
-       sat6.CostADCS = cost;
+       sat6.mass = mass;
+       sat6.cost = cost;
        sat_out = sat6;
    elseif conf == 4
        %Iteration for 3-axis stabilization using magnetic torquers
@@ -73,8 +73,8 @@ if sat_in.ADCSChoice == 1 %When you want to choose ADCS from a catalogue
        sat4 = sat_adcs_sensors(sat2);
        mass = sat3.MGTMass + sat4.SensorMass;
        cost = sat3.MGTCost + sat4.SensorCost;
-       sat5.MassADCS = mass;
-       sat5.CostADCS = cost;
+       sat5.mass = mass;
+       sat5.cost = cost;
        sat_out = sat5;
    else
        sat2 = sat_adcs_disturbances(sat1); %Calculate disturbance torques for each architecture
@@ -84,8 +84,8 @@ if sat_in.ADCSChoice == 1 %When you want to choose ADCS from a catalogue
        sat5 = sat_adcs_sensors(sat2); %Calculate which sensor to use
        mass = sat3.RWMass + sat4.ADCSPropellantMass + sat5.SensorMass;
        cost = sat3.RWCost + sat4.ThrusterCost + sat5.SensorCost;
-       sat6.MassADCS = mass;
-       sat6.CostADCS = cost;
+       sat6.mass = mass;
+       sat6.cost = cost;
        sat_out = sat6;
        
    end
@@ -102,8 +102,8 @@ elseif sat_in.ADCSChoice ==2 %When you want to make the ADCS
     
     mass = sat3.RWMass*sat3.NRW + sat5.SensorMass + sat4.MGTMass*sat4.NMGT;% *sat3.NRW and *sat4.NMGT added by Pau (correct?) 
     cost = sat3.RWCost*sat3.NRW + sat5.SensorCost + sat4.MGTCost*sat4.NMGT;% *sat3.NRW and *sat4.NMGT added by Pau (correct?)
-    sat6.MassADCS = mass;
-    sat6.CostADCS = cost;
+    sat6.mass = mass;
+    sat6.cost = cost;
     
     %sat4.SensorMass=sat5.SensorMass;
     %sat7=sat_adcs_MassPower(sat4);
@@ -141,13 +141,13 @@ elseif sat_in.ADCSChoice ==2 %When you want to make the ADCS
 
     %Filling of the cell containing all the components of the ADCS
     Ncomponents=Nsensors+sat3.NRW+sat4.NMGT;
-    components(Ncomponents) = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[],'Dim',[],'CG_XYZ',[],'Verteces',[],'LocationReq',[],'Orientation',[],'Thermal',[]);
+    components(Ncomponents) = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[],'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[],'Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
 
     %Reaction Wheels
     row=1;
     iNRW=1;
     while iNRW<=sat3.NRW
-        components(row) = struct('Name','Reaction Wheel','Subsystem','ADCS','Shape','Cylinder','Mass',sat3.RWMass,'Dim',[sat3.RWRadius,sat3.RWThickness],'CG_XYZ',[],'Verteces',[],'LocationReq',[],'Orientation',[],'Thermal',[-40,100]);
+        components(row) = struct('Name','Reaction Wheel','Subsystem','ADCS','Shape','Cylinder','Mass',sat3.RWMass,'Dim',[sat3.RWRadius,sat3.RWThickness],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
         iNRW=iNRW+1;
         row=row+1;
     end
@@ -157,9 +157,9 @@ elseif sat_in.ADCSChoice ==2 %When you want to make the ADCS
         iMGT=1;
         while iMGT<=sat4.NMGT
             if strcmp(sat4.MGTShape,'Cylinder')
-                components(row) = struct('Name','Magnetic Torquer','Subsystem','ADCS','Shape','Cylinder','Mass',sat4.MGTMass,'Dim',[sat4.MGTRadius,sat4.MGTH],'CG_XYZ',[],'Verteces',[],'LocationReq','?','Orientation',[],'Thermal',[-40,100]);
-            else
-                components(row) = struct('Name','Magnetic Torquer','Subsystem','ADCS','Shape','Rectangle','Mass',sat4.MGTMass,'Dim',[sat4.MGTL,sat4.MGTW,sat4.MGTH],'CG_XYZ',[],'Verteces',[],'LocationReq','?','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Magnetic Torquer','Subsystem','ADCS','Shape','Cylinder','Mass',sat4.MGTMass,'Dim',[sat4.MGTRadius,sat4.MGTH],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
+            elseif strcmp(sat4.MGTShape,'Rectangle')
+                components(row) = struct('Name','Magnetic Torquer','Subsystem','ADCS','Shape','Rectangle','Mass',sat4.MGTMass,'Dim',[sat4.MGTL,sat4.MGTW,sat4.MGTH],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             end
             iMGT=iMGT+1;
             row=row+1;
@@ -171,9 +171,9 @@ elseif sat_in.ADCSChoice ==2 %When you want to make the ADCS
         iSun=1;
         while iSun<=NSun
             if strcmp(sat5.Components.Sun.Shape,'Cylinder')
-                components(row) = struct('Name','Sun Sensor','Subsystem','ADCS','Shape','Cylinder','Mass',sat5.Components.Sun.Mass,'Dim',[sat5.Components.Sun.R,sat5.Components.Sun.H],'CG_XYZ',[],'Verteces',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Sun Sensor','Subsystem','ADCS','Shape','Cylinder','Mass',sat5.Components.Sun.Mass,'Dim',[sat5.Components.Sun.R,sat5.Components.Sun.H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             else
-                components(row) = struct('Name','Sun Sensor','Subsystem','ADCS','Shape','Rectangle','Mass',sat5.Components.Sun.Mass,'Dim',[sat5.Components.Sun.L,sat5.Components.Sun.W,sat5.Components.Sun.H],'CG_XYZ',[],'Verteces',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Sun Sensor','Subsystem','ADCS','Shape','Rectangle','Mass',sat5.Components.Sun.Mass,'Dim',[sat5.Components.Sun.L,sat5.Components.Sun.W,sat5.Components.Sun.H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             end
             iSun=iSun+1;
             row=row+1;
@@ -184,9 +184,9 @@ elseif sat_in.ADCSChoice ==2 %When you want to make the ADCS
         iEarth=1;
         while iEarth<=NEarth
             if strcmp(sat5.Components.Earth.Shape,'Cylinder')
-                components(row) = struct('Name','Earth Sensor','Subsystem','ADCS','Shape','Cylinder','Mass',sat5.Components.Earth.Mass,'Dim',[sat5.Components.Earth.R,sat5.Components.Earth.H],'CG_XYZ',[],'Verteces',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Earth Sensor','Subsystem','ADCS','Shape','Cylinder','Mass',sat5.Components.Earth.Mass,'Dim',[sat5.Components.Earth.R,sat5.Components.Earth.H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             else
-                components(row) = struct('Name','Earth Sensor','Subsystem','ADCS','Shape','Rectangle','Mass',sat5.Components.Earth.Mass,'Dim',[sat5.Components.Earth.L,sat5.Components.Earth.W,sat5.Components.Earth.H],'CG_XYZ',[],'Verteces',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Earth Sensor','Subsystem','ADCS','Shape','Rectangle','Mass',sat5.Components.Earth.Mass,'Dim',[sat5.Components.Earth.L,sat5.Components.Earth.W,sat5.Components.Earth.H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             end
             iEarth=iEarth+1;
             row=row+1;
@@ -197,9 +197,9 @@ elseif sat_in.ADCSChoice ==2 %When you want to make the ADCS
         iMM=1;
         while iMM<=NMM
             if strcmp(sat5.Components.MM.Shape,'Cylinder')
-                components(row) = struct('Name','Magnetometer','Subsystem','ADCS','Shape','Cylinder','Mass',sat5.Components.MM.Mass,'Dim',[sat5.Components.MM.R,sat5.Components.MM.H],'CG_XYZ',[],'Verteces',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Magnetometer','Subsystem','ADCS','Shape','Cylinder','Mass',sat5.Components.MM.Mass,'Dim',[sat5.Components.MM.R,sat5.Components.MM.H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             else
-                components(row) = struct('Name','Magnetometer','Subsystem','ADCS','Shape','Rectangle','Mass',sat5.Components.MM.Mass,'Dim',[sat5.Components.MM.L,sat5.Components.MM.W,sat5.Components.MM.H],'CG_XYZ',[],'Verteces',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Magnetometer','Subsystem','ADCS','Shape','Rectangle','Mass',sat5.Components.MM.Mass,'Dim',[sat5.Components.MM.L,sat5.Components.MM.W,sat5.Components.MM.H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             end
             iMM=iMM+1;
             row=row+1;
@@ -210,9 +210,9 @@ elseif sat_in.ADCSChoice ==2 %When you want to make the ADCS
         iStar=1;
         while iStar<=NStar
             if strcmp(sat5.Components.Star.Shape,'Cylinder')
-                components(row) = struct('Name','Star Sensor','Subsystem','ADCS','Shape','Cylinder','Mass',sat5.Components.Star.Mass,'Dim',[sat5.Components.Star.R,sat5.Components.Star.H],'CG_XYZ',[],'Verteces',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Star Sensor','Subsystem','ADCS','Shape','Cylinder','Mass',sat5.Components.Star.Mass,'Dim',[sat5.Components.Star.R,sat5.Components.Star.H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             else
-                components(row) = struct('Name','Star Sensor','Subsystem','ADCS','Shape','Rectangle','Mass',sat5.Components.Star.Mass,'Dim',[sat5.Components.Star.L,sat5.Components.Star.W,sat5.Components.Star.H],'CG_XYZ',[],'Verteces',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Star Sensor','Subsystem','ADCS','Shape','Rectangle','Mass',sat5.Components.Star.Mass,'Dim',[sat5.Components.Star.L,sat5.Components.Star.W,sat5.Components.Star.H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             end
             iStar=iStar+1;
             row=row+1;
@@ -223,9 +223,9 @@ elseif sat_in.ADCSChoice ==2 %When you want to make the ADCS
         iCombo=1;
         while iCombo<=NCombo
             if strcmp(sat5.Components.Sun.Shape,'Cylinder')
-                components(row) = struct('Name','Combo Sensor','Subsystem','ADCS','Shape','Cylinder','Mass',sat5.Components.Combo.Mass,'Dim',[sat5.Components.Combo.R,sat5.Components.Combo.H],'CG_XYZ',[],'Verteces',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Combo Sensor','Subsystem','ADCS','Shape','Cylinder','Mass',sat5.Components.Combo.Mass,'Dim',[sat5.Components.Combo.R,sat5.Components.Combo.H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             else
-                components(row) = struct('Name','Combo Sensor','Subsystem','ADCS','Shape','Rectangle','Mass',sat5.Components.Combo.Mass,'Dim',[sat5.Components.Combo.L,sat5.Components.Combo.W,sat5.Components.Combo.H],'CG_XYZ',[],'Verteces',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100]);
+                components(row) = struct('Name','Combo Sensor','Subsystem','ADCS','Shape','Rectangle','Mass',sat5.Components.Combo.Mass,'Dim',[sat5.Components.Combo.L,sat5.Components.Combo.W,sat5.Components.Combo.H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
             end
             iCombo=iCombo+1;
             row=row+1;
