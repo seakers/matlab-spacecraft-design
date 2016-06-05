@@ -1,4 +1,4 @@
-function [components] = CreateSampleComponents_Cylinder()
+function [components] = CreateSampleComponents_PanelMounted()
 % Create sample components to be used by the code. They have arbitrary
 % sizes and masses, not at all based on accurate calculations.
 
@@ -8,7 +8,7 @@ components(i).Name = 'Fuel Tank';
 components(i).Subsystem = 'Propulsion';
 components(i).Shape = 'Sphere';
 components(i).Mass = 150;
-components(i).Dim = 0.4;
+components(i).Dim = 0.7;
 components(i).CG_XYZ = [];
 components(i).Vertices = [];
 components(i).LocationReq = 'Specific';
@@ -23,7 +23,7 @@ components(i).Name = 'Fuel Tank 2';
 components(i).Subsystem = 'Propulsion';
 components(i).Shape = 'Sphere';
 components(i).Mass = 150;
-components(i).Dim = 0.3;
+components(i).Dim = 0.7;
 components(i).LocationReq = 'Specific';
 i = i+1; 
 % 

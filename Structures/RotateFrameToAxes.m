@@ -19,8 +19,8 @@ elseif strcmp(normalAxes,'+Y')
 elseif strcmp(normalAxes,'+Z')
 % Rotate around the Y axis in order to get the Z and the X aligned.
         pitch = -pi/2;
-%     % Rotate around the Z axis in order to get the Y and the X aligned.
-      yaw = -pi/2;
+% %     % Rotate around the Z axis in order to get the Y and the X aligned.
+%       yaw = -pi/2;
 %     roll = pi/2;
 %     pitch = 0;
 elseif strcmp(normalAxes,'-X')

@@ -56,6 +56,7 @@ while (time < 250) && ~drymass_ok
     
     components = [payload.comp comms.comp avionics.comp eps.comp propulsion.comp];
     
+    fprintf('Performing Structures Calculations\n');
     [structures] = structures_main(components);
     
     LV = LV_selection(payload,structures);
