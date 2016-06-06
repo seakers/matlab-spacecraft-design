@@ -80,6 +80,7 @@ function obj = PlotComponents(components)
 nr = length(components);
 obj = [];
 for i = 1:nr
+    objnew = [];
     if ~isempty(components(i).CG_XYZ )
         [FaceColor,EdgeColor] = ColorSelection(components(i).Subsystem);
         objnew = ShapePlotter(components(i).Shape,components(i).Dim,components(i).Vertices,components(i).CG_XYZ,FaceColor,EdgeColor);

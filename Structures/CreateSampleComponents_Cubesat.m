@@ -190,7 +190,7 @@ for j = i:i+nElectronics
     components(j).Subsystem = 'EPS';
     components(j).Shape = 'Rectangle';
     components(j).Mass = .01;
-    components(j).Dim = [0.02,0.01,0.001];
+    components(j).Dim = [0.02,0.01,0.04];
     components(j).LocationReq = 'Inside';
 end
 i = i + nElectronics+1;
