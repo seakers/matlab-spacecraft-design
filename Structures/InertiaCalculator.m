@@ -1,7 +1,22 @@
-function [totalI,totalCM] = InertiaCalculator(components,structures)
-% Might have to rotate bodies to make them in the same frame
+function [totalI,totalCG] = InertiaCalculator(components,structures)
+% A function that calculates the Inertia matrix and CG of the satellite
+% for all the components that have a CG. This is all with respect to the LV
+% payload adapter.
+%   Inputs:
+%       components      a structure array that contains all the components
+%                       for the satellite, see the excel sheet for the
+%                       required format of the components
+%       structures      a structure array that contains all the structures
+%                       for the satellite, see the excel sheet for the
+%                       required format of the components
+%
+%   Outputs:
+%       totalI          The Inertia matrix of the satellite using the LV
+%                       payload adapter as the origin (kg*meters^2)
+%       totalCM         The CG of the satellite using the LV payload
+%                       adapter as the origin (meters)
 
-totalCM = [0,0,0];
+totalCG = [0,0,0];
 totalMass = 0;
 totalI = zeros(3,3);
 n1 = length(components);
@@ -12,7 +27,7 @@ for i = 1:n1
     if ~isempty(components(i).CG_XYZ )
         I = ComputingShapeInertia(components(i));
         components(i).InertiaMatrix = components(i).RotateToSatBodyFrame*I*components(i).RotateToSatBodyFrame';
-        [totalI,totalCM,totalMass] = ParallelAxis(totalMass,components(i).Mass,totalCM,components(i).CG_XYZ,totalI,components(i).InertiaMatrix);  
+        [totalI,totalCG,totalMass] = ParallelAxis(totalMass,components(i).Mass,totalCG,components(i).CG_XYZ,totalI,components(i).InertiaMatrix);  
     else
         fprintf([components(i).Name,' not added to satellite because it doesn''t fit\n'])
     end
@@ -21,7 +36,7 @@ end
 for i = 1:n2
     % Compute the inertia matrix for the structures
     structures(i).InertiaMatrix = ComputingShapeInertia(structures(i));
-    [totalI,totalCM,totalMass] = ParallelAxis(totalMass,structures(i).Mass,totalCM,structures(i).CG_XYZ,totalI,structures(i).InertiaMatrix);  
+    [totalI,totalCG,totalMass] = ParallelAxis(totalMass,structures(i).Mass,totalCG,structures(i).CG_XYZ,totalI,structures(i).InertiaMatrix);  
 end
 
 
@@ -65,9 +80,6 @@ I1 = I2;
 I = [I1,0,0;
     0,I1,0;
     0,0,I2];
-
-
-
 
 function I = SphereInertia(m,R)
 % Calculating the inertia tensor of a sphere

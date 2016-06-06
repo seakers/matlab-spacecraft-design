@@ -1,20 +1,19 @@
 function [components,structures,genParameters] = FitComponents(components,structures,genParameters)
-%%
+% A function that fits the given components on the structures given, based
+% on what structure surface the component is assigned to. 
 
-% Fits the given component on the surface given, returning if the component
-% was able to be configured and how much surface is left.
-% n1 = size(components,1);
-% components_temp = 
-
-% This could be made faster if you have some sort of logical that shows
-% what components have been assigned, which turns off the code when all
-% components have been assigned to a place.
+% In genParameters, the needExpand and isFit variables are updated to tell
+% the structures that need to be expanded and the components that were able
+% to be fitted, respectively.
 
 structuresAssignment = cat(1,components.structuresAssignment);
 i = 1;
 while i <= length(structures)
+% cycle through all the structures
     j = 1;
     while j <= length(structures(i).Surface)
+    % Cycle through their surfaces
+        % Find which components are assigned to the structure
         index = ismember(structuresAssignment,[i,j],'rows');
         temp_comp = components(index);
         if any(index)
@@ -27,7 +26,8 @@ while i <= length(structures)
             % algorithm
                 [temp_comp,structures,genParameters.needExpand(i,:),isFit] = PackingAlgorithm(temp_comp,structures,[i,j],genParameters);    
             else
-                % If not use stacking algorithm
+            % If not use stacking algorithm to stack components on top of
+            % each other
                 [temp_comp,structures,genParameters.needExpand(i,:),isFit] = StackingAlgorithm(temp_comp,structures,[i,j],genParameters);
             end
             components(index) = temp_comp;
@@ -41,12 +41,6 @@ while i <= length(structures)
     i =i+1;
 end
 j = 1;
-
-
-% Allocate the components to parts.
-% Take the allocated components and convert them to a format the algorithm
-% will understand
-% Then send them to the packing algorithm.
 
 
 

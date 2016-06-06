@@ -1,6 +1,6 @@
 function material =  MaterialTable()
-
 % Prices were taken from Alibaba as an average of the cost.
+% SHOULD BE REVISED
 
 i = 1;
 material(i).Name = 'Aluminum 2219-T851'; % Material name

@@ -1,4 +1,7 @@
 function [structures,genParameters] = CreateStructure(genParameters)
+% A function that creates the a structure array that contains the physical
+% structure of the satellite based on the general parameters that are
+% inputted.
 
 if strcmp(genParameters.spacecraftType,'Central Cylinder');
     structures = CylinderStructure(genParameters);
@@ -15,10 +18,10 @@ end
 
 
 function structures = PanelMountedStructure(genParameters)
-% You will have a structure inside the structure. The main structure tells
-% details about the actual shape and object, while the second structure
-% tells about the surfaces available to mount components on for the
-% structure.
+% You will have a second structure variable inside the first structure
+% variable. The main structure variable tells details about the actual
+% shape and object, while the second structure variable tells about the
+% surfaces available to mount components on for the physical structure.
 
 %% 1, Bottom Panel (Normal to -Z)
 bottomVert = [genParameters.satLength/2,genParameters.satWidth/2,0;
@@ -40,8 +43,8 @@ structures(1).Top_Vertices = topVert;
 structures(1).Plane = 'XY';
 
 % Outside Surface to mount parts on
-structures(1).Surface(1).Mountable = 'N/A';
-structures(1).Surface(1).buildableDir = 'XY';
+structures(1).Surface(1).Mountable = 'Thruster';
+structures(1).Surface(1).buildableDir = '-Z';
 structures(1).Surface(1).normalFace = '-Z';
 structures(1).Surface(1).Location = 'Outside';
 structures(1).Surface(1).availableX = [-genParameters.satLength/2,genParameters.satLength/2];
@@ -53,9 +56,9 @@ structures(1).Surface(2).Mountable = 'Fuel Tanks';
 structures(1).Surface(2).buildableDir = 'XY';
 structures(1).Surface(2).normalFace = '+Z';
 structures(1).Surface(2).Location = 'Inside';
-structures(1).Surface(2).availableX = -[-genParameters.satLength/2,genParameters.satLength/2];
+structures(1).Surface(2).availableX = [-genParameters.satLength/2,genParameters.satLength/2];
 structures(1).Surface(2).availableY = [-genParameters.satWidth/2,genParameters.satWidth/2];
-structures(1).Surface(2).availableZ = [genParameters.honeycombThickness,genParameters.satHeight]; % -genParameters.honeycombThickness
+structures(1).Surface(2).availableZ = [genParameters.honeycombThickness,genParameters.satHeight-genParameters.honeycombThickness]; % 
  
  
 
@@ -93,8 +96,8 @@ structures(2).Surface(2).Mountable = 'N/A'; % Don't need any specifics
 structures(2).Surface(2).normalFace = '-Y';
 structures(2).Surface(2).buildableDir = 'XZ';
 structures(2).Surface(2).Location = 'Inside';
-structures(2).Surface(2).availableX = [-genParameters.satLength/2,genParameters.satLength/2];
-structures(2).Surface(2).availableY = [genParameters.satWidth/2,-genParameters.satWidth/2];
+structures(2).Surface(2).availableX = [genParameters.satLength/2,-genParameters.satLength/2];
+structures(2).Surface(2).availableY = [genParameters.satWidth/2-genParameters.honeycombThickness,-genParameters.satWidth/2+genParameters.honeycombThickness];
 structures(2).Surface(2).availableZ = [genParameters.honeycombThickness,genParameters.satHeight-genParameters.honeycombThickness];
 
 
@@ -117,7 +120,7 @@ structures(3).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the
 structures(3).Top_Vertices = topVert;
 structures(3).Plane = 'XZ';
 
-% Outside Surface to mount parts on <- Check out the z face start
+% Outside Surface to mount parts on 
 structures(3).Surface(1).Mountable = 'N/A';
 structures(3).Surface(1).buildableDir = 'XZ';
 structures(3).Surface(1).normalFace = '-Y';
@@ -132,7 +135,7 @@ structures(3).Surface(2).normalFace = '+Y';
 structures(3).Surface(2).buildableDir = 'XZ';
 structures(3).Surface(2).Location = 'Inside';
 structures(3).Surface(2).availableX = [-genParameters.satLength/2,genParameters.satLength/2];
-structures(3).Surface(2).availableY = [-genParameters.satWidth/2,genParameters.satWidth/2];
+structures(3).Surface(2).availableY = [-genParameters.satWidth/2+genParameters.honeycombThickness,genParameters.satWidth/2-genParameters.honeycombThickness];
 structures(3).Surface(2).availableZ = [0,genParameters.satHeight];
 
 %% 4, East Face Panel (normal to +X)
@@ -168,8 +171,8 @@ structures(4).Surface(2).Mountable = 'N/A'; % Don't need any specifics
 structures(4).Surface(2).normalFace = '-X';
 structures(4).Surface(2).buildableDir = 'YZ';
 structures(4).Surface(2).Location = 'Inside';
-structures(4).Surface(2).availableX = [-genParameters.satLength/2,genParameters.satLength/2];
-structures(4).Surface(2).availableY = [-genParameters.satWidth/2,-genParameters.satWidth/2];
+structures(4).Surface(2).availableX = [-genParameters.satLength/2+genParameters.honeycombThickness,genParameters.satLength/2-genParameters.honeycombThickness];
+structures(4).Surface(2).availableY = [-genParameters.satWidth/2,genParameters.satWidth/2];
 structures(4).Surface(2).availableZ = [0,genParameters.satHeight];
 
 %% 5, West Face Panel (normal to -X)
@@ -205,8 +208,8 @@ structures(5).Surface(2).Mountable = 'N/A'; % Don't need any specifics
 structures(5).Surface(2).normalFace = '+X';
 structures(5).Surface(2).buildableDir = 'YZ';
 structures(5).Surface(2).Location = 'Inside';
-structures(5).Surface(2).availableX = [-genParameters.satLength/2,genParameters.satLength/2];
-structures(5).Surface(2).availableY = [-genParameters.satWidth/2,-genParameters.satWidth/2];
+structures(5).Surface(2).availableX = [-genParameters.satLength/2+genParameters.honeycombThickness,genParameters.satLength/2-genParameters.honeycombThickness];
+structures(5).Surface(2).availableY = [genParameters.satWidth/2,-genParameters.satWidth/2];
 structures(5).Surface(2).availableZ = [0,genParameters.satHeight];
 
 
@@ -238,10 +241,10 @@ structures(6).Surface(1).availableY = [-genParameters.satWidth/2,genParameters.s
 structures(6).Surface(1).availableZ = [genParameters.satHeight,+inf];
 
 function structures = StackedStructure(genParameters)
-% You will have a structure inside the structure. The main structure tells
-% details about the actual shape and object, while the second structure
-% tells about the surfaces available to mount components on for the
-% structure.
+% You will have a second structure variable inside the first structure
+% variable. The main structure variable tells details about the actual
+% shape and object, while the second structure variable tells about the
+% surfaces available to mount components on for the physical structure.
 
 %% 1, Bottom Panel (Normal to -Z)
 bottomVert = [genParameters.satLength/2,genParameters.satWidth/2,0;
@@ -436,13 +439,17 @@ for i = 1:size(genParameters.trays,1)
     structures(6+i).Surface(1).Mountable = 'N/A';
     structures(6+i).Surface(1).buildableDir = 'XY';
     structures(6+i).Surface(1).normalFace = '+Z';
-    structures(6+i).Surface(1).availableX = -[-genParameters.satLength/2+genParameters.aluminumThickness,genParameters.satLength/2-genParameters.aluminumThickness];
+    structures(6+i).Surface(1).availableX = [-genParameters.satLength/2+genParameters.aluminumThickness,genParameters.satLength/2-genParameters.aluminumThickness];
     structures(6+i).Surface(1).availableY = [-genParameters.satWidth/2+genParameters.aluminumThickness,genParameters.satWidth/2-genParameters.aluminumThickness];
     structures(6+i).Surface(1).availableZ = [2*genParameters.aluminumThickness+height,genParameters.satHeight-genParameters.aluminumThickness];
 end
 
 function structures = CylinderStructure(genParameters)
-%%
+% You will have a second structure variable inside the first structure
+% variable. The main structure variable tells details about the actual
+% shape and object, while the second structure variable tells about the
+% surfaces available to mount components on for the physical structure.
+
 % A function that creates the structure for a central cylinder-based
 % structure.
 ratios = genParameters.ratios;
@@ -780,6 +787,7 @@ function genParameters = OrderedSurfaces(genParameters)
 % This allows someone to decide what surfaces to mount on first for inside
 % vs outside surfaces. This gives the order that instruments should be
 % placed on the satellite in the order of: [index of structure, index of surface on that structure]
+% Priority is given to the first structure.
 
 if strcmp(genParameters.spacecraftType,'Central Cylinder')
 % If the satellite is a central cylinder type 

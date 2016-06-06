@@ -1,21 +1,30 @@
 function test_structures_main() % Include surfaceArea
-% The main function for the structures subsystem. This takes in components
-% from the other subsystems and figures out the structure for them.
+% A function that tests the structures subsystem by generating components
+% based on the payload that the user wants to generate. This function
+% allows the user to skip the process of having to deal with extra time
+% waiting for other subsystems to perform calculations
+
+% These are the necessary folders to test the subsystem
 addpath Structures
 addpath LV
 addpath Plotting
 addpath Payload
 
+% Select the payload the user wants to try out.
 % payloadType = 1; % MicroMAS payload
 % payloadType = 2; % Central Cylinder Commsat Payload payload
 payloadType = 3; % Panel Mounted Comms Satellite payload
 
+% Generate the components that work with that type of payload
 satInfo = InitializingSubsystems(payloadType);
 
+% Call the main structures function
 [satInfo.structures] = structures_main(satInfo.components);
 
+% Select the Launch Vehicle from the structures information
 satInfo.LV = LV_selection(satInfo.payload,satInfo.structures);
 
+% Plot all the information in the GUI
 PlotSatInfo(satInfo.payload,satInfo.comms,satInfo.eps,satInfo.avionics,satInfo.thermal,satInfo.structures,satInfo.propulsion,satInfo.LV)
 
 

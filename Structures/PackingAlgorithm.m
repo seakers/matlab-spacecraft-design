@@ -1,6 +1,6 @@
 function [components,structures,needExpand,isFit] = PackingAlgorithm(components,structures,structuresIndices,genParameters)
-
-% Function that packs the components on a panel.
+% Function that packs the components on a panel using the Sleator
+% algorithm.
 
 % Convert the components from their shapes to rectangles in order to be
 % compatible with the packing algorithm
@@ -15,30 +15,53 @@ function [components,structures,needExpand,isFit] = PackingAlgorithm(components,
 
 % Here the CG of the components is rotated into its location.
 [rectangleCG,rotationMatrix,needExpand] = CGconversionFromAlgorithm(rectangleCG,structures(structuresIndices(1)).Surface(structuresIndices(2)),panelWidth,panelHeight,panelLength,needExpand);
-% Convert from Algorithm Format to the original format by rotating the components around and converting back to the original shapes.         
+
+% Convert from Algorithm Format to the original format by rotating the
+% components around and converting back to the original shapes. But only
+% components that were fitted
 components(isFit) = ComponentsConversionFromAlgorithm(rectangleCG,rectangleDim,components(isFit),rotationMatrix);
 
 
-function [panelWidth,panelHeight,panelLength] = StructuresConversionForPacking(structures)
-% A function to convert the panel structures to something more easily used
-% for the mounting algorithm.
+function [panelWidth,panelHeight,panelLength] = StructuresConversionForPacking(surface)
+% A function to get the information from the panel structure and convert it
+% into something more easily read by the packing algorithm. The packing
+% algorithm doesn't take what plane the panels are in into account, it just
+% assumes that they are on the YZ plane with a normal face in the X
+% direction. This helps accomplish that task by converting panels in
+% different planes to the same format.
+%   Inputs:
+%       surface             The surface of the structure that the
+%                           components have been assigned to.
+%
+%   Outputs:
+%       panelWidth          the "Width" of the panel, the base dimension of
+%                           the panel if it were stood up with a normal
+%                           vector along the +X direction.
+%       panelHeight         the "Height" of the panel, the height dimension of
+%                           the panel if it were stood up with a normal
+%                           vector along the +X direction.
+%       panelLength         the "Length" of the panel, the allowable
+%                           distance away from the panel that the components can reach the most
+%                           of (e.g., a component that can fit within the height and width of
+%                           the panel but is extremely large in the other dimension might not
+%                           fit.
 
-if strcmp(structures.buildableDir,'XZ')
-    if strcmp(structures.normalFace,'+Y')
-        panelWidth = -structures.availableX;
+if strcmp(surface.buildableDir,'XZ')
+    if strcmp(surface.normalFace,'+Y')
+        panelWidth = -surface.availableX;
     else
-        panelWidth = structures.availableX;
+        panelWidth = surface.availableX;
     end
-    panelHeight = structures.availableZ;
-    panelLength = structures.availableY;
-elseif strcmp(structures.buildableDir,'YZ')
-    panelWidth = structures.availableY;
-    panelHeight = structures.availableZ;
-    panelLength = structures.availableX;
-elseif strcmp(structures.buildableDir,'XY')
-    panelWidth = structures.availableX;
-    panelHeight = structures.availableY;
-    panelLength = structures.availableZ;
+    panelHeight = surface.availableZ;
+    panelLength = surface.availableY;
+elseif strcmp(surface.buildableDir,'YZ')
+    panelWidth = surface.availableY;
+    panelHeight = surface.availableZ;
+    panelLength = surface.availableX;
+elseif strcmp(surface.buildableDir,'XY')
+    panelWidth = surface.availableX;
+    panelHeight = surface.availableY;
+    panelLength = surface.availableZ;
 end
 
 
@@ -47,6 +70,8 @@ function [rectangleCG,rotationMatrix,needExpand] = CGconversionFromAlgorithm(rec
 % Edit the CG of the components to reflect the location of the panels. If it is on the YZ
 % plane, then it should be fine, but then if it is along the XZ or XY
 % plane, rotate the CG's of the components to reflect the new location.
+% Certain CGs have to be flipped along certain axes in order to be placed
+% correctly depending on the the original normal vectors of the panels.
 
 rotationMatrix = RotateFrameToAxes(structures.normalFace,0);
 % rotationMatrix = RotateFrameToAxes('-X',0);
@@ -61,11 +86,6 @@ if abs(panelWidth(2)) >= abs(panelWidth(1)) && panelWidth(2) < panelWidth(1)
         rectangleCG(:,2) = -rectangleCG(:,2);
     end
 end
-% elseif ~isempty(strfind(structures.normalFace,'Y'))
-%    if abs(panelWidth(2)) >= abs(panelWidth(1)) && panelWidth(2) > panelWidth(1)
-%         rectangleCG(:,2) = -rectangleCG(:,2);
-%     end
-% end
 
 % Check To see if the Z goes in the negative direction
 if abs(panelHeight(2)) >= abs(panelHeight(1)) && panelHeight(2) < panelHeight(1)
@@ -87,7 +107,8 @@ rectangleCG(:,1) = rectangleCG(:,1) + structures.availableX(1);
 rectangleCG(:,2) = rectangleCG(:,2) + structures.availableY(1);
 rectangleCG(:,3) = rectangleCG(:,3) + structures.availableZ(1);
 
-
+% Place the expansion variables in the right entries of the needExpand
+% vector so that it turns out to be [Height, Width, Length]
 if strcmp(structures.buildableDir,'XY')
     expandHeight = needExpand(4);
     expandWidth = needExpand(3);
@@ -115,7 +136,6 @@ needExpand(4) = expandLength;
 function [rectangleDim,rectangleMass] = ComponentConversionForPacking(components)
 % Converts allocated components into a format useable by the algorithm
 % Assumes that the component will be mounted along it's 'zy' axis.
-
 % rectangleDim = [h, w, l]
 % rectangleMass = [m]
 
@@ -158,7 +178,9 @@ end
 function components = ComponentsConversionFromAlgorithm(rectangleCG,rectangleDim,components,rotationMatrix)
 % Since the CG has already been placed into location, this takes the
 % components that were transformed into rectangles to work with the packing
-% algorithm and returns them to their original shape
+% algorithm and returns them to their original shape, along with their
+% necessary rotation matrix to go from their component body axes to the
+% satellite body axis.
 
 n1 = size(rectangleCG,1);
 

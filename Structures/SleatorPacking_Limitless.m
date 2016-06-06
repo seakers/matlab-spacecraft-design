@@ -1,15 +1,39 @@
 function [packedCG,packedDim,needExpand,isFit] = SleatorPacking_Limitless(rectangleDim,rectangleMass,tolerance,Width,Length,Height)
-% Limitless because the panel height can expand until everything fits.
-
-% Rectangles come in with height, width, and length, with the height and
-% width being mounted on the panel directly.
-
-% Tolerance is the minimum distance there should be between objects
-
-% Send back the x,y of the center of the rectangles
-
-% PanelWidth and PanelHeight are ranges from where the components start out
-% to where they end on the panel.
+% A function to get the information from the panel structure and convert it
+% into something more easily read by the packing algorithm. The packing
+% algorithm doesn't take what plane the panels are in into account, it just
+% assumes that they are on the YZ plane with a normal face in the X
+% direction. This helps accomplish that task by converting panels in
+% different planes to the same format.
+%   Inputs:
+%       rectangleDim        The dimensions of the n-components in rectangular
+%                           format [h,w,l]
+%       rectangleMass       The mass of the n-components
+%       tolerance           The given distance there should be between components
+%       Width               the "Width" of the panel, the base dimension of
+%                           the panel if it were stood up with a normal
+%                           vector along the +X direction.
+%       Height              the "Height" of the panel, the height dimension of
+%                           the panel if it were stood up with a normal
+%                           vector along the +X direction.
+%       Length              the "Length" of the panel, the allowable
+%                           distance away from the panel that the components can reach the most
+%                           of (e.g., a component that can fit within the height and width of
+%                           the panel but is extremely large in the other dimension might not
+%   Outputs:
+%       packedCG            The CG [x,y,z] of the packed components using
+%                           the bottom left edge of the panel as the origin.
+%       packedDim           Dimensions of all the packed rectangles [h,w,l]
+%       needExpand          A 1x4 vector containing if the structure needs
+%                           to be expanded or not. needExpand(1) shows if
+%                           the structure needs to be expanded with a 1 for
+%                           yes and a 0 for no. needExpand(2:4) designate
+%                           if the Height, Width, and Length of the
+%                           panel need to be expanded, assuming the panel
+%                           has a normal vector along the +X direction.
+%       isFit               A binary vector of which components were fitted
+%                           and which weren't. 1 for yes, 0 for not
+%                           fitted.
 
 % Need expand initially tells what componends need the panel to be expanded and for how much
 needExpand = zeros(size(rectangleDim,1),4);

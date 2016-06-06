@@ -1,17 +1,18 @@
 function [genParameters]= initGenParameters(components)
-% Check the size of the largest component. If the largest size is greater
-% than 0.3 meters, then look for the fuel tank. Check the size of the tank to make sure it fits the size of central
-% cylinders available. Central Cylinders are sized based on the size of the
-% payload adapters. If the payload adapters are too small, then you can
-% place the tanks symmetrically on the base of the satellite. If it's too
-% small, then we can use a smaller panel mounted configuration. If the tanks are too large,
-% then you can use a panel mounted configuration. If there are no fuel
-% tanks use a stacked configuration.
-
-% Get size of multiple fuel tanks if there are multiple fuel tanks and the
-% largest component.
+% Check the size of the largest component. If the largest component is less
+% than 0.3 meters, use a cubesat configuration. If the largest size is
+% greater than 0.3 meters, then look for the fuel tank in the list of
+% components. Check the size of the tank to make sure it fits the size of
+% central cylinders available. Central Cylinders are sized based on the
+% size of the payload adapters. If the payload adapters are too small,
+% compared to the fuel tank, or if there are more than 2 fuel tanks then
+% you can use a panel mounted satellite . If the tanks are too small, then
+% we can use a smaller panel mounted configuration. If the tanks are too
+% large, then you can use a panel mounted configuration. If there are no
+% fuel tanks use a stacked configuration.
 
 tankDiam = 0;
+nTanks = 0;
 largestComponent = 0;
 
 genParameters.aluminumThickness = .002; % Initial thickness of aluminum
@@ -19,9 +20,12 @@ genParameters.carbonfiberThickness = .03; % Initial thickness of carbon fiber
 genParameters.honeycombThickness = .02; % Initial thickness of honeycomb panels
 genParameters.carbonfiberThickness = .03; % Initial thickness of carbon fiber
 
-
-genParameters.needExpand = zeros(10,4);
-genParameters.isFit = zeros(length(components),1);
+% create an initial needExpand variable that has the first entry being that
+% the structure needs to be expanded, and the next three entries being the
+% height, width, and length that the satellite should be expanded to
+genParameters.needExpand = zeros(10,4); 
+% create an initial isFit variable that tells if each components are fitted in a location or not
+genParameters.isFit = zeros(length(components),1); 
 
 for i = 1:length(components)
 % Cycle through all the components, there are different ways that
@@ -66,6 +70,7 @@ for i = 1:length(components)
     if any(strfind(components(i).Name,'Tank'))
     % Get the size of the largest tank on the satellite
         placeHolder = components(i).Dim*2;
+        nTanks = nTanks + 1;
         if tankDiam < placeHolder
             tankDiam = placeHolder;
         end
@@ -83,14 +88,14 @@ if largestComponent > 0.3
     % Check to make sure that there is a tank and what the size is. If
     % there are more than one tanks, find the larger one.
         clampbandSize = ClampbandSizer(tankDiam);
-        if isempty(clampbandSize)
+        if isempty(clampbandSize) || nTanks > 2
         % If the clampbandSize variable is empty, this means that the fuel
         % tank is larger than any of the clampband sizes, so go with the
-        % Panel Mounted Configuration
+        % Panel Mounted Configuration, or if there are more than 2 fuel tanks.
             genParameters.spacecraftType = 'Panel Mounted';
-        elseif abs(clampbandSize-tankDiam)/clampbandSize > .10
+        elseif abs(clampbandSize-tankDiam)/clampbandSize > .30
         % If the tank diameter is so much smaller than the clampband size,
-        % 10% difference, then pick a panel mounted configuration
+        % 30% difference, then pick a panel mounted configuration
             genParameters.spacecraftType = 'Panel Mounted';
         else
         % Else if the tank diameter fits well within the clampband, then

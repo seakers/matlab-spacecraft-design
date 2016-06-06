@@ -1,10 +1,12 @@
 function [components,structures,needExpand,isFit] = StackingAlgorithm(components,structures,structuresIndices,genParameters)
-%% A function that will stack the components assigned to it on top of each other along the vector of selection.
+%% A function that will stack the components assigned to a structure on top of each other along the structure's normal vector
 
 n1 = length(components);
 rollRotate = 0;
 isFit = zeros(n1,1);
 
+% Go through all the components and convert them to the same rectangular
+% shape
 for i = 1:n1
     % Calculate the XYZ center of gravity of the component 
     % If it's a rectangle, include the vertece
@@ -42,7 +44,7 @@ for i = 1:n1
         Dim = [h,r*2,r*2];
         [components(i).CG_XYZ,structures(structuresIndices(1)).Surface(structuresIndices(2)),needExpand,isFit(i)] = StackComponent(Dim,structures(structuresIndices(1)).Surface(structuresIndices(2)),genParameters);
     elseif strcmp(components(i).Shape,'Cone')
-        % Come back to this one.
+        
         h = components(i).Dim(1);
         r1 = components(i).Dim(2); 
         r2 = components(i).Dim(2);
@@ -55,12 +57,32 @@ for i = 1:n1
         [components(i).CG_XYZ,structures(structuresIndices(1)).Surface(structuresIndices(2)),needExpand,isFit(i)] = StackComponent(Dim,structures(structuresIndices(1)).Surface(structuresIndices(2)),genParameters);
     end
     
+    % Get the rotation matrix for the component.
     components(i).RotateToSatBodyFrame = RotateFrameToAxes(structures(structuresIndices(1)).Surface(structuresIndices(2)).buildableDir,rollRotate);
 end
 
 function [xyz,structureSurface,needExpand,isFit] = StackComponent(Dim,structureSurface,genParameters)
-% Input of the rectangle's dimensions and the available space for it's location
-% isFit = 1;
+% A function that stacks the given component in the space given to it. This
+% reduces the amount of space available on the structures surface.
+%   Inputs:
+%       Dim                 The dimensions of the given component that has
+%                           been transformed into a rectangle
+%       structureSurface    the structure variable containing the surface
+%                           of the structure 
+%       genParameters       The general parameters of the satellite. Used
+%                           for the tolerance necessary between components.
+%
+%   Outputs:
+%       xyz                 An xyz coordinate of the CG of the component.
+%       structureSurface    The updated structure surface with less space
+%                           if the component was fitted.
+%       needExpand          Tells if the satellite needs expansion or not.
+%       isFit               Tells if the component was fitted or not.
+%
+%   Cornell University
+%   Author Name: Anjit Fageria
+%   Author NetID: agf46
+
 xyz = zeros(1,3);
 surfaceXYZ = zeros(3,2);
 needExpand = [0,0,0,0];
@@ -120,31 +142,10 @@ structureSurface.availableY = surfaceXYZ(2,:);
 structureSurface.availableZ = surfaceXYZ(3,:);
 
 if abs(surfaceXYZ(3,1)) > abs(surfaceXYZ(3,2))
+% If the height expanded to is more than the allotted given height, then
+% expand the satellite and put the component as not fitted.
     needExpand = [1, surfaceXYZ(3,1),0,0];
     isFit = 0;
 end
-% 
-% if strcmp(structures.buildableDir,'XY')
-%     expandHeight = needExpand(4);
-%     expandWidth = needExpand(2);
-%     expandLength = needExpand(3);
-% elseif strcmp(structures.buildableDir,'XZ')
-%     expandHeight = needExpand(2);
-%     expandWidth = needExpand(4);
-%     expandLength = needExpand(3);
-% elseif strcmp(structures.buildableDir,'YZ')
-%     expandHeight = needExpand(2);
-%     expandWidth = needExpand(3);
-%     expandLength = needExpand(4);
-% else
-%     expandHeight = 0;
-%     expandWidth = 0;
-%     expandLength = 0;
-% end
-% 
-% needExpand(2) = expandHeight + structures.availableZ(1);
-% needExpand(3) = expandWidth;
-% needExpand(4) = expandLength;
-
 
 
