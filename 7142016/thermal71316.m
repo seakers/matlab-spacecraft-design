@@ -1,4 +1,4 @@
-function thermal=thermal71316%(Comps,x,y,z,H,power)
+function thermal=thermamainl71316%(Comps,x,y,z,H,power)
 %for the purpose of merging code into the main code on 7/14/16 meeting
 
 Thigh=35;
