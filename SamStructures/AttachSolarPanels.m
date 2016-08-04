@@ -8,7 +8,7 @@ function [stowed,deploy] = AttachSolarPanels(panel,structure,dim,s)
 % deployed config, the solar panels will be displayed as folding
 % components. 
 
-rad = pi/2;   %define angle between deployed solar panels
+rad = pi/3;   %define angle between deployed solar panels
 
 L = dim(1);
 W = dim(2);
@@ -76,7 +76,7 @@ elseif s == 2
         stowed(k).Dim(1) = structure.Dim(1);
         stowed(k).Dim(2) = structure.Dim(3);
 
-        bottomVert = [-L/2-T,W/2,T; -(L/2+panel_t+T),W/2,T; 
+        bottomVert = [-L/2-T,W/2,0; -(L/2+panel_t+T),W/2,0; 
             -(L/2+panel_t+T),-W/2,0; -L/2-T,-W/2,0]; 
         topVert = [-(L/2+T),W/2,H; -(L/2+T+panel_t),W/2,H; 
             -(L/2+panel_t+T),-W/2,H; -(L/2+T),-W/2,H]; 

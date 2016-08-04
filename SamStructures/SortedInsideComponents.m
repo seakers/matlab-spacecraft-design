@@ -2,7 +2,14 @@ function [inside_comp,payload] = SortedInsideComponents(components)
 
 inside_comp = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[]...
     ,'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[]...
-    ,'Orientation',[],'Thermal',[],'InertiaMatrix',[],'Volume',[]);
+    ,'RotateToSatBodyFrame',[],'Thermal',[],'InertiaMatrix',[],'Volume',[],'HeatPower',[]);
+
+
+inside_comp = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[],'Dim'...
+    ,[],'CG_XYZ',[],'Vertices',[],'LocationReq',[],'Orientation',[],'Thermal'...
+    ,[],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',[]);
+
+
 
 j = 1;
 k = 1;

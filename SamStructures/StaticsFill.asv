@@ -1,4 +1,4 @@
-function [newdesign,t_good,mat,masses] = StaticsFill(structures,dim)
+function [t_good,material,masses] = StaticsFill(structures,dim)
 % Check each structure, make sure the panels and cylinders can survive
 % buckling or not. 
 
@@ -9,7 +9,7 @@ function [newdesign,t_good,mat,masses] = StaticsFill(structures,dim)
 % Initially idealize spacecraft in launch config. as a cantilevered hollow
 % cylinder with uniform thickness 
 
-newdesign = structures;
+%newdesign = structures;
 
 % Get material parameters 
 material = MaterialTable();
@@ -94,21 +94,21 @@ for i = 1:10;
     end
 end
 
-newdesign.structures(1).Dim(3) = t_good;
-newdesign.structures(2).Dim(2) = t_good;
-newdesign.structures(3).Dim(2) = t_good;
-newdesign.structures(4).Dim(2) = t_good;
-newdesign.structures(5).Dim(2) = t_good;
-newdesign.structures(6).Dim(1) = t_good;
-mat = material(mat_i).Name;
-masses = zeros(1,6);
+% newdesign.structures(1).Dim(3) = t_good;
+% newdesign.structures(2).Dim(2) = t_good;
+% newdesign.structures(3).Dim(2) = t_good;
+% newdesign.structures(4).Dim(2) = t_good;
+% newdesign.structures(5).Dim(2) = t_good;
+% newdesign.structures(6).Dim(1) = t_good;
+material = material(mat_i).Name;
+masses = zeros(length(1:6)
 for j = 1:6
-    masses(j) = newdesign.structures(j).Dim(1)...
+    newdesign.structures(j).Mass = newdesign.structures(j).Dim(1)...
         *newdesign.structures(j).Dim(2)*newdesign.structures(j).Dim(3)*material(mat_i).Density;
     %newdesign.structures(j).Material = material(mat_i).Name;
 end
 
-newdesign.structuresMass = sum(masses);
+newdesign.structuresMass = sum([newdesign.structures.Mass]);
 newdesign.structuresCost = newdesign.structuresMass*material(mat_i).Cost;
 newdesign.totalMass = newdesign.structuresMass + structures.componentsMass;
         

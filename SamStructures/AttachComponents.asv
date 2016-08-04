@@ -1,0 +1,56 @@
+function [stowed_comp, deploy_comp] = AttachComponents(components,structures,dim)
+% After building the structure frame and filling it with the inside
+% components, add the outside components such as solar panels, sensors,
+% radiators, etc.
+
+L = dim(1);
+W = dim(2);
+H = dim(3);
+
+stowed_comp = struct('Name',[],'Mass',[],'Dim',[0,0,0],'CG_XYZ',[]...
+    ,'Volume',[],'Vertices',[]);
+j = 1;
+for i = 1:length(components)
+    if strcmp(components(i).LocationReq,'Outside')
+        stowed_comp(j).Name = components(i).Name;
+        stowed_comp(j).Mass = components(i).Mass;
+        stowed_comp(j).Volume = components(i).Dim(1)*components(i).Dim(2)*components(i).Dim(3);
+        stowed_comp(j).Dim = components(i).Dim;
+       j = j+1;
+    end
+end
+
+s = 1;
+for k = 1:length(stowed_comp)
+    if strcmp(stowed_comp(k),'Solar Panel')
+        panel_A = stowed_comp(k).Dim(1)*stowed_comp(k).Dim(2);
+        panel_t = stowed_comp(k).Dim(3);
+        if panel_A > structures(s+3).Surface(1).availableA
+            [stowed_comp,deploy_comp = SolarDeployables(stowed_comp(k),structures(s+3).Surface(1).availableA);
+        else
+            stowed_comp(k).Dim(1) = structures(s+3).Dim(1);
+            stowed_comp(k).Dim(2) = structures(s+3).Dim(3);
+            if s ==1
+                bottomVert = [L/2,W/2,0; L/2,-W/2,0; 
+                    L/2+panel_t,W/2,0; L/2+panel_t,-W/2,0]; 
+                topVert = [L/2,W/2,H; L/2,-W/2,H; 
+                    L/2+panel_t,W/2,H; L/2+panel_t,-W/2,H]; 
+            else
+                bottomVert = [-L/2,W/2,0; -L/2,-W/2,0; 
+                    -(L/2+panel_t),W/2,0; -(L/2+panel_t),-W/2,0]; 
+                topVert = [-L/2,W/2,H; -L/2,-W/2,H; 
+                    -(L/2+panel_t),W/2,H; -(L/2+panel_t),-W/2,H]; 
+            end
+            deploy_comp = [];
+            stowed_comp(k).Vertices = [bottomVert; topVert];
+            s = s+1;
+        end
+    elseif strcmp(stowed_comp(k),'Earth Sensor')
+%    elseif strcmp(stowed_comp(k).... what else? sun sensor, maybe star
+%    sensor... and then payload yes 
+    end
+
+end
+
+
+end

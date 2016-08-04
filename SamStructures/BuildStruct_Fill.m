@@ -10,11 +10,11 @@ fill_volume = sum(cat(1,inside_comp.Volume));
 if strcmp(payload.Shape,'Rectangle')
 L = 1*max(payload.Dim(1));
 W = 1*sum(payload.Dim(2));
-H = 1*fill_volume/((L-2*init_t)*(W-2*init_t));
+H = 1.2*fill_volume/((L-2*init_t)*(W-2*init_t));
 dim = [L,W,H,init_t];
 else
-L = 2.1*max(payload.Dim(1));
-W = 2.1*sum(payload.Dim(1));
+L = 2.1*max(payload(1).Dim(1));
+W = 2.1*sum(payload(1).Dim(1));
 H = 1.01*fill_volume/(L*W);
 dim = [L,W,H,init_t];
 end
@@ -27,7 +27,7 @@ topVert(:,3) = topVert(:,3)+init_t;
 
 structures(1).Name = 'Zenith Panel';
 structures(1).Shape = 'Rectangle';
-structures(1).Material = [];
+structures(1).Material = material;
 structures(1).Mass = []; % This will be density times volume
 structures(1).Dim = [L,W,init_t]; % use the satial paramaters.
 structures(1).CG_XYZ = [0,0,init_t/2]; % Make the origin at the middle of the bottom panel.
@@ -55,7 +55,7 @@ topVert(:,3) = topVert(:,3)+H-2*init_t;
 
 structures(2).Name = 'Velocity Vector Panel';
 structures(2).Shape = 'Rectangle';
-structures(2).Material = [];
+structures(2).Material = material;
 structures(2).Mass = []; % This will be density times volume
 structures(2).Dim = [H-2*init_t,init_t,L]; % use the satial paramaters.
 structures(2).CG_XYZ = [0,W/2-init_t/2,(H-init_t)/2+init_t];

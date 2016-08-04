@@ -41,6 +41,8 @@ function [obc] = structOBC(ddpd, redundancy)
       
       obc.PeakPwr = 2*(obc.AvgPwr);
       
+      heatpower = obc.PeakPwr;
+      
       
       obc.Mass = exp(dot([-1.04807, 0.169433, 0.186482, -0.00983],x))/1000;
       
@@ -76,10 +78,11 @@ function [obc] = structOBC(ddpd, redundancy)
       obc.Orientation = [];
       
       
-      components(redundancy) = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[],'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[],'Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+      
+      components(redundancy) = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[],'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[],'Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',[]);
       
       for i = 1:redundancy
-          components(i) = struct('Name','OBC','Subsystem','Avionics','Shape','Rectangle','Mass',obc.Mass,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,85],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+          components(i) = struct('Name','OBC','Subsystem','Avionics','Shape','Rectangle','Mass',obc.Mass,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,85],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',heatpower);
       end
       obc.comp = components;
       

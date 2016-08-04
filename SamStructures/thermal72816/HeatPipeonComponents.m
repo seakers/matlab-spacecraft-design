@@ -21,16 +21,17 @@ for i=1:len
     dis=min(sqrt((x+z)^2+y^2),sqrt((z+y)^2+x^2));
     pipelength=pipelength+dis;
     comps(i).HPlength=dis;
-    end
     
-    if comps(i).Power<1
+    if comps(i).HeatPower<1
         comps(i).HPdiameter=0.003;
-    elseif comps(i).Power>=1&&comps(i).Power<=10
+    elseif comps(i).HeatPower>=1&&comps(i).HeatPower<=10
         comps(i).HPdiameter=0.005;
     else
         comps(i).HPdiameter=0.01;
     end
+    
     volume=volume+0.25*pi*comps(i).HPdiameter^2*dis;
+    end
 end
 
 CHP.length=pipelength;

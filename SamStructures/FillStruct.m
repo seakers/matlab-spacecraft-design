@@ -15,10 +15,10 @@ function filled_comp = FillStruct(inside_comp,dim)
 
 filled_comp = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[]...
     ,'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[]...
-    ,'Orientation',[],'Thermal',[],'InertiaMatrix',[],'Volume',[]);
+    ,'RotateToSatBodyFrame',[],'Thermal',[],'InertiaMatrix',[],'Volume',[],'HeatPower',[]);
 
 L = dim(1);     W = dim(2);     H = dim(3);     t = dim(4);
-stackH = t;
+stackH = t+.03*H;
 
 for i = 1:length(inside_comp)
     filled_comp(i) = inside_comp(i);
@@ -37,6 +37,6 @@ for i = 1:length(inside_comp)
     
     filled_comp(i).Vertices = [bottomVert; topVert];
     filled_comp(i).CG_XYZ = [0,0,(2*stackH+tempH)/2];
-    stackH = stackH + tempH;
+    stackH = stackH + tempH + .03*H;
 end
 end

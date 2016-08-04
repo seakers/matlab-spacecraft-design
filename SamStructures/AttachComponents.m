@@ -38,13 +38,15 @@ for k = 1:length(outside_comp)
     elseif strcmp(outside_comp(k).Name,'Payload')
         payload_comp(p) = AttachPayload(outside_comp(k),dim,p);
         p = p+1;
+    elseif strcmp(outside_comp(k).Name,'Antenna')
+        antenna = AttachAntenna(outside_comp(k),dim);
 %    elseif strcmp(stowed_comp(k).... what else? sun sensor, maybe star
 %    sensor... and then payload yes radiator?
     end
 end
 
-stowed_comp = [solar_stowed solar_stowed2 payload_comp];
-deploy_comp = [solar_deploy solar_deploy2 payload_comp];
+stowed_comp = [solar_stowed solar_stowed2 payload_comp antenna];
+deploy_comp = [solar_deploy solar_deploy2 payload_comp antenna];
 
 
 end

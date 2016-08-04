@@ -18,22 +18,47 @@ addpath Plotting
 
 % Author Name: Samuel Wu 
 
+% Testing using self-generated components, reads through component lists
+% and sort inside components by mass.
+
 fake_comp = FakeComps();
 [inside_comp,payload] = SortedInsideComponents(fake_comp);
-init_t = .005;
+
+% First generate a structure using an initial guess for the thickness of
+% the walls, and fill the structure with the inside components and attach
+% outside components. 
+init_t = .001;
 [structures.structures,dim] = BuildStruct_Fill(inside_comp,payload,init_t);
 filled_comp = FillStruct(inside_comp,dim);
 [stowed_comp,deploy_comp] = AttachComponents(FakeComps,structures,dim);
 structures.stowed = [filled_comp stowed_comp];
 structures.deploy = [filled_comp deploy_comp];
+structures.componentsMass = sum([inside_comp.Mass])+sum([stowed_comp.Mass]);
+
+% Test the structure against static and dynamics loads and generate correct
+% thickness to withstand loads 
+[structures,final_t,material,masses] = StaticsFill(structures,dim);
+
+% Rebuild structure and fill with components given correct thickness
+[structures.structures,dim] = BuildStruct_Fill(inside_comp,payload,final_t);
+structures.structures = StructuresMatMass(structures.structures,material,masses);
+filled_comp = FillStruct(inside_comp,dim);
+[stowed_comp,deploy_comp] = AttachComponents(FakeComps,structures,dim);
+structures.stowed = [filled_comp stowed_comp];
+structures.deploy = [filled_comp deploy_comp];
+[structures.IM_stowed,structures.CG_stowed] = InertiaCalculator(structures.stowed,structures.structures);
+
 
 LV = struct('id','Vega','payload_GEO',[0,0,0],'diameter',2.38,'height',3.5);
 
-%[thermal,structures.stowed] = thermal726(dim(1),dim(2),dim(3),400,structures.stowed);
+[Radiator,thermal,structures.stowed] = thermal726(dim(1),dim(2),dim(3),400,structures.stowed);
 
-figure(1)
+structures.thermal = thermal;
+structures.radiator = Radiator;
+
+figure
 PlotSatellite(structures.stowed,structures.structures,LV)
-figure(2)
+figure
 PlotSatellite(structures.deploy,structures.structures,LV)
 
 end
