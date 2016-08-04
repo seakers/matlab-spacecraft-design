@@ -1,4 +1,4 @@
-function LV = LV_selection(payload,structures)
+function LV = LV_selection(mission,structures)
 
 LVData = GetLVData();
 n1 = length(LVData);
@@ -20,7 +20,7 @@ LVData=LVData(ind);
 % See if the cheapest will be able to take the satellite there or not. If
 % not, keep cycling to the next one.
 n1 = length(LVData);
-index = strfind(fieldnames(LVData),payload.Orbit);
+index = strfind(fieldnames(LVData),mission.orbit);
 
 i = 1;
 keepGoing = 1;
@@ -33,7 +33,7 @@ while i <= n1 && keepGoing
         if ~isempty(index{j})
             LV_orbit = struct2cell(LVData(j));
             LV_orbit = LV_orbit{j};
-            if CanReachOrbit(payload,LV_orbit)
+            if CanReachOrbit(mission,LV_orbit)
                 keepGoing = 0;
                 LV = LVData(i);
             end
@@ -47,7 +47,7 @@ end
 
 function yn = CanReachOrbit(payload_orbit,LV_orbit)
     
-    if payload_orbit.h <= LV_orbit(1)
+    if payload_orbit.alt <= LV_orbit(1)
         yn = 1;
     else 
         yn = 0;

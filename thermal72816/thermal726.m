@@ -1,10 +1,10 @@
-function [thermal,complist]=thermal726(x,y,z,H,complist)
+function [Radiator,thermal,complist]=thermal726(x,y,z,H,complist)
 %for the purpose of merging code into the main code on 7/14/16 meeting
 %for faster result
 Thigh=35;
 Tlow=5;
 
-powertotal=sum(cat(1,complist.Power));
+powertotal=sum(cat(1,complist.HeatPower));
 
 %load the Comps list here as needed
 %load the radiator location as needed.

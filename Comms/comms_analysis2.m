@@ -158,7 +158,7 @@ for Band=1:4
                             costElectronics=CostCommElectronics(massE,Nchannels);
                             comms_cost_new=(costAntenna+costElectronics+CostGroundStations/1000);
                             
-                            power_comms=comms_power(P_tx);
+                            [power_comms,eff]=comms_power(P_tx);
                             
                             if comms_cost_new<comms.cost
                                 optfound=true;
@@ -307,13 +307,13 @@ end
 
 if optfound
     %Outputs for Structures (Anjit)
-    components(1) = struct('Name','Filters/Diplexers','Subsystem','Comms','Shape','Rectangle','Mass',massFiltersDiplexers,'Dim',dimFiltersDiplexers,'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
-    components(2) = struct('Name','Electronics/Wiring','Subsystem','Comms','Shape','Rectangle','Mass',massElectronics,'Dim',dimElectronics,'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+    components(1) = struct('Name','Filters/Diplexers','Subsystem','Comms','Shape','Rectangle','Mass',massFiltersDiplexers,'Dim',dimFiltersDiplexers,'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[],'HeatPower',0);
+    components(2) = struct('Name','Electronics/Wiring','Subsystem','Comms','Shape','Rectangle','Mass',massElectronics,'Dim',dimElectronics,'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',P_tx/eff);
     
     if strcmp(AntennaTypeOPT,'Parabolic')
-        components(3) = struct('Name','Antenna','Subsystem','Comms','Shape','Cylinder','Mass',massAntenna,'Dim',dimAntenna,'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+        components(3) = struct('Name','Antenna','Subsystem','Comms','Shape','Cylinder','Mass',massAntenna,'Dim',dimAntenna,'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',P_tx*(1-.6));
     else
-        components(3) = struct('Name','Antenna','Subsystem','Comms','Shape','Rectangle','Mass',massAntenna,'Dim',dimAntenna,'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', []);
+        components(3) = struct('Name','Antenna','Subsystem','Comms','Shape','Rectangle','Mass',massAntenna,'Dim',dimAntenna,'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',P_tx*(1-.6));
     end
     
     comms.mass=MassOpt;

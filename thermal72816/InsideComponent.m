@@ -10,7 +10,7 @@ for i=1:len
     if strcmp('Inside',complist(i).LocationReq)
         
         %assume the power is the component's heat output
-        Qw=complist(i).Power;
+        Qw=complist(i).HeatPower;
         %get the dimension and area of the component for further math
         dim=complist(i).Dim;
         if strcmp('Rectangle',complist(i).Shape)

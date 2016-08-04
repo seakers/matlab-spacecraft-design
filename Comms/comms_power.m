@@ -1,4 +1,4 @@
-function power=comms_power(Ptx)
+function [power,eff]=comms_power(Ptx)
 
 eff=0.45-0.015*(Ptx-5);
 if eff<0.45
