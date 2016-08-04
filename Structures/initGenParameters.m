@@ -69,10 +69,10 @@ for i = 1:length(components)
     end
     if any(strfind(components(i).Name,'Tank'))
     % Get the size of the largest tank on the satellite
-        placeHolder = components(i).Dim*2;
+        tankSize = components(i).Dim*2;
         nTanks = nTanks + 1;
-        if tankDiam < placeHolder
-            tankDiam = placeHolder;
+        if tankDiam < tankSize
+            tankDiam = tankSize;
         end
     end
 end
@@ -135,7 +135,7 @@ elseif strfind(genParameters.spacecraftType,'Stacked')
     genParameters.trays = [1,genParameters.aluminumThickness]; % a parameter that says the number of trays on the satellite and where they should start.
     if largestComponent <= 0.3
     % Create a cubesat
-        % If the largest component is smaller than 10 centimeters, create a
+        % If the largest component is smaller than 30 centimeters, create a
         % cubesat shape
         genParameters.satWidth = .1; % Initial Length
         genParameters.satLength = .1; % Initial Width
@@ -148,7 +148,8 @@ elseif strfind(genParameters.spacecraftType,'Stacked')
         ratios.size_component = 1.01; 
         genParameters.satWidth = ratios.size_component*largestComponent; % Initial Length
         genParameters.satLength = ratios.size_component*largestComponent; % Initial Width
-        genParameters.satHeight = .1; % Initial Height    
+        genParameters.satHeight = 0; % Initial Height   
+        %genParameters.satHeight = ratios.size_component*largestComponent;
     end
 elseif strfind(genParameters.spacecraftType,'Panel Mounted')
 % Create a panel mounted satellite
@@ -160,7 +161,8 @@ elseif strfind(genParameters.spacecraftType,'Panel Mounted')
         ratios.size_component = 1.01;
         genParameters.satWidth = ratios.size_component*largestComponent; % Initial Length
         genParameters.satLength = ratios.size_component*largestComponent; % Initial Width
-        genParameters.satHeight = .1; % Initial Height    
+        genParameters.satHeight = .1; % Initial Height  
+        %genParameters.satHeight = ratios.size_component*largestComponent;
 end
 
 function clampbandSize = ClampbandSizer(tankDiam)

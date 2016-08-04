@@ -234,7 +234,7 @@ structures(6).Plane = 'XY';
 
 % Outside Surface to mount parts on
 structures(6).Surface(1).Mountable = 'Payload';
-structures(6).Surface(1).buildableDir = '+Z';
+structures(6).Surface(1).buildableDir = 'XY';
 structures(6).Surface(1).normalFace = '+Z';
 structures(6).Surface(1).availableX = -[-genParameters.satLength/2,genParameters.satLength/2]; % This needs to be in the negative direciton, as if the x direction is facing you and you're mounting into the page
 structures(6).Surface(1).availableY = [-genParameters.satWidth/2,genParameters.satWidth/2]; 
@@ -407,7 +407,7 @@ structures(6).Plane = 'XY';
 
 % Outside Surface to mount parts on
 structures(6).Surface(1).Mountable = 'Payload';
-structures(6).Surface(1).buildableDir = '+Z';
+structures(6).Surface(1).buildableDir = 'XY';
 structures(6).Surface(1).normalFace = '+Z';
 structures(6).Surface(1).availableX = -[-genParameters.satLength/2,genParameters.satLength/2]; % This needs to be in the negative direciton, as if the x direction is facing you and you're mounting into the page
 structures(6).Surface(1).availableY = [-genParameters.satWidth/2,genParameters.satWidth/2]; 
@@ -778,7 +778,7 @@ structures(8).Plane = 'XY';
 % Top Panel Outside Face
 structures(9).Surface(1).Mountable = 'Payload'; % Don't need any specifics
 structures(9).Surface(1).normalFace = '+Z';
-structures(9).Surface(1).buildableDir = '+Z';
+structures(9).Surface(1).buildableDir = 'XY';
 structures(9).Surface(1).availableX = [-panelWidth/2,panelWidth/2];
 structures(9).Surface(1).availableY = [-genParameters.cylinderDiam/2-shearWidth,genParameters.cylinderDiam/2+shearWidth];
 structures(9).Surface(1).availableZ = [genParameters.satHeight,inf];

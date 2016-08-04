@@ -1,0 +1,185 @@
+function structure = BuildStruct_Fill(inside_comp,payload)
+
+% Define the volume needed for the surroinding structure to hold. Builds the
+% structural walls around this volume based on an aspect ratio.
+fill_volume = sum(inside_comp.Volume);
+
+% Assume L & W of structure are same, and you are adjusting height
+% accordingly
+
+L = 1.05*sum(payload.Dim(1));
+W = 1.05*max(payload.Dim(2));
+H = fill_volume/(L*W);
+
+%% 1, Bottom Panel (Normal to -Z)
+bottomVert = [L/2,W/2,0; -genParameters.satLength/2,genParameters.satWidth/2,0;
+                 -genParameters.satLength/2,-genParameters.satWidth/2,0;
+                 genParameters.satLength/2,-genParameters.satWidth/2,0];
+
+topVert = bottomVert;
+topVert(:,3) = topVert(:,3)+genParameters.aluminumThickness;
+
+structures(1).Name = 'Bottom Panel';
+structures(1).Shape = 'Rectangle';
+structures(1).Material = 'Aluminum 6061-T6';
+structures(1).Mass = []; % This will be density times volume
+structures(1).Dim = [genParameters.aluminumThickness,genParameters.satWidth,genParameters.satLength]; % use the satial paramaters.
+structures(1).CG_XYZ = [0,0,genParameters.aluminumThickness/2]; % Make the origin at the middle of the bottom panel.
+structures(1).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
+structures(1).Top_Vertices = topVert;
+structures(1).Plane = 'XY';
+
+% Outside Surface to mount parts on
+structures(1).Surface(1).Mountable = 'N/A';
+structures(1).Surface(1).buildableDir = 'XY';
+structures(1).Surface(1).normalFace = '-Z';
+structures(1).Surface(1).availableX = [-genParameters.satLength/2,genParameters.satLength/2];
+structures(1).Surface(1).availableY = [-genParameters.satWidth/2,genParameters.satWidth/2];
+structures(1).Surface(1).availableZ = [0,-inf];
+ 
+
+
+%% 2, North Face Panel (Normal to +Y axis)
+bottomVert = [genParameters.satLength/2,genParameters.satWidth/2-genParameters.aluminumThickness,genParameters.aluminumThickness;
+                 -genParameters.satLength/2,genParameters.satWidth/2-genParameters.aluminumThickness,genParameters.aluminumThickness;
+                 -genParameters.satLength/2,genParameters.satWidth/2,genParameters.aluminumThickness;
+                 genParameters.satLength/2,genParameters.satWidth/2,genParameters.aluminumThickness];
+
+topVert = bottomVert;
+topVert(:,3) = topVert(:,3)+genParameters.satHeight-2*genParameters.aluminumThickness;
+
+structures(2).Name = 'North Face Panel';
+structures(2).Shape = 'Rectangle';
+structures(2).Material = 'Aluminum 6061-T6';
+structures(2).Mass = []; % This will be density times volume
+structures(2).Dim = [genParameters.satHeight-2*genParameters.aluminumThickness,genParameters.aluminumThickness,genParameters.satLength]; % use the satial paramaters.
+structures(2).CG_XYZ = [0,genParameters.satWidth/2-genParameters.aluminumThickness/2,(genParameters.satHeight-genParameters.aluminumThickness)/2+genParameters.aluminumThickness];
+structures(2).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
+structures(2).Top_Vertices = topVert;
+structures(2).Plane = 'XZ';
+
+% Outside Surface to mount parts on <- Check out the z face start
+structures(2).Surface(1).Mountable = 'N/A';
+structures(2).Surface(1).buildableDir = 'XZ';
+structures(2).Surface(1).normalFace = '+Y';
+structures(2).Surface(1).availableX = [genParameters.satLength/2,-genParameters.satLength/2];
+structures(2).Surface(1).availableY = [genParameters.satWidth/2,inf];
+structures(2).Surface(1).availableZ = [0,genParameters.satHeight];
+
+%% 3, South Face Panel (normal to -Y)
+bottomVert = [genParameters.satLength/2,-(genParameters.satWidth/2-genParameters.aluminumThickness),genParameters.aluminumThickness;
+                 -genParameters.satLength/2,-(genParameters.satWidth/2-genParameters.aluminumThickness),genParameters.aluminumThickness;
+                 -genParameters.satLength/2,-genParameters.satWidth/2,genParameters.aluminumThickness;
+                 genParameters.satLength/2,-genParameters.satWidth/2,genParameters.aluminumThickness];
+
+topVert = bottomVert;
+topVert(:,3) = topVert(:,3)+genParameters.satHeight-2*genParameters.aluminumThickness;
+
+structures(3).Name = 'South Face Panel';
+structures(3).Shape = 'Rectangle';
+structures(3).Material = 'Aluminum 6061-T6';
+structures(3).Mass = []; % This will be density times volume
+structures(3).Dim = [genParameters.satHeight-2*genParameters.aluminumThickness,genParameters.aluminumThickness,genParameters.satLength]; % use the satial paramaters.
+structures(3).CG_XYZ = [0,-genParameters.satWidth/2+genParameters.aluminumThickness/2,(genParameters.satHeight-genParameters.aluminumThickness)/2+genParameters.aluminumThickness];
+structures(3).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
+structures(3).Top_Vertices = topVert;
+structures(3).Plane = 'XZ';
+
+% Outside Surface to mount parts on <- Check out the z face start
+structures(3).Surface(1).Mountable = 'N/A';
+structures(3).Surface(1).buildableDir = 'XZ';
+structures(3).Surface(1).normalFace = '-Y';
+structures(3).Surface(1).availableX = [-genParameters.satLength/2,genParameters.satLength/2];
+structures(3).Surface(1).availableY = [-genParameters.satWidth/2,-inf];
+structures(3).Surface(1).availableZ = [0,genParameters.satHeight];
+
+
+%% 4, East Face Panel (normal to +X)
+bottomVert = [genParameters.satLength/2-genParameters.aluminumThickness,-genParameters.satWidth/2,genParameters.aluminumThickness;
+                 genParameters.satLength/2-genParameters.aluminumThickness,genParameters.satWidth/2,genParameters.aluminumThickness;
+                 genParameters.satLength/2,genParameters.satWidth/2,genParameters.aluminumThickness;
+                 genParameters.satLength/2,-genParameters.satWidth/2,genParameters.aluminumThickness];
+
+topVert = bottomVert;
+topVert(:,3) = topVert(:,3)+genParameters.satHeight-2*genParameters.aluminumThickness;
+
+structures(4).Name = 'East Face Panel';
+structures(4).Shape = 'Rectangle';
+structures(4).Material = 'Aluminum 6061-T6';
+structures(4).Mass = []; % This will be density times volume
+structures(4).Dim = [genParameters.satHeight-genParameters.aluminumThickness,genParameters.aluminumThickness,genParameters.satLength]; % use the satial paramaters.
+structures(4).CG_XYZ = [genParameters.satLength/2-genParameters.aluminumThickness/2,0,(genParameters.satHeight-genParameters.aluminumThickness)/2+genParameters.aluminumThickness];
+structures(4).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
+structures(4).Top_Vertices = topVert;
+structures(4).Plane = 'YZ';
+
+% Outside Surface to mount parts on <- Check out the z face start
+structures(4).Surface(1).Mountable = 'N/A';
+structures(4).Surface(1).buildableDir = 'YZ';
+structures(4).Surface(1).normalFace = '+X';
+structures(4).Surface(1).availableX = [genParameters.satLength/2,inf];
+structures(4).Surface(1).availableY = [-genParameters.satWidth/2,genParameters.satWidth/2];
+structures(4).Surface(1).availableZ = [0,genParameters.satHeight];
+
+
+%% 5, West Face Panel (normal to -X)
+bottomVert = [-(genParameters.satLength/2-genParameters.aluminumThickness),-genParameters.satWidth/2,genParameters.aluminumThickness;
+                 -(genParameters.satLength/2-genParameters.aluminumThickness),genParameters.satWidth/2,genParameters.aluminumThickness;
+                 -genParameters.satLength/2,genParameters.satWidth/2,genParameters.aluminumThickness;
+                 -genParameters.satLength/2,-genParameters.satWidth/2,genParameters.aluminumThickness];
+
+topVert = bottomVert;
+topVert(:,3) = topVert(:,3)+genParameters.satHeight-2*genParameters.aluminumThickness;
+
+structures(5).Name = 'West Face Panel';
+structures(5).Shape = 'Rectangle';
+structures(5).Material = 'Aluminum 6061-T6';
+structures(5).Mass = []; % This will be density times volume
+structures(5).Dim = [genParameters.satHeight-genParameters.aluminumThickness,genParameters.aluminumThickness,genParameters.satLength]; % use the satial paramaters.
+structures(5).CG_XYZ = [-genParameters.satLength/2+genParameters.aluminumThickness/2,0,(genParameters.satHeight-genParameters.aluminumThickness)/2+genParameters.aluminumThickness];
+structures(5).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
+structures(5).Top_Vertices = topVert;
+structures(5).Plane = 'YZ';
+
+% Outside Surface to mount parts on <- Check out the z face start
+structures(5).Surface(1).Mountable = 'N/A';
+structures(5).Surface(1).buildableDir = 'YZ';
+structures(5).Surface(1).normalFace = '-X';
+structures(5).Surface(1).availableX = [-genParameters.satLength/2,-inf];
+structures(5).Surface(1).availableY = [genParameters.satWidth/2,-genParameters.satWidth/2];
+structures(5).Surface(1).availableZ = [0,genParameters.satHeight];
+
+
+%% 6, Top Panel (normal to +Z)
+bottomVert = [genParameters.satLength/2,genParameters.satWidth/2,genParameters.satHeight-genParameters.aluminumThickness;
+                 -genParameters.satLength/2,genParameters.satWidth/2,genParameters.satHeight-genParameters.aluminumThickness;
+                 -genParameters.satLength/2,-genParameters.satWidth/2,genParameters.satHeight-genParameters.aluminumThickness;
+                 genParameters.satLength/2,-genParameters.satWidth/2,genParameters.satHeight-genParameters.aluminumThickness];
+
+topVert = bottomVert;
+topVert(:,3) = topVert(:,3)+genParameters.aluminumThickness;
+
+structures(6).Name = 'Top Panel';
+structures(6).Shape = 'Rectangle';
+structures(6).Material = 'Aluminum 6061-T6';
+structures(6).Mass = []; % This will be density times volume
+structures(6).Dim = [genParameters.aluminumThickness,genParameters.satWidth,genParameters.satLength]; % use the satial paramaters.
+structures(6).CG_XYZ = [0,0,genParameters.satHeight-genParameters.aluminumThickness/2]; % Make the origin at the base of the bottom panel.
+structures(6).Bottom_Vertices = bottomVert; % The Vertices are the bottom of the satellite.
+structures(6).Top_Vertices = topVert;
+structures(6).Plane = 'XY';
+
+% Outside Surface to mount parts on
+structures(6).Surface(1).Mountable = 'Payload';
+structures(6).Surface(1).buildableDir = 'XY';
+structures(6).Surface(1).normalFace = '+Z';
+structures(6).Surface(1).availableX = -[-genParameters.satLength/2,genParameters.satLength/2]; % This needs to be in the negative direciton, as if the x direction is facing you and you're mounting into the page
+structures(6).Surface(1).availableY = [-genParameters.satWidth/2,genParameters.satWidth/2]; 
+structures(6).Surface(1).availableZ = [genParameters.satHeight,+inf];
+ 
+
+
+
+
+end
+

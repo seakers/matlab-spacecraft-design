@@ -19,8 +19,8 @@ fnat_lat = 10; % Lateral natural frequency (Hz)
 fnat_ax = 25; % Axial natural frequency (Hz)
 
 % Factors of safety for ultimate and yielding strength 
-fos_ult = 100;
-fos_yield = 75;
+fos_ult = 1.25;
+fos_yield = 1.10;
 
 % Load factors requirement (multiple of weight on Earth)
 % May need to change these assumptions
@@ -32,16 +32,16 @@ loadf_bend = 3.0;
 pressure = 6889;    %(Pa)
 
 MS = 0;
-mass = inf;
-struct_vol = zeros(1,6);
-for i = 1:10;
+cost = inf;
+struct_vol = zeros(1:6);
+for i = 1:length(material)
     % Calculating parameters
     for k = 1:6
-    struct_vol(k) = design.structures(k).Dim(1).*design.structures(k).Dim(2).*design.structures(k).Dim(3);
+    struct_vol(k) = design.structures(k).Dim(1)*design.structures(k).Dim(2)*design.structures(k).Dim(3);
     end
     t_int = design.structures(1).Dim(1);
     A_const = sum(struct_vol)/t_int;
-    mB = design.componentsMass+2*sum(struct_vol)*material(i).Density;    %inc. allocation for structure
+    mB = design.componentsMass+2*sum(struct_vol*material(i)).Density;    %inc. allocation for structure
     weight = mB*9.81;
     R = design.genParameters.satWidth/2;
     
@@ -56,7 +56,7 @@ for i = 1:10;
     t_lat = I_req/(pi*R^3);
     
     % Calculating limit load of spacecraft
-    dist_CG = design.genParameters.satHeight/2;
+    dist_CG = design.CG(3)/2;
     limit_axial = weight*loadf_ax;
     limit_lat = weight*loadf_lat;
     limit_bend = weight*dist_CG*loadf_bend;
@@ -69,47 +69,51 @@ for i = 1:10;
     % Sizing for tensile strength (using A = 2*pi*R*t
     t_ult = Peq/(material(i).F_ult*2*pi*R);
     t_yield = Peq/(material(i).F_yield*2*pi*R);
-    t_vect = [t_ult t_yield t_ax t_lat];
-    t_req = max(t_vect);
+    t_req = max(t_ult,t_yield,t_ax,t_lat);
     MS_new = 0;
 
     % Sizing for stability (compressive strength)
     while MS_new - 1 < 0
         phi = sqrt(R/t_req)/16;
-        gamma = 1.0 - 0.901*(1.0-exp(-phi));
-        sig_cr = (0.6.*gamma.*material(i).E.*t_req)/R;
-        Pcr = 2*pi.*R.*t_req.*sig_cr;
-        MS_new = Pcr./ult_load;
-        mass_new = A_const.*t_req.*material(i).Density;
-        t_req = t_req.*1.05;
+        gamma = 1.0 - 0.901*(1.0-exp^(-phi));
+        sig_cr = 0.6*gamma*material(i).E*t_req/R;
+        Pcr = 2*pi*R*t_req*sig_cr;
+        MS_new = Pcr/ult_load;
+        cost_new = cost_new = A_const*t_req*material(mat_i).Cost;
+        t_req = t_req*1.05;
     end
-    if MS_new >= MS && mass_new < mass 
+    if MS_new >= MS
+        newdesign.structures(1).Dim(1) = t_req;
+        newdesign.structures(2).Dim(2) = t_req;
+        newdesign.structures(3).Dim(2) = t_req;
+        newdesign.structures(4).Dim(2) = t_req;
+        newdesign.structures(5).Dim(2) = t_req;
+        newdesign.structures(6).Dim(3) = t_req;
+        cost_new = A_const*t_req*material(mat_i).Cost;
+        if cost_new < cost 
+            
+    else
+        
+    end
+        
         mat_i = i;
-        MS = MS_new;
-        mass = mass_new;
-        t_good = t_req./1.05;
     end
+
 end
 
-newdesign.structures(1).Dim(1) = t_good;
-newdesign.structures(2).Dim(2) = t_good;
-newdesign.structures(3).Dim(2) = t_good;
-newdesign.structures(4).Dim(2) = t_good;
-newdesign.structures(5).Dim(2) = t_good;
-newdesign.structures(6).Dim(1) = t_good;
+design.structures(1).Dim(1) = t_req;
+design.structures(2).Dim(2) = t_req;
+design.structures(3).Dim(2) = t_req;
+design.structures(4).Dim(2) = t_req;
+design.structures(5).Dim(2) = t_req;
+design.structures(6).Dim(3) = t_req;
 for j = 1:6
-    newdesign.structures(j).Mass = newdesign.structures(j).Dim(1)...
-        *newdesign.structures(j).Dim(2)*newdesign.structures(j).Dim(3)*material(mat_i).Density;
-    newdesign.structures(j).Material = material(mat_i).Name;
+    newdesign.structures(j).Mass = design.structures(i).Dim(1)...
+        *design.structures(i).Dim(2)*design.structures(i).Dim(3)*material(mat_i).Density;
 end
-newdesign.structureMass = sum([newdesign.structures.Mass]);
-% newdesign.structureMass = newdesign.structures(1).Mass+newdesign.structures(2).Mass...
-%     +newdesign.structures(3).Mass+ newdesign.structures(4).Mass...
-%     +newdesign.structures(5).Mass+ newdesign.structures(6).Mass;
-%    +newdesign.structures(7).Mass+ newdesign.structures(8).Mass;
-%newdesign.structureMass = sum(newdesign.structures.Mass);
-newdesign.structuresCost = design.structuresMass*material(mat_i).Cost;
-newdesign.totalMass = design.structuresMass + design.componentsMass;
+newdesign.structureMass = sum(design.structure.Mass);
+newdesign.structureCost = design.structureMass*material(mat_i).Cost;
+newdesign.totalMass = design.structureMass + design.componentsMass;
             
         
 % n1 = length(structures);

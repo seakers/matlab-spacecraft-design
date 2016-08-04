@@ -20,10 +20,11 @@ function [STRUCTURES] = structures_main(components)
 %
 %   Cornell University
 %   Author Name: Anjit Fageria
+%       Author Name: Samuel Wu (6/13/16)
 %   Author NetID: agf46
 
 % Sort the components by their mass 
-components = ComponentSort(components);
+%components = ComponentSort(components);
 
 
 nSatellites = 0; % Number of satellites created to compare with each other
@@ -84,30 +85,27 @@ while nSatellites <= 30
         
         %%%%%%%%%%%%%%%%%%%%
         
-        % Claculate the total mass of the satellite, the mass of the structure, and the cost of the structure due to that mass
+        % Calculate the total mass of the satellite, the mass of the structure, and the cost of the structure due to that mass
         [new.structures,new.structuresMass,new.structuresCost,new.componentsMass,new.totalMass] = MassCostCalculator(new.components,new.structures);
+        
+        new_check = Statics(new);
+        
         % Calculate the surface area of the satellite
-        [new.SA] = SurfaceAreaCalculator(new.genParameters.satHeight,new.genParameters.satLength,new.genParameters.satWidth);
+        [new_check.SA] = SurfaceAreaCalculator(new_check.genParameters.satHeight,new_check.genParameters.satLength,new_check.genParameters.satWidth);
         % Calculate the inertia matrix and the CG of the current satellite
-        [new.InertiaMatrix,new.CG] = InertiaCalculator(new.components,new.structures);
-
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        % Insert Statics Calculations here
+        [new_check.InertiaMatrix,new_check.CG] = InertiaCalculator(new_check.components,new_check.structures);
         
-        % This is an initial version of a statics function. It doesn't do
-        % much at the moment, so please improve it as you see fit.
-        % Statics(components,structures)
+        % Statics is completed? Not sure if still need a while loop
         ok_statics = 1;
-        
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
     end
     if nSatellites == 0
     % If this is the first run of the code, just save the first satellite
     % as the "best"
-        old = new;
+        old = new_check;
     else
     % Compare satellites to see which one is more optimal
-        old = CheckSatellites(old,new);
+        old = CheckSatellites(old,new_check);
     end
     nSatellites = nSatellites + 1;
 end

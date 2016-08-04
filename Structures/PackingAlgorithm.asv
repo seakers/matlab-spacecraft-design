@@ -91,7 +91,7 @@ end
 
 % Check To see if the Z goes in the negative direction
 if abs(panelHeight(2)) >= abs(panelHeight(1)) && panelHeight(2) < panelHeight(1)
-    rectangleCG(:,3) = -rectangleCG(:,3);
+    rectangleCG(:,3) = rectangleCG(:,3);
 end
 
 % Check to see if the X goes in the negative direction
@@ -105,15 +105,10 @@ rectangleCG = (rotationMatrix*rectangleCG')';
 
 % Add the center of gravities to the first places that a satellite can fit
 % it on that panel
-if strcmp(structures.Mountable,'Payload')
-     rectangleCG(:,1) = rectangleCG(:,1)-rectangleCG(1,1);
-     rectangleCG(:,2) = rectangleCG(:,2)-rectangleCG(1,2);
-else
-    rectangleCG(:,1) = rectangleCG(:,1) + structures.availableX(1);
-    rectangleCG(:,2) = rectangleCG(:,2) + structures.availableY(1);
-end
-rectangleCG(:,3) = rectangleCG(:,3) + structures.availableZ(1); 
-
+if 
+rectangleCG(:,1) = rectangleCG(:,1) + structures.availableX(1);
+rectangleCG(:,2) = rectangleCG(:,2) + structures.availableY(1);
+rectangleCG(:,3) = rectangleCG(:,3) + structures.availableZ(1);
 
 % Place the expansion variables in the right entries of the needExpand
 % vector so that it turns out to be [Height, Width, Length]

@@ -9,7 +9,8 @@ addpath Power
 addpath Avionics
 addpath Structures
 %addpath SamStructures
-addpath Thermal
+%addpath Thermal
+addpath thermal72816
 addpath LV
 addpath Propulsion
 addpath Plotting
@@ -82,14 +83,13 @@ while (time < 250) && ~drymass_ok
 
     LV = LV_selection(mission,structures);
     
+    [Radiator,thermal,structures.components] = thermal726(structures.width,structures.width,structures.height,mission.alt,structures.components);
     
-    drymass_calc = structures.totalMass;
-    
-    [thermal,components] = thermal726(structures.width,structures,width,structures.height,mission.alt,components);
+    drymass_calc = structures.totalMass + thermal.mass;
     
     drymass_ok = abs(drymass_est - drymass_calc)/drymass_calc < 0.05;
     
-    cost = avionics.Cost/1000 + comms.cost + eps.cost + thermal.cost; 
+    cost = avionics.Cost/1000 + comms.cost + eps.cost + thermal.cost + structures.structuresCost + payload.cost + propulsion.cost + adcs.cost; 
     
     drymass_est = drymass_calc;
     fprintf('Total mass (kg): %f\n',drymass_calc)

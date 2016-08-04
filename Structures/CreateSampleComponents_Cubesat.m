@@ -29,7 +29,7 @@ i = 1;
 % 
 % % 
 % 
-% % ADCS Computer
+% % Avionics Computer
 components(i).Name = 'Computer';
 components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Rectangle';
@@ -131,14 +131,14 @@ components(i).Dim = [0.008,0.005];
 components(i).LocationReq = 'Inside';
 i = i + 1;
 
-% Reaction Wheel 4
-components(i).Name = 'Reaction Wheel 4';
-components(i).Subsystem = 'ADCS';
-components(i).Shape = 'Cylinder';
-components(i).Mass = 0.01;
-components(i).Dim = [0.008,0.005];
-components(i).LocationReq = 'Inside';
-i = i + 1;
+% % Reaction Wheel 4
+% components(i).Name = 'Reaction Wheel 4';
+% components(i).Subsystem = 'ADCS';
+% components(i).Shape = 'Cylinder';
+% components(i).Mass = 0.01;
+% components(i).Dim = [0.008,0.005];
+% components(i).LocationReq = 'Inside';
+% i = i + 1;
 
 % Magnetometer
 components(i).Name = 'Magnetometer';
@@ -170,7 +170,7 @@ i = i + 1;
 components(i).Name = 'Magnetic Torquer';
 components(i).Subsystem = 'ADCS';
 components(i).Shape = 'Cylinder';
-components(i).Mass = 10;
+components(i).Mass = .010;
 components(i).Dim = [0.01,0.01];
 components(i).LocationReq = 'Inside';
 i = i + 1;
@@ -195,12 +195,12 @@ for j = i:i+nElectronics
 end
 i = i + nElectronics+1;
 
-% % Comms Electronics
-% components(i).Name = 'Payload';
-% components(i).Subsystem = 'Payload';
-% components(i).Shape = 'Rectangle';
-% components(i).Mass = 1;
-% components(i).Dim = [0.1,0.1,0.1];
-% components(i).LocationReq = 'Specific';
-% i = i + 1;
-%
+% Comms Electronics
+components(i).Name = 'Payload';
+components(i).Subsystem = 'Payload';
+components(i).Shape = 'Rectangle';
+components(i).Mass = 1;
+components(i).Dim = [0.1,0.1,0.1];
+components(i).LocationReq = 'Specific';
+i = i + 1;
+

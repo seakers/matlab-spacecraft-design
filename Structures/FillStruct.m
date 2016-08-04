@@ -1,0 +1,1 @@
+function components = FillStruct(inside_comp,

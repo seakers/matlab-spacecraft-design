@@ -1,6 +1,8 @@
-function [components]= ComponentSort(components)
+ function [sortedIndices]= ComponentSort(components)
 % Sorts the components by mass in descending order and sends the indices of
 % how they should be sorted back.
+
+% First goes through all the components and 
 sortedComponentIndices = MassSort(components);
 
 

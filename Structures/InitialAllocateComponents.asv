@@ -11,31 +11,19 @@ n_Outside = size(genParameters.buildableIndices.Outside,1); % number of outside 
 w_Inside = (n_Inside:-1:1)/n_Inside;% Weights for the inside surfaces, giving the highest weights to the initial surfaces
 w_Outside = (n_Outside:-1:1)/n_Outside;% Weights for the outside surfaces, giving the highest weights to the initial surfaces
 
-panelCount = 2;
-wheelCount = 1;
-wheelCounter = 1;
 for i = 1:n1
     if strcmp(components(i).LocationReq,'Inside')
     % Check to see if the component's location requirement is inside or
     % not.
-        if strcmp(components(i).Name,'Reaction Wheel')
-            assignment = [wheelCount,1];
-            wheelCount = wheelCount+wheelCounter;
-            wheelCounter = wheelCounter + 1;
-        else
-        end
         index1 = randsample(1:n_Inside,1,true,w_Inside);
         assignment = genParameters.buildableIndices.Inside(index1,:);
     elseif strcmp(components(i).LocationReq,'Outside')
     % Check to see if the component's location requirement is Outside or
     % not and find the indices for the next location.
-        if strcmp(components(i).Name,'Solar Panel')
-            assignment = [panelCount,1];
-            panelCount = panelCount+1;
-        else
+    if strcmp(components(i).Name,'Solar Panel')
+        assignment = 
         index1 = randsample(1:n_Outside,1,true,w_Outside);
         assignment = genParameters.buildableIndices.Outside(index1,:);
-        end
     elseif strcmp(components(i).LocationReq,'Specific')
     % Check to see if the component's location requirement is Specific or
     % not.

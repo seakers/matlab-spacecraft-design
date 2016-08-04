@@ -11,6 +11,7 @@ material(i).E = 72*10^9; % N/m^2, Young's Modulus
 material(i).Cost = 2.75; % $/kg
 i = i+1;
 
+
 material(i).Name = 'Aluminum 6061-T6';
 material(i).Density = 2.71*10^3; % kg/m^3
 material(i).F_ult = 290*10^6; % N/m^2, Tensile Ultimate Stress
