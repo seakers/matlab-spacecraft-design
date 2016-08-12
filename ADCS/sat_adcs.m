@@ -147,7 +147,7 @@ elseif sat_in.ADCSChoice ==2 %When you want to make the ADCS
     row=1;
     iNRW=1;
     while iNRW<=sat3.NRW
-        components(row) = struct('Name','Reaction Wheel','Subsystem','ADCS','Shape','Cylinder','Mass',sat3.RWMass,'Dim',[sat3.RWRadius,sat3.RWThickness],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
+        components(row) = struct('Name','Reaction Wheel','Subsystem','ADCS','Shape','Cylinder','Mass',sat3.RWMass,'Dim',[sat3.RWThickness,sat3.RWRadius],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[]);
         iNRW=iNRW+1;
         row=row+1;
     end

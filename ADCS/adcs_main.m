@@ -26,7 +26,7 @@ sat.RWMarginFactor          = 1.5;          % Margin for sizing of reaction whee
 
 
 sat.NumberofThrusters       = 0;
-sat.NumberofRW              = 4;            % Number of reaction wheels (>=3) [#] 
+sat.NumberofRW              = 3;            % Number of reaction wheels (>=3) [#] 
 sat.NumberofMagneticTorquers= 3;            % Number of Magnetic torquers(>=3) [#]
 sat.NumberofSunSensors      = 3;            % Number of sun sensors(>=2) [#]
 sat.NumberofStarTrackers    = 1;

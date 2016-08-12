@@ -80,14 +80,14 @@ end
 if sat_in.ADCSChoice == 1
     sat_out.MGTorquersDipole    = D;
     sat_out.MGTCost            = MGT_cost;
-    sat_out.MGTMass            = MGT_mass/1000; % Convert the mass from grams to kg
+    sat_out.MGTMass            = (MGT_mass/1000); % Convert the mass from grams to kg
     sat_out.NMGT=sat_in.NumberofMagneticTorquers;
 
 else
     sat_out.MGTorquersDipole = D;
     sat_out.MGTChoice = MGT_choice;
     sat_out.MGTCost  = MGT_cost;
-    sat_out.MGTMass  = MGT_mass/1000; % Convert the mass from grams to kg
+    sat_out.MGTMass  = (MGT_mass/1000); % Convert the mass from grams to kg
     sat_out.NMGT=sat_in.NumberofMagneticTorquers;
 
 end

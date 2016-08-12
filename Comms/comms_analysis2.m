@@ -198,10 +198,10 @@ for Band=1:4
                                         dimAntenna=[Dtx/2,H];
                                     end
                                 elseif Band==2
-                                    massFiltersDiplexers=2;
-                                    dimFiltersDiplexers=[0.300 0.150 0.060];
+                                    massFiltersDiplexers=.2;
+                                    dimFiltersDiplexers=[0.1 0.1 0.03];
                                     massElectronics=massE;
-                                    dimElectronics=[0.140,0.330,0.070];
+                                    dimElectronics=[0.1,0.1,0.03];
                                     if strcmp(AntennaType,'Dipole')
                                         massAntenna=massA;
                                         dimAntenna=[0.098,0.098,0.007];
@@ -307,16 +307,16 @@ end
 
 if optfound
     %Outputs for Structures (Anjit)
-    components(1) = struct('Name','Filters/Diplexers','Subsystem','Comms','Shape','Rectangle','Mass',massFiltersDiplexers,'Dim',dimFiltersDiplexers,'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[],'HeatPower',0);
-    components(2) = struct('Name','Electronics/Wiring','Subsystem','Comms','Shape','Rectangle','Mass',massElectronics,'Dim',dimElectronics,'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',P_tx/eff);
+    components(1) = struct('Name','Filters/Diplexers','Subsystem','Comms','Shape','Rectangle','Mass',massFiltersDiplexers,'Dim',dimFiltersDiplexers./1,'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',[1,0,0;0,1,0;0,0,1],'HeatPower',0);
+    components(2) = struct('Name','Electronics/Wiring','Subsystem','Comms','Shape','Rectangle','Mass',massElectronics,'Dim',dimElectronics./1,'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [1,0,0;0,1,0;0,0,1],'HeatPower',P_tx/eff);
     
     if strcmp(AntennaTypeOPT,'Parabolic')
-        components(3) = struct('Name','Antenna','Subsystem','Comms','Shape','Cylinder','Mass',massAntenna,'Dim',dimAntenna,'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',P_tx*(1-.6));
+        components(3) = struct('Name','Antenna','Subsystem','Comms','Shape','Cylinder','Mass',massAntenna,'Dim',dimAntenna,'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [1,0,0;0,1,0;0,0,1],'HeatPower',P_tx*(1-.6));
     else
-        components(3) = struct('Name','Antenna','Subsystem','Comms','Shape','Rectangle','Mass',massAntenna,'Dim',dimAntenna,'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',P_tx*(1-.6));
+        components(3) = struct('Name','Antenna','Subsystem','Comms','Shape','Rectangle','Mass',massAntenna,'Dim',dimAntenna,'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [1,0,0;0,1,0;0,0,1],'HeatPower',P_tx*(1-.6));
     end
     
-    comms.mass=MassOpt;
+    comms.mass=MassOpt+massFiltersDiplexers;
     comms.power=power_comms_opt;
     comms.f=f_OPT;
     comms.modulation=MOD_opt;

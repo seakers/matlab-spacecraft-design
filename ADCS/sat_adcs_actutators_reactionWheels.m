@@ -78,7 +78,7 @@ if sat_in.ADCSChoice == 2
     sat_out.RWMaxOmega  = omega;
     sat_out.RWPower = Power;
     sat_out.RWRadius    = R;
-    sat_out.RWMass      = mass;
+    sat_out.RWMass      = mass/1000;
     sat_out.NRW      = N_RW;
     sat_out.RWThickness = thickness;
     sat_out.RWVolume = pi*R^2*thickness;
@@ -86,7 +86,7 @@ if sat_in.ADCSChoice == 2
     sat_out.RWTorque    = torque_RW;
 elseif sat_in.ADCSChoice == 1
     sat_out.RWPower     = Power;
-    sat_out.RWMass      = mass;
+    sat_out.RWMass      = mass/1000;
     sat_out.NRW      = N_RW;
     sat_out.RWThickness = 0;
     sat_out.RWVolume = 0;

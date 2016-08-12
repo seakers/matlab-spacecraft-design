@@ -82,7 +82,7 @@ function [obc] = structOBC(ddpd, redundancy)
       components(redundancy) = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[],'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[],'Orientation',[],'Thermal',[],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',[]);
       
       for i = 1:redundancy
-          components(i) = struct('Name','OBC','Subsystem','Avionics','Shape','Rectangle','Mass',obc.Mass,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,85],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',heatpower);
+          components(i) = struct('Name','OBC','Subsystem','Avionics','Shape','Rectangle','Mass',obc.Mass,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,85],'InertiaMatrix',[],'RotateToSatBodyFrame', [1,0,0;0,1,0;0,0,1],'HeatPower',heatpower);
       end
       obc.comp = components;
       
