@@ -133,10 +133,12 @@ function [power,components]=power_analysis2(params,vars)
     end
     %Outputs for Structures (Anjit)
     
-    components(1) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',.5*Pbol*Asa*(1-Xe));
-    components(2) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',.5*Pbol*Asa*(1-Xe));
-    components(3) = struct('Name','Battery','Subsystem','EPS','Shape','Rectangle','Mass',Mbatt,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',(Pe/Nbat)*(1-n));
-    components(4) = struct('Name','Wiring','Subsystem','EPS','Shape','Rectangle','Mass',Mpcu+Mregconv+Mwiring,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',0);
+    I = [1,0,0;0,1,0;0,0,1];
+    
+    components(1) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', I,'HeatPower',.5*Pbol*Asa*(1-Xe));
+    components(2) = struct('Name','Solar Panel','Subsystem','EPS','Shape','Rectangle','Mass',Msa/2,'Dim',[L,W,H],'CG_XYZ',[],'Vertices',[],'LocationReq','Outside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', I,'HeatPower',.5*Pbol*Asa*(1-Xe));
+    components(3) = struct('Name','Battery','Subsystem','EPS','Shape','Rectangle','Mass',Mbatt,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame', I,'HeatPower',(Pe/Nbat)*(1-n));
+    components(4) = struct('Name','Wiring','Subsystem','EPS','Shape','Rectangle','Mass',Mpcu+Mregconv+Mwiring,'Dim',[dimbat,dimbat,dimbat],'CG_XYZ',[],'Vertices',[],'LocationReq','Inside','Orientation',[],'Thermal',[-40,100],'InertiaMatrix',[],'RotateToSatBodyFrame',I,'HeatPower',0);
 
     power.mass = Msa + Mbatt + Mpcu + Mregconv + Mwiring;  % in kg
     power.solararraymass=Msa;
@@ -152,4 +154,5 @@ function [power,components]=power_analysis2(params,vars)
     else
         power.cost= (62.7*power.mass+112*power.mass^.763);
     end
+    power.Pbol = Pbol*Asa;
 end

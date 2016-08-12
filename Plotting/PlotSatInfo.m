@@ -1,16 +1,16 @@
-function PlotSatInfo(payload,comms,eps,avionics,thermal,structures, propulsion,LV)
+function PlotSatInfo(payload,comms,eps,avionics,thermal,structures,config,propulsion,adcs,LV)
 
 % Create the vectors containing the mass info
-mass = [payload.mass,comms.mass,eps.mass,thermal.mass,avionics.Mass,structures.structuresMass,propulsion.mass];
-mass_subsystemStrings = {'Payload','Comms','EPS','Thermal','Avionics','Structures','Propulsion'};
+mass = [sum(payload.mass),comms.mass,eps.mass,thermal.mass,avionics.Mass,structures.structuresMass,propulsion.mass,adcs.mass];
+mass_subsystemStrings = {'Payload','Comms','EPS','Thermal','Avionics','Structures','Propulsion','ADCS'};
 
 % Create the vectors containing the power info
-power = [payload.power,comms.power,avionics.AvgPwr,propulsion.power];
-power_subsystemStrings = {'Payload','Comms','Avionics','Propulsion'};
+power = [sum(payload.power),comms.power,avionics.AvgPwr,propulsion.power adcs.power];
+power_subsystemStrings = {'Payload','Comms','Avionics','Propulsion','ADCS'};
 
 % Create the vectors containing the cost info
-cost = [avionics.Cost/1000, comms.cost, eps.cost, thermal.cost,propulsion.cost];
-cost_subsystemStrings = {'Avionics','Comms','EPS','Thermal','Propulsion'};
+cost = [avionics.Cost/1000, comms.cost, eps.cost, thermal.cost,propulsion.cost,adcs.cost structures.structuresCost];
+cost_subsystemStrings = {'Avionics','Comms','EPS','Thermal','Propulsion','ADCS','Structures'};
 
 % Establish the figure
 f = figure('units','normalized','outerposition',[0 0 1 1]);
@@ -27,13 +27,13 @@ subplot(2, 3, 5);
 PieChartPlotter(cost,cost_subsystemStrings,'Cost (Thousands $)');
 
 subplot(1, 3, 1);
-PlotSatellite(structures.components,structures.structures,LV);
+PlotSatellite(config,structures.structures,LV);
 
 linkbudget = {'Pt',comms.Pt,'L_l',[],'D_r',comms.Dr,'Eb_no',comms.EbN0;
             'D',comms.D,'L_a',comms.Pt,'G_r',comms.Gr,'Eb/No',comms.EbN0min;
             'G_t',comms.Gt,'L_s',comms.Ls,'T_r',comms.Tr,'Margin',comms.Margin;
             'f/\lambda',comms.f,'R_b',comms.Rb,[],[],[],[];
-            'R',comms.R,'Modulation',comms.modulation,[],[],[],[]};
+            'R',comms.R,'Modulation',comms.modulation,'Type',comms.antennaType,[],[]};
 
 % Create the uitable
 cnames = {[],'Tx',[],'Cx',[],'Rx',[],'Out'};
