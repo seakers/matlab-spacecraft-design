@@ -22,6 +22,7 @@ topVert = [L/2,W/2,H+T; -L/2,W/2,H+T;
     -L/2,-W/2,H+T; L/2,-W/2,H+T];
 
 payload_comp.Vertices = [bottomVert; topVert];
+payload_comp.RotateToSatBodyFrame = [1,0,0;0,1,0;0,0,1];
 payload_comp.CG_XYZ = [0,0,(2*H+T)/2];
 
 

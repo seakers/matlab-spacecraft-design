@@ -11,6 +11,10 @@ H = dim(3);
 %     ,'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[]...
 %     ,'Orientation',[],'Thermal',[],'InertiaMatrix',[],'Volume',[]);
 
+outside_comp = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[],'Dim'...
+    ,[],'CG_XYZ',[],'Vertices',[],'LocationReq',[],'Orientation',[],'Thermal'...
+    ,[],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',[]);
+
 j = 1;
 for i = 1:length(components)
     if strcmp(components(i).LocationReq,'Outside') || strcmp(components(i).LocationReq,'Specific') 

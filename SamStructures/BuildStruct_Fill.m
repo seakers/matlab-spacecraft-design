@@ -1,8 +1,8 @@
-function [structures,dim] = BuildStruct_Fill(inside_comp,payload,init_t)
+function [structures,dim] = BuildStruct_Fill(vol,payload,init_t)
 
 % Define the volume needed for the surroinding structure to hold. Builds the
 % structural walls around this volume based on an aspect ratio.
-fill_volume = sum(cat(1,inside_comp.Volume));
+fill_volume = vol;
 
 % Assume L & W of structure are same, and you are adjusting height
 % accordingly
@@ -13,9 +13,9 @@ W = 1*sum(payload.Dim(2));
 H = 1.2*fill_volume/((L-2*init_t)*(W-2*init_t));
 dim = [L,W,H,init_t];
 else
-L = 2.1*max(payload(1).Dim(1));
-W = 2.1*sum(payload(1).Dim(1));
-H = 1.01*fill_volume/(L*W);
+L = 2*max(payload(1).Dim(1));
+W = 2*sum(payload(1).Dim(1));
+H = 1.1*fill_volume/(L*W);
 dim = [L,W,H,init_t];
 end
 

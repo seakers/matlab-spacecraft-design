@@ -26,7 +26,7 @@ for i = 1:n1
     % Compute the inertia matrix for the components
     if ~isempty(components(i).CG_XYZ )
         I = ComputingShapeInertia(components(i));
-        components(i).InertiaMatrix = components(i).RotateToSatBodyFrame*I*components(i).RotateToSatBodyFrame';
+        components(i).InertiaMatrix = components(i).RotateToSatBodyFrame*I*components(i).RotateToSatBodyFrame;
         [totalI,totalCG,totalMass] = ParallelAxis(totalMass,components(i).Mass,totalCG,components(i).CG_XYZ,totalI,components(i).InertiaMatrix);  
     else
         fprintf([components(i).Name,' not added to satellite because it doesn''t fit\n'])

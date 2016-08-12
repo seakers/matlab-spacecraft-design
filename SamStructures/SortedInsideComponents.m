@@ -1,38 +1,29 @@
-function [inside_comp,payload] = SortedInsideComponents(components)
+function [inside_comp,payload,vol] = SortedInsideComponents(components)
 
-inside_comp = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[]...
-    ,'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[]...
-    ,'RotateToSatBodyFrame',[],'Thermal',[],'InertiaMatrix',[],'Volume',[],'HeatPower',[]);
+% inside_comp = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[]...
+%     ,'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[]...
+%     ,'RotateToSatBodyFrame',[],'Thermal',[],'InertiaMatrix',[],'Volume',[],'HeatPower',[]);
 
 
 inside_comp = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[],'Dim'...
     ,[],'CG_XYZ',[],'Vertices',[],'LocationReq',[],'Orientation',[],'Thermal'...
     ,[],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',[]);
 
-
-
+vol = 0;
 j = 1;
 k = 1;
 for i = 1:length(components)
     if strcmp(components(i).LocationReq,'Inside')
-        if strcmp(components(i).Shape,'Cylinder')
-            inside_comp(j) = components(i);
-            inside_mass(j) = components(i).Mass;
-            inside_comp(j).Shape = 'Rectangle';
-            inside_comp(j).Volume = pi*components(i).Dim(1)^2*components(i).Dim(2);
-            j = j+1;
-        elseif strcmp(components(i).Shape,'Sphere')
-            inside_comp(j) = components(i);
-            inside_mass(j) = components(i).Mass;
-            inside_comp(j).Shape = 'Rectangle';
-            inside_comp(j).Volume = components(i).Dim(1)^2*pi;
-            j = j+1;
+        inside_comp(j) = components(i);
+        inside_mass(j) = components(i).Mass;
+        if strcmp(inside_comp(j).Shape,'Cylinder')
+            vol = vol + pi*(inside_comp(j).Dim(1)/2)^2*inside_comp(j).Dim(2);
+        elseif strcmp(inside_comp(j).Shape,'Sphere')
+            vol = vol + pi*(inside_comp.Dim(1)/2)^2;
         else
-            inside_comp(j) = components(i);
-            inside_mass(j) = components(i).Mass;
-            inside_comp(j).Volume = components(i).Dim(1)*components(i).Dim(2)*components(i).Dim(3);
-            j = j+1;
+            vol = vol + inside_comp(j).Dim(1)*inside_comp(j).Dim(2)*inside_comp(j).Dim(3);
         end
+        j = j+1;
     elseif strcmp(components(i).Name,'Payload')
         payload(k) = components(i);
         k = k+1;

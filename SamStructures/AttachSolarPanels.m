@@ -8,7 +8,7 @@ function [stowed,deploy] = AttachSolarPanels(panel,structure,dim,s)
 % deployed config, the solar panels will be displayed as folding
 % components. 
 
-rad = pi/3;   %define angle between deployed solar panels
+theta = pi/3;   %define angle between deployed solar panels
 
 L = dim(1);
 W = dim(2);
@@ -31,6 +31,7 @@ if s == 1
     T = 0;
     for i = 1:count
         stowed(i) = panel;
+        stowed(i).Mass = panel.Mass/count;
         stowed(i).Dim(1) = structure.Dim(1);
         stowed(i).Dim(2) = structure.Dim(3);
 
@@ -49,13 +50,14 @@ if s == 1
         P = 0;
         for l = 2:count
             deploy(l) = panel;
+            deploy(l).Mass = panel.Mass/count;
             deploy(l).Dim(1) = structure.Dim(1);
             deploy(l).Dim(2) = structure.Dim(3);
             
             L1 = L/2+panel_t;              H1 = 0;
-            L2 = L1-panel_t*cos(rad);      H2 = -panel_t*sin(rad);
-            L3 = L2+H*sin(rad);            H3 = H2-H*cos(rad);
-            L4 = L3+panel_t*cos(rad);      H4 = H3+panel_t*sin(rad);
+            L2 = L1-panel_t*cos(theta);      H2 = -panel_t*sin(theta);
+            L3 = L2+H*sin(theta);            H3 = H2-H*cos(theta);
+            L4 = L3+panel_t*cos(theta);      H4 = H3+panel_t*sin(theta);
             %These make up the positions of the 8 vertices that will make
             %up the first deployed solar panel where its angle to the
             %body mounted panel is defined as rad. 
@@ -66,6 +68,8 @@ if s == 1
                 L4,-W/2+P,H4; L3,-W/2+P,H3]; 
             deploy(l).Vertices = [bottomVert; topVert];
             deploy(l).CG_XYZ = [(L1+L3)/2,P,(H1+H3)/2];
+            phi = pi/2 - theta;
+            deploy(l).RotateToSatBodyFrame = [cos(phi),0,sin(phi);0,1,0;-sin(phi),0,cos(phi)];
             P = P+W;
         end
     end
@@ -73,6 +77,7 @@ elseif s == 2
     T = 0;
     for k = 1:count
         stowed(k) = panel;
+        stowed(k).Mass = panel.Mass/count;
         stowed(k).Dim(1) = structure.Dim(1);
         stowed(k).Dim(2) = structure.Dim(3);
 
@@ -91,13 +96,14 @@ elseif s == 2
         P = 0;
         for l = 2:count
             deploy(l) = panel;
+            deploy(l).Mass = panel.Mass/count;
             deploy(l).Dim(1) = structure.Dim(1);
             deploy(l).Dim(2) = structure.Dim(3);
             
             L1 = L/2+panel_t;              H1 = 0;
-            L2 = L1-panel_t*cos(rad);      H2 = -panel_t*sin(rad);
-            L3 = L2+H*sin(rad);            H3 = H2-H*cos(rad);
-            L4 = L3+panel_t*cos(rad);      H4 = H3+panel_t*sin(rad);
+            L2 = L1-panel_t*cos(theta);      H2 = -panel_t*sin(theta);
+            L3 = L2+H*sin(theta);            H3 = H2-H*cos(theta);
+            L4 = L3+panel_t*cos(theta);      H4 = H3+panel_t*sin(theta);
             %These make up the positions of the 8 vertices that will make
             %up the first deployed solar panel where its angle to the
             %body mounted panel is defined as rad. 
@@ -108,6 +114,8 @@ elseif s == 2
                 -L4,-W/2+P,H4; -L3,-W/2+P,H3]; 
             deploy(l).Vertices = [bottomVert; topVert];
             deploy(l).CG_XYZ = [-(L1+L3)/2,P,(H1+H3)/2];
+            phi = pi/2 + theta;
+            deploy(l).RotateToSatBodyFrame = [cos(phi),0,sin(phi);0,1,0;-sin(phi),0,cos(phi)];
             P = P-W;
         end
     end

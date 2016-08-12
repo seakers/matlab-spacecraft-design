@@ -1,4 +1,4 @@
-function [structures] = StructuresVolumeFill()
+function [structures] = StructuresVolumeFill(components)
 % Testing out an approach to structure configuration. Starts with the
 % satellite volume estimate based on average satellite density (79 kg/m^3)
 % and drymass estimate. 
@@ -20,17 +20,19 @@ addpath Plotting
 
 % Testing using self-generated components, reads through component lists
 % and sort inside components by mass.
+% 
+% fake_comp = FakeComps();
+% [inside_comp,payload,fill_vol] = SortedInsideComponents(fake_comp);
 
-fake_comp = FakeComps();
-[inside_comp,payload] = SortedInsideComponents(fake_comp);
+[inside_comp,payload,fill_vol] = SortedInsideComponents(components);
 
 % First generate a structure using an initial guess for the thickness of
 % the walls, and fill the structure with the inside components and attach
 % outside components. 
 init_t = .001;
-[structures.structures,dim] = BuildStruct_Fill(inside_comp,payload,init_t);
+[structures.structures,dim] = BuildStruct_Fill(fill_vol,payload,init_t);
 filled_comp = FillStruct(inside_comp,dim);
-[stowed_comp,deploy_comp] = AttachComponents(FakeComps,structures,dim);
+[stowed_comp,deploy_comp] = AttachComponents(components,structures,dim);
 structures.stowed = [filled_comp stowed_comp];
 structures.deploy = [filled_comp deploy_comp];
 structures.componentsMass = sum([inside_comp.Mass])+sum([stowed_comp.Mass]);
@@ -40,25 +42,33 @@ structures.componentsMass = sum([inside_comp.Mass])+sum([stowed_comp.Mass]);
 [structures,final_t,material,masses] = StaticsFill(structures,dim);
 
 % Rebuild structure and fill with components given correct thickness
-[structures.structures,dim] = BuildStruct_Fill(inside_comp,payload,final_t);
+[structures.structures,dim] = BuildStruct_Fill(fill_vol,payload,final_t);
 structures.structures = StructuresMatMass(structures.structures,material,masses);
 filled_comp = FillStruct(inside_comp,dim);
-[stowed_comp,deploy_comp] = AttachComponents(FakeComps,structures,dim);
+[stowed_comp,deploy_comp] = AttachComponents(components,structures,dim);
 structures.stowed = [filled_comp stowed_comp];
 structures.deploy = [filled_comp deploy_comp];
 [structures.IM_stowed,structures.CG_stowed] = InertiaCalculator(structures.stowed,structures.structures);
+[structures.IM_delploy,structures.CG_deploy] = InertiaCalculator(structures.deploy,structures.structures);
+structures.InertiaMatrix = structures.IM_stowed;
+
+structures.width = dim(2);
+structures.height = dim(3);
+structures.SA = 2*dim(1)*dim(3)+2*dim(2)*dim(3)+2*dim(1)*dim(2);
+
+%LV = struct('id','Vega','payload_GEO',[0,0,0],'diameter',2.38,'height',3.5);
 
 
-LV = struct('id','Vega','payload_GEO',[0,0,0],'diameter',2.38,'height',3.5);
+% Add input for total surface area remaining after attaching external
+% components
+%[Radiator,thermal,structures.stowed] = thermal728(dim(1),dim(2),dim(3),400,structures.stowed);
 
-[Radiator,thermal,structures.stowed] = thermal726(dim(1),dim(2),dim(3),400,structures.stowed);
+%structures.thermal = thermal;
+%structures.radiator = Radiator;
 
-structures.thermal = thermal;
-structures.radiator = Radiator;
-
-figure
-PlotSatellite(structures.stowed,structures.structures,LV)
-figure
-PlotSatellite(structures.deploy,structures.structures,LV)
+% figure
+% PlotSatellite(structures.stowed,structures.structures,LV)
+% figure
+% PlotSatellite(structures.deploy,structures.structures,LV)
 
 end

@@ -13,30 +13,43 @@ function filled_comp = FillStruct(inside_comp,dim)
 % Sorts components placed inside in descending order such that the heaviest
 % comps will be placed on the bottom first. 
 
-filled_comp = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[]...
-    ,'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[]...
-    ,'RotateToSatBodyFrame',[],'Thermal',[],'InertiaMatrix',[],'Volume',[],'HeatPower',[]);
+% filled_comp = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[]...
+%     ,'Dim',[],'CG_XYZ',[],'Vertices',[],'LocationReq',[]...
+%     ,'RotateToSatBodyFrame',[],'Thermal',[],'InertiaMatrix',[],'Volume',[],'HeatPower',[]);
+
+filled_comp = struct('Name',[],'Subsystem',[],'Shape',[],'Mass',[],'Dim'...
+    ,[],'CG_XYZ',[],'Vertices',[],'LocationReq',[],'Orientation',[],'Thermal'...
+    ,[],'InertiaMatrix',[],'RotateToSatBodyFrame', [],'HeatPower',[]);
 
 L = dim(1);     W = dim(2);     H = dim(3);     t = dim(4);
-stackH = t+.03*H;
+stackH = t+.025*H;
 
 for i = 1:length(inside_comp)
     filled_comp(i) = inside_comp(i);
-    filled_comp(i).Dim(1) = L-2*t;
-    filled_comp(i).Dim(2) = W-2*t;
-    filled_comp(i).Dim(3) = inside_comp(i).Volume/((L-2*t)*(W-2*t));
-    tempH = filled_comp(i).Dim(3);
-    
-    L1 = (L-t)/2;       W1 = (W-t)/2;
-    L2 = -L1;           W2 = -W1;
-    
-    bottomVert = [L1,W1,stackH; L2,W1,stackH;
-        L2,W2,stackH; L1,W2,stackH];
-    topVert = [L1,W1,stackH+tempH; L2,W1,stackH+tempH;
-        L2,W2,stackH+tempH; L1,W2,stackH+tempH];
-    
-    filled_comp(i).Vertices = [bottomVert; topVert];
-    filled_comp(i).CG_XYZ = [0,0,(2*stackH+tempH)/2];
-    stackH = stackH + tempH + .03*H;
+    if strcmp(filled_comp(i).Shape,'Cylinder')  
+        filled_comp(i).Shape = 'Rectangle';
+        volume = pi*(filled_comp(i).Dim(1)/2)^2*filled_comp(i).Dim(2);
+    elseif strcmp(filled_comp(i).Shape,'Sphere')
+        filled_comp(i).Shape = 'Rectangle';
+        volume = (filled_comp(i).Dim(1)/2)^2*pi;
+    else 
+        volume = filled_comp(i).Dim(1)*filled_comp(i).Dim(2)*filled_comp(i).Dim(3);
+    end
+        filled_comp(i).Dim(1) = L-2*t;
+        filled_comp(i).Dim(2) = W-2*t;
+        filled_comp(i).Dim(3) = volume/((L-2*t)*(W-2*t));
+        tempH = filled_comp(i).Dim(3);
+
+        L1 = (L-t)/2;       W1 = (W-t)/2;
+        L2 = -L1;           W2 = -W1;
+
+        bottomVert = [L1,W1,stackH; L2,W1,stackH;
+            L2,W2,stackH; L1,W2,stackH];
+        topVert = [L1,W1,stackH+tempH; L2,W1,stackH+tempH;
+            L2,W2,stackH+tempH; L1,W2,stackH+tempH];
+
+        filled_comp(i).Vertices = [bottomVert; topVert];
+        filled_comp(i).CG_XYZ = [0,0,(2*stackH+tempH)/2];
+        stackH = stackH + tempH + .025*H;
 end
 end
