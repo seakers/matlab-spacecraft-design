@@ -1,4 +1,4 @@
-function complist=OutsideCompoent(complist,MLI,outpaint)
+function complist=OutsideComponent(complist,MLI,outpaint)
 len=length(complist);
 epsilon=outpaint.emittance;
 sigma=5.67e-8;
@@ -7,7 +7,7 @@ for i=1:len
     
     if strcmp('Outside',complist(i).LocationReq)
         
-        Qw=complist(i).Power;
+        Qw=complist(i).HeatPower;
         
         dim=complist(i).Dim;
         

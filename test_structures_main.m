@@ -13,7 +13,7 @@ addpath Payload
 % Select the payload the user wants to try out.
 % payloadType = 1; % MicroMAS payload
 % payloadType = 2; % Central Cylinder Commsat Payload payload
-payloadType = 3; % Panel Mounted Comms Satellite payload
+payloadType = 4; % Panel Mounted Comms Satellite payload
 
 % Generate the components that work with that type of payload
 satInfo = InitializingSubsystems(payloadType);

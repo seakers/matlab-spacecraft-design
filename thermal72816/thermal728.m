@@ -1,4 +1,4 @@
-function [thermal,complist]=thermal726(x,y,z,H,complist)
+function [thermal,complist]=thermal728(x,y,z,H,complist)
 %for the purpose of merging code into the main code on 7/14/16 meeting
 %for faster result
 Thigh=35;
@@ -24,6 +24,7 @@ infofunc.A=2*(x*y+x*z+y*z);
 infofunc.pmax=powertotal;
 infofunc.pmin=powertotal;
 [Radiator]=ThermalEstimate(infofunc);
+
 %there's radiator type, radiator area, radiator dimension, radiator louver
 %angle, and radiator mass
 
@@ -56,5 +57,6 @@ thermal.mlimass=MLImass;
 thermal.radiatormass=Radiator.mass;
 thermal.chpmass=CHP.mass;
 thermal.cost=394*thermal.mass^(.635)+50.6*thermal.mass^.707;
+thermal.radiator = Radiator;
 %thermal.cost_cjf=outpaint.cost+inpaint.cost+CHP.cost+RHP.cost+MLIcost;
 end
